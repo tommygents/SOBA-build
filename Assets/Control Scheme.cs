@@ -116,7 +116,7 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""89777591-0acc-414b-a99e-bab0db5b5499"",
-                    ""path"": ""<XInputController>/rightTrigger"",
+                    ""path"": ""<XInputController>/leftTrigger"",
                     ""interactions"": ""Press(pressPoint=0.5,behavior=1)"",
                     ""processors"": """",
                     ""groups"": ""Ringcon play"",
