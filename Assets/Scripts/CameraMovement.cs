@@ -22,20 +22,39 @@ public class CameraMovement : MonoBehaviour
 
     void Update()
     {
-        Vector3 playerViewportPos = cam.WorldToViewportPoint(player.position);
+        Vector3 playerViewportPos = cam.WorldToViewportPoint(player.position); //gets the player's position in the camera
+        //Vector3 cameraCenter = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, playerViewportPos.z));//finds the worldPos of the center of the camera
+        Vector3 cameraCenter = this.transform.position;
+        Vector3 direction = cameraCenter;
 
+        if (playerViewportPos.x > 0.5f + deadzone.x || playerViewportPos.x < 0.5f - deadzone.x) // check if the player is outside the deadzone on the x-axis
+        {
+            //set the camera's new position nearer the player on the x-axis
+            direction.x = player.position.x - cameraCenter.x; 
+
+        }
+
+        if (playerViewportPos.y > 0.5f + deadzone.y || playerViewportPos.y < 0.5f - deadzone.y) //check on y-axis
+        {
+            direction.y = player.position.y - cameraCenter.y;
+        }
+        transform.Translate(direction.normalized * moveSpeed * Time.deltaTime, Space.World); //move the camera according the the composite direction above
+
+        /*
         // Check if the player is outside the deadzone
         if (playerViewportPos.x > 0.5f + deadzone.x || playerViewportPos.x < 0.5f - deadzone.x ||
             playerViewportPos.y > 0.5f + deadzone.y || playerViewportPos.y < 0.5f - deadzone.y)
         {
             // Calculate the direction vector in world space
-            Vector3 playerWorldPos = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, playerViewportPos.z));
-            //Vector3 direction = playerWorldPos - transform.position;
-            Vector3 direction = player.position - playerWorldPos;
+            
+           
+            Vector3 direction = player.position - cameraCenter;
             direction.z = 0; // Assuming a 2D plane movement
 
             // Translate the camera
-            transform.Translate(direction.normalized * moveSpeed * Time.deltaTime, Space.World);
+            
         }
+        */
+
     }
 }

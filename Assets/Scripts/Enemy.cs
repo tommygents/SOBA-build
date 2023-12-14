@@ -7,11 +7,18 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]
     private int maxHP = 20;
-
     public virtual int MaxHP
     {
         get { return maxHP; }
         set { maxHP = value; }
+    }
+
+
+    private int moveSpeed = 3;
+    public virtual int MoveSpeed
+    {
+        get { return moveSpeed; }
+        set { moveSpeed = value; }
     }
 
 
