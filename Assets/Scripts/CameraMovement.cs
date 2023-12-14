@@ -22,24 +22,27 @@ public class CameraMovement : MonoBehaviour
 
     void Update()
     {
-        Vector3 playerViewportPos = cam.WorldToViewportPoint(player.position); //gets the player's position in the camera
-        //Vector3 cameraCenter = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, playerViewportPos.z));//finds the worldPos of the center of the camera
-        Vector3 cameraCenter = this.transform.position;
-        Vector3 direction = cameraCenter;
+        
+            Vector3 playerViewportPos = cam.WorldToViewportPoint(player.position);
+            Vector3 direction = Vector3.zero; // Initialize direction as zero
 
-        if (playerViewportPos.x > 0.5f + deadzone.x || playerViewportPos.x < 0.5f - deadzone.x) // check if the player is outside the deadzone on the x-axis
-        {
-            //set the camera's new position nearer the player on the x-axis
-            direction.x = player.position.x - cameraCenter.x; 
+            // Check if the player is outside the deadzone on the x-axis
+            if (playerViewportPos.x > 0.5f + deadzone.x || playerViewportPos.x < 0.5f - deadzone.x)
+            {
+                direction.x = player.position.x - transform.position.x; // Accumulate x-axis difference
+            }
 
-        }
+            // Check if the player is outside the deadzone on the y-axis
+            if (playerViewportPos.y > 0.5f + deadzone.y || playerViewportPos.y < 0.5f - deadzone.y)
+            {
+                direction.y = player.position.y - transform.position.y; // Accumulate y-axis difference
+            }
 
-        if (playerViewportPos.y > 0.5f + deadzone.y || playerViewportPos.y < 0.5f - deadzone.y) //check on y-axis
-        {
-            direction.y = player.position.y - cameraCenter.y;
-        }
-        transform.Translate(direction.normalized * moveSpeed * Time.deltaTime, Space.World); //move the camera according the the composite direction above
-
+            if (direction != Vector3.zero) // Check if there is any movement needed
+            {
+                transform.Translate(direction.normalized * moveSpeed * Time.deltaTime, Space.World);
+            }
+        
         /*
         // Check if the player is outside the deadzone
         if (playerViewportPos.x > 0.5f + deadzone.x || playerViewportPos.x < 0.5f - deadzone.x ||
