@@ -12,40 +12,74 @@ public class Enemy : MonoBehaviour
         get { return maxHP; }
         set { maxHP = value; }
     }
+    public int hp;
+    public virtual int HP { get => hp; set => hp = value; }
 
-
-    private int moveSpeed = 3;
+    [SerializeField] private int moveSpeed = 3;
     public virtual int MoveSpeed
     {
         get { return moveSpeed; }
         set { moveSpeed = value; }
     }
 
-
-    public int HP;
+    [SerializeField]
+    private GameObject targetGO;
+    public virtual GameObject TargetGO
+    {
+        get { return targetGO; }
+        set { targetGO = value; }
+    }
+    
+    
+    
     public SpriteRenderer spriteRenderer;
+    //public bool targetInRange = false;
+    public EnemyMovement movementScript;
+    [SerializeField] private Player player;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        HP = MaxHP;
+        hp = MaxHP;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        movementScript = GetComponent<EnemyMovement>();
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
-        if (HP <= 0)
+        if (hp <= 0)
         {
             Die();
+        }
+
+        if (hp < MaxHP)
+        {
+
         }
     }
 
 
     public void Die()
     {
-        //Called when an enemy's HP gets to zero
+        //Called when an enemy's hp gets to zero
         Destroy(this.gameObject);
+    }
+
+    public void Attack(GameObject _target)
+    {
+        //TODO: needs some sort of UI to let us know the attack is happening
+
+    }
+
+    public void TargetEnter(GameObject _target)
+    {
+        movementScript.TargetEnter(_target);
+    }
+    public void TargetExit(GameObject _target)
+    {
+        movementScript.TargetExit(_target);
     }
 
     /*

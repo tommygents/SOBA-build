@@ -22,6 +22,42 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "heavy pull",
+                    "type": "Button",
+                    "id": "070e3c94-d736-44b1-8cb8-16c8e201710e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "light push",
+                    "type": "Button",
+                    "id": "e9a11950-ca26-4966-9e12-de5d9b3c4fe3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "light pull",
+                    "type": "Button",
+                    "id": "e7658a5b-db12-4ed3-814a-800a047e206a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Sprint",
+                    "type": "Button",
+                    "id": "27478abb-384a-4513-9c4b-bb62e2da37fc",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -95,7 +131,7 @@
                     "name": "",
                     "id": "89777591-0acc-414b-a99e-bab0db5b5499",
                     "path": "<XInputController>/leftTrigger",
-                    "interactions": "Press(pressPoint=0.5,behavior=1)",
+                    "interactions": "Press(pressPoint=0.7,behavior=1)",
                     "processors": "",
                     "groups": "Ringcon play",
                     "action": "heavy push",
@@ -110,6 +146,94 @@
                     "processors": "",
                     "groups": "keyboard playtest",
                     "action": "heavy push",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3be75bca-f723-4278-a567-10217b0d5f42",
+                    "path": "<XInputController>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Ringcon play",
+                    "action": "light push",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "55bc3485-63af-4705-9967-a4386b4a8915",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard playtest",
+                    "action": "light push",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9937e946-3f07-4c25-b1a5-2ef21ffcf615",
+                    "path": "<XInputController>/rightShoulder",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "Ringcon play",
+                    "action": "light pull",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c6d23f26-fc01-45df-aa82-d861c60eea73",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard playtest",
+                    "action": "light pull",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e674226c-89b9-492f-8f65-bc988896570b",
+                    "path": "<XInputController>/rightTrigger",
+                    "interactions": "Press(pressPoint=0.2,behavior=1)",
+                    "processors": "",
+                    "groups": "Ringcon play",
+                    "action": "heavy pull",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ee263efb-2f00-4192-bc89-1e331dae8299",
+                    "path": "<Keyboard>/s",
+                    "interactions": "Press(pressPoint=0.2,behavior=1)",
+                    "processors": "",
+                    "groups": "keyboard playtest",
+                    "action": "heavy pull",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b1ee460f-1b64-4d57-8e83-8995b097a9dc",
+                    "path": "<XInputController>/rightStickPress",
+                    "interactions": "Press(pressPoint=0.2,behavior=1)",
+                    "processors": "",
+                    "groups": "Ringcon play",
+                    "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a7b1ccf9-275a-41ca-9142-fe01c34cba16",
+                    "path": "<Keyboard>/space",
+                    "interactions": "Press(pressPoint=0.2,behavior=1)",
+                    "processors": "",
+                    "groups": "keyboard playtest",
+                    "action": "Sprint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

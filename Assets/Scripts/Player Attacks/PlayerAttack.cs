@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-
-    public virtual int Damage { get; set; } = 7;
+    [SerializeField] private int damage = 7;
+    public virtual int Damage
+    {
+        get { return damage; }
+        set { damage = value; } // You can add additional logic here
+    }
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -32,12 +37,18 @@ public class PlayerAttack : MonoBehaviour
     
     {
         GameObject _go = collision.gameObject;
-        if (_go.GetComponent<Enemy>() != null)
+        if (_go.GetComponent<Enemy>() != null || _go.GetComponent<EnemySpawner>() != null)
         {
             //Code here for doing damage to an enemy
             Enemy _en = _go.GetComponent<Enemy>();
             DealDamage(_en);
 
+        }
+        if (_go.GetComponent<EnemySpawner>() != null)
+        {
+            Debug.Log("Hitting Spawner");
+            EnemySpawner _en = _go.GetComponent<EnemySpawner>();
+            DealDamage(_en);
         }
     }
 
@@ -45,8 +56,15 @@ public class PlayerAttack : MonoBehaviour
     {
         _enemy.HP -= Damage;
         Debug.Log(Damage + "Damage");
-        Debug.Log("HP: " + _enemy.HP);
+        Debug.Log("hp: " + _enemy.hp);
     }
+    public virtual void DealDamage(EnemySpawner _enemy)
+    {
+        _enemy.HP -= Damage;
+        Debug.Log(Damage + "Damage");
+        Debug.Log("hp: " + _enemy.HP);
+    }
+
 
     public virtual void Initialize()
     {

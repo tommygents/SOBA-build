@@ -44,6 +44,42 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""heavy pull"",
+                    ""type"": ""Button"",
+                    ""id"": ""070e3c94-d736-44b1-8cb8-16c8e201710e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""light push"",
+                    ""type"": ""Button"",
+                    ""id"": ""e9a11950-ca26-4966-9e12-de5d9b3c4fe3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""light pull"",
+                    ""type"": ""Button"",
+                    ""id"": ""e7658a5b-db12-4ed3-814a-800a047e206a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Sprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""27478abb-384a-4513-9c4b-bb62e2da37fc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -117,7 +153,7 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""89777591-0acc-414b-a99e-bab0db5b5499"",
                     ""path"": ""<XInputController>/leftTrigger"",
-                    ""interactions"": ""Press(pressPoint=0.5,behavior=1)"",
+                    ""interactions"": ""Press(pressPoint=0.7,behavior=1)"",
                     ""processors"": """",
                     ""groups"": ""Ringcon play"",
                     ""action"": ""heavy push"",
@@ -132,6 +168,94 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""keyboard playtest"",
                     ""action"": ""heavy push"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3be75bca-f723-4278-a567-10217b0d5f42"",
+                    ""path"": ""<XInputController>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Ringcon play"",
+                    ""action"": ""light push"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""55bc3485-63af-4705-9967-a4386b4a8915"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard playtest"",
+                    ""action"": ""light push"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9937e946-3f07-4c25-b1a5-2ef21ffcf615"",
+                    ""path"": ""<XInputController>/rightShoulder"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""Ringcon play"",
+                    ""action"": ""light pull"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c6d23f26-fc01-45df-aa82-d861c60eea73"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard playtest"",
+                    ""action"": ""light pull"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e674226c-89b9-492f-8f65-bc988896570b"",
+                    ""path"": ""<XInputController>/rightTrigger"",
+                    ""interactions"": ""Press(pressPoint=0.2,behavior=1)"",
+                    ""processors"": """",
+                    ""groups"": ""Ringcon play"",
+                    ""action"": ""heavy pull"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ee263efb-2f00-4192-bc89-1e331dae8299"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": ""Press(pressPoint=0.2,behavior=1)"",
+                    ""processors"": """",
+                    ""groups"": ""keyboard playtest"",
+                    ""action"": ""heavy pull"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b1ee460f-1b64-4d57-8e83-8995b097a9dc"",
+                    ""path"": ""<XInputController>/rightStickPress"",
+                    ""interactions"": ""Press(pressPoint=0.2,behavior=1)"",
+                    ""processors"": """",
+                    ""groups"": ""Ringcon play"",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a7b1ccf9-275a-41ca-9142-fe01c34cba16"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": ""Press(pressPoint=0.2,behavior=1)"",
+                    ""processors"": """",
+                    ""groups"": ""keyboard playtest"",
+                    ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -155,6 +279,10 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
         m_gameplay = asset.FindActionMap("gameplay", throwIfNotFound: true);
         m_gameplay_move = m_gameplay.FindAction("move", throwIfNotFound: true);
         m_gameplay_heavypush = m_gameplay.FindAction("heavy push", throwIfNotFound: true);
+        m_gameplay_heavypull = m_gameplay.FindAction("heavy pull", throwIfNotFound: true);
+        m_gameplay_lightpush = m_gameplay.FindAction("light push", throwIfNotFound: true);
+        m_gameplay_lightpull = m_gameplay.FindAction("light pull", throwIfNotFound: true);
+        m_gameplay_Sprint = m_gameplay.FindAction("Sprint", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -216,12 +344,20 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
     private IGameplayActions m_GameplayActionsCallbackInterface;
     private readonly InputAction m_gameplay_move;
     private readonly InputAction m_gameplay_heavypush;
+    private readonly InputAction m_gameplay_heavypull;
+    private readonly InputAction m_gameplay_lightpush;
+    private readonly InputAction m_gameplay_lightpull;
+    private readonly InputAction m_gameplay_Sprint;
     public struct GameplayActions
     {
         private @ControlScheme m_Wrapper;
         public GameplayActions(@ControlScheme wrapper) { m_Wrapper = wrapper; }
         public InputAction @move => m_Wrapper.m_gameplay_move;
         public InputAction @heavypush => m_Wrapper.m_gameplay_heavypush;
+        public InputAction @heavypull => m_Wrapper.m_gameplay_heavypull;
+        public InputAction @lightpush => m_Wrapper.m_gameplay_lightpush;
+        public InputAction @lightpull => m_Wrapper.m_gameplay_lightpull;
+        public InputAction @Sprint => m_Wrapper.m_gameplay_Sprint;
         public InputActionMap Get() { return m_Wrapper.m_gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -237,6 +373,18 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                 @heavypush.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnHeavypush;
                 @heavypush.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnHeavypush;
                 @heavypush.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnHeavypush;
+                @heavypull.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnHeavypull;
+                @heavypull.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnHeavypull;
+                @heavypull.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnHeavypull;
+                @lightpush.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLightpush;
+                @lightpush.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLightpush;
+                @lightpush.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLightpush;
+                @lightpull.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLightpull;
+                @lightpull.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLightpull;
+                @lightpull.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLightpull;
+                @Sprint.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSprint;
+                @Sprint.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSprint;
+                @Sprint.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSprint;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -247,6 +395,18 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                 @heavypush.started += instance.OnHeavypush;
                 @heavypush.performed += instance.OnHeavypush;
                 @heavypush.canceled += instance.OnHeavypush;
+                @heavypull.started += instance.OnHeavypull;
+                @heavypull.performed += instance.OnHeavypull;
+                @heavypull.canceled += instance.OnHeavypull;
+                @lightpush.started += instance.OnLightpush;
+                @lightpush.performed += instance.OnLightpush;
+                @lightpush.canceled += instance.OnLightpush;
+                @lightpull.started += instance.OnLightpull;
+                @lightpull.performed += instance.OnLightpull;
+                @lightpull.canceled += instance.OnLightpull;
+                @Sprint.started += instance.OnSprint;
+                @Sprint.performed += instance.OnSprint;
+                @Sprint.canceled += instance.OnSprint;
             }
         }
     }
@@ -273,5 +433,9 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnHeavypush(InputAction.CallbackContext context);
+        void OnHeavypull(InputAction.CallbackContext context);
+        void OnLightpush(InputAction.CallbackContext context);
+        void OnLightpull(InputAction.CallbackContext context);
+        void OnSprint(InputAction.CallbackContext context);
     }
 }
