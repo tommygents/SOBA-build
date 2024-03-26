@@ -58,6 +58,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Run",
+                    "type": "Button",
+                    "id": "68c76340-3b02-455b-a858-ceef6551e43e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Squat",
+                    "type": "Button",
+                    "id": "6a894020-486e-4229-bb3f-e4ae14f02c22",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -234,6 +252,39 @@
                     "processors": "",
                     "groups": "keyboard playtest",
                     "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4a98b34c-68c0-4748-9fe3-bb92ef1862ba",
+                    "path": "<XInputController>/leftStickPress",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "Ringcon play",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "45aaad3c-16f5-4780-9c4c-87115842dbdf",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard playtest",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "60e28be5-6665-4da3-a5aa-e8d41e3dc501",
+                    "path": "<XInputController>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Squat",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HealthManager : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class HealthManager : MonoBehaviour
     }
     public int HP;
     private GameObject parent;
+    [SerializeField] private Image healthBar;
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +31,12 @@ public class HealthManager : MonoBehaviour
         {
             Die();
         }
+
+        if (healthBar != null)
+        {
+            healthBar.fillAmount = (float)HP/MaxHP;
+            Debug.Log("HP: " + HP + " Max HP: " + MaxHP + " Ratio: "+ (HP / MaxHP));
+        }
     }
 
     private void Die()
@@ -43,5 +51,10 @@ public class HealthManager : MonoBehaviour
         {
 
         }
+    }
+
+    public void UpdateHealthBar()
+    {
+
     }
 }

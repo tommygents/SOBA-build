@@ -80,6 +80,24 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Run"",
+                    ""type"": ""Button"",
+                    ""id"": ""68c76340-3b02-455b-a858-ceef6551e43e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Squat"",
+                    ""type"": ""Button"",
+                    ""id"": ""6a894020-486e-4229-bb3f-e4ae14f02c22"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -258,6 +276,39 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                     ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4a98b34c-68c0-4748-9fe3-bb92ef1862ba"",
+                    ""path"": ""<XInputController>/leftStickPress"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""Ringcon play"",
+                    ""action"": ""Run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""45aaad3c-16f5-4780-9c4c-87115842dbdf"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard playtest"",
+                    ""action"": ""Run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""60e28be5-6665-4da3-a5aa-e8d41e3dc501"",
+                    ""path"": ""<XInputController>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Squat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -283,6 +334,8 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
         m_gameplay_lightpush = m_gameplay.FindAction("light push", throwIfNotFound: true);
         m_gameplay_lightpull = m_gameplay.FindAction("light pull", throwIfNotFound: true);
         m_gameplay_Sprint = m_gameplay.FindAction("Sprint", throwIfNotFound: true);
+        m_gameplay_Run = m_gameplay.FindAction("Run", throwIfNotFound: true);
+        m_gameplay_Squat = m_gameplay.FindAction("Squat", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -348,6 +401,8 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
     private readonly InputAction m_gameplay_lightpush;
     private readonly InputAction m_gameplay_lightpull;
     private readonly InputAction m_gameplay_Sprint;
+    private readonly InputAction m_gameplay_Run;
+    private readonly InputAction m_gameplay_Squat;
     public struct GameplayActions
     {
         private @ControlScheme m_Wrapper;
@@ -358,6 +413,8 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
         public InputAction @lightpush => m_Wrapper.m_gameplay_lightpush;
         public InputAction @lightpull => m_Wrapper.m_gameplay_lightpull;
         public InputAction @Sprint => m_Wrapper.m_gameplay_Sprint;
+        public InputAction @Run => m_Wrapper.m_gameplay_Run;
+        public InputAction @Squat => m_Wrapper.m_gameplay_Squat;
         public InputActionMap Get() { return m_Wrapper.m_gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -385,6 +442,12 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                 @Sprint.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSprint;
                 @Sprint.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSprint;
                 @Sprint.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSprint;
+                @Run.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRun;
+                @Run.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRun;
+                @Run.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRun;
+                @Squat.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSquat;
+                @Squat.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSquat;
+                @Squat.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSquat;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -407,6 +470,12 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                 @Sprint.started += instance.OnSprint;
                 @Sprint.performed += instance.OnSprint;
                 @Sprint.canceled += instance.OnSprint;
+                @Run.started += instance.OnRun;
+                @Run.performed += instance.OnRun;
+                @Run.canceled += instance.OnRun;
+                @Squat.started += instance.OnSquat;
+                @Squat.performed += instance.OnSquat;
+                @Squat.canceled += instance.OnSquat;
             }
         }
     }
@@ -437,5 +506,7 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
         void OnLightpush(InputAction.CallbackContext context);
         void OnLightpull(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
+        void OnRun(InputAction.CallbackContext context);
+        void OnSquat(InputAction.CallbackContext context);
     }
 }

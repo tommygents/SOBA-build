@@ -26,6 +26,15 @@ public class Player : MonoBehaviour
     public float attackDistance = 2f;
     public int healAmount = 5;
     public bool invertControls = true;
+    public bool isRunning = false;
+    public bool isSprinting = false;
+    public bool isSquating = false;
+
+    public bool isNearTurret = false;
+    public bool isEngagedWithTurret = false;
+    public Turret nearbyTurret = null;
+    public Turret engagedTurret = null;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -57,6 +66,10 @@ public class Player : MonoBehaviour
         LightPress();
         HeavyPull();
         Sprint();
+        Squat();
+        Run();
+
+
 
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -64,7 +77,7 @@ public class Player : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
-    }
+    } //END OF UPDATE FUNCTION
 
     public void OnMove(Vector2 _vector2)
     {
@@ -77,12 +90,53 @@ public class Player : MonoBehaviour
         controller.gameplay.Sprint.started += ctx =>
         {
             actualSpeed = 2f * speed;
+            isRunning = true;
+            isSprinting = true;
         };
         controller.gameplay.Sprint.performed += ctx =>
         {
             actualSpeed = speed;
+            isRunning = false;
+            isSprinting = false;
         };
     }
+
+    public void Squat()
+    {
+        controller.gameplay.Squat.started += ctx =>
+        {
+
+            isSquating = true;
+            
+
+            
+        };
+        controller.gameplay.Squat.performed += ctx =>
+        {
+
+            isSquating = false;
+            
+        };
+    }
+
+    public void Run()
+    {
+        controller.gameplay.Run.started += ctx =>
+        {
+
+            isRunning = true;
+            //TODO: Set up the charging
+
+        };
+        controller.gameplay.Run.performed += ctx =>
+        {
+
+            isRunning = false;
+            //TODO: Stop charging
+
+        };
+    }
+
     public void HeavyPress()
     {
         controller.gameplay.heavypush.started += ctx =>
@@ -114,19 +168,18 @@ public class Player : MonoBehaviour
     {
         
 
-        controller.gameplay.lightpull.performed += ctx =>
+        controller.gameplay.lightpush.performed += ctx => //when the action is performed, a complete light push
         {
+            /* This is the code that formerly triggered an attack.
             Vector2 direction = moveVector;
             Vector3 attackPosition = transform.position + new Vector3(direction.x, direction.y, 0) * attackDistance;
             PlayerAttack _light = Instantiate(attackSet.lightPush, attackPosition, Quaternion.identity, this.gameObject.transform);
-        };
+       */       
 
-        controller.gameplay.lightpush.performed += ctx =>
-        {
-            Vector2 direction = moveVector;
-            Vector3 attackPosition = transform.position + new Vector3(direction.x, direction.y, 0) * attackDistance;
-            PlayerAttack _light = Instantiate(attackSet.lightPush, attackPosition, Quaternion.identity, this.gameObject.transform);
-        };
+
+            };
+
+     
     }
 
     public void HeavyPull()
@@ -162,6 +215,45 @@ public class Player : MonoBehaviour
         //TODO: player dies, and loses
     }
 
+
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.gameObject.GetComponent<Turret>() != null)
+        {
+            isNearTurret = true;
+            nearbyTurret = collision.collider.gameObject.GetComponent<Turret>();
+        }
+    }
+
+    public void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.collider.gameObject.GetComponent<Turret>() != null)
+        {
+            isNearTurret = false;
+            nearbyTurret = null;
+        }
+    }
+
+
+    public void EnterTurret(Turret _turret)
+    {
+        isNearTurret = false;
+        isEngagedWithTurret = true;
+        nearbyTurret = null;
+        engagedTurret = _turret;
+
+
+
+    }
+
+
+    public void ExitTurret(Turret _turret)
+    {
+        isNearTurret = true;
+        isEngagedWithTurret = false;
+        nearbyTurret = _turret;
+        engagedTurret = null;
+    }
     public IEnumerator Heal()
     {
         Debug.Log("Healing");
