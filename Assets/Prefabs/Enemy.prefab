@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1082777223845990598}
   - component: {fileID: 1082777223845990599}
   - component: {fileID: 6541075175018944363}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 5
-  HP: 0
+  hp: 0
   moveSpeed: 2
   targetGO: {fileID: 0}
   spriteRenderer: {fileID: 0}
@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 8472306132931242605}
   - component: {fileID: 819409408}
   - component: {fileID: 819409407}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -252,7 +252,7 @@ GameObject:
   - component: {fileID: 8649125769627465899}
   - component: {fileID: 1983141899711018312}
   - component: {fileID: 3550729931405003692}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy Detector
   m_TagString: Untagged
   m_Icon: {fileID: 0}

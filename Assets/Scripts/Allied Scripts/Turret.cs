@@ -182,7 +182,7 @@ public class Turret : MonoBehaviour
     }
     #endregion
 
-    //TODO: Turret can be wound up and given energy
+  
     //TODO: Player can control the turret directly
     #region charging and engagement
 

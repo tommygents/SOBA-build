@@ -291,8 +291,8 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""45aaad3c-16f5-4780-9c4c-87115842dbdf"",
-                    ""path"": ""<Keyboard>/z"",
-                    ""interactions"": """",
+                    ""path"": ""<Keyboard>/m"",
+                    ""interactions"": ""Press(behavior=1)"",
                     ""processors"": """",
                     ""groups"": ""keyboard playtest"",
                     ""action"": ""Run"",

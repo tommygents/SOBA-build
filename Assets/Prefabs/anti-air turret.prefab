@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 702155796}
   - component: {fileID: 702155797}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 4120685630083168460}
   - component: {fileID: 178165069}
   - component: {fileID: 178165068}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Detection Radius
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 2060385094}
   - component: {fileID: 2060385095}
   - component: {fileID: 7817073912392242676}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: anti-air turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}

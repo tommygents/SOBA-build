@@ -34,6 +34,8 @@ public class Player : MonoBehaviour
     public bool isEngagedWithTurret = false;
     public Turret nearbyTurret = null;
     public Turret engagedTurret = null;
+    public Vector3 positionBeforeEnteringTurret;
+    [SerializeField] private PlayerTurretDetector turretDetector;
 
     // Start is called before the first frame update
     void Start()
@@ -46,6 +48,8 @@ public class Player : MonoBehaviour
         healthManager = GetComponent<HealthManager>();
         actualSpeed = speed;
 
+        turretDetector = GetComponentInChildren<PlayerTurretDetector>();
+
     }
 
     // Update is called once per frame
@@ -54,7 +58,10 @@ public class Player : MonoBehaviour
         //move the player according to the tilt of the RingCon
         moveVector = controller.gameplay.move.ReadValue<Vector2>();
         if (invertControls) moveVector.y *= -1;
-        OnMove(moveVector);
+        if (!isEngagedWithTurret)
+        {
+            OnMove(moveVector);
+        }
 
         //iterate holdingDuration
         if (holdingPress)
@@ -69,6 +76,14 @@ public class Player : MonoBehaviour
         Squat();
         Run();
 
+
+        if (isRunning && isEngagedWithTurret)
+        {
+            //TODO: Here the running happens. Pass the time value to the turret, which charges.
+            float _chargeTime = Time.deltaTime;
+            if (isSprinting) { _chargeTime *= 1.5f; }
+            engagedTurret.ChargeUp(_chargeTime);
+        }
 
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -127,6 +142,8 @@ public class Player : MonoBehaviour
             isRunning = true;
             //TODO: Set up the charging
 
+
+
         };
         controller.gameplay.Run.performed += ctx =>
         {
@@ -166,7 +183,7 @@ public class Player : MonoBehaviour
 
     public void LightPress()
     {
-        
+        Debug.Log("light press detected");
 
         controller.gameplay.lightpush.performed += ctx => //when the action is performed, a complete light push
         {
@@ -174,7 +191,16 @@ public class Player : MonoBehaviour
             Vector2 direction = moveVector;
             Vector3 attackPosition = transform.position + new Vector3(direction.x, direction.y, 0) * attackDistance;
             PlayerAttack _light = Instantiate(attackSet.lightPush, attackPosition, Quaternion.identity, this.gameObject.transform);
-       */       
+       */
+            if (turretDetector.detectsTurret && engagedTurret == null)
+            {
+                EnterTurret(turretDetector.DetectedTurret());
+            } 
+            else if (engagedTurret != null)
+            {
+                ExitTurret(engagedTurret);
+            }
+
 
 
             };
@@ -237,11 +263,13 @@ public class Player : MonoBehaviour
 
     public void EnterTurret(Turret _turret)
     {
+        positionBeforeEnteringTurret = this.transform.position;
         isNearTurret = false;
         isEngagedWithTurret = true;
         nearbyTurret = null;
         engagedTurret = _turret;
-
+        this.GetComponent<SpriteRenderer>().enabled = false; // Hide player sprite
+        Camera.main.transform.position = new Vector3(_turret.transform.position.x, _turret.transform.position.y, Camera.main.transform.position.z); // Center camera on turret
 
 
     }
@@ -252,7 +280,10 @@ public class Player : MonoBehaviour
         isNearTurret = true;
         isEngagedWithTurret = false;
         nearbyTurret = _turret;
-        engagedTurret = null;
+        engagedTurret = null; 
+        this.GetComponent<SpriteRenderer>().enabled = true; // Show player sprite
+        this.transform.position = positionBeforeEnteringTurret;
+        positionBeforeEnteringTurret = new Vector3();// Adjust position as needed
     }
     public IEnumerator Heal()
     {
