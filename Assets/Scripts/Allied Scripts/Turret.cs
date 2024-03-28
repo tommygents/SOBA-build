@@ -83,7 +83,7 @@ public class Turret : MonoBehaviour
         #region charging in update
 
         
-        
+        /* This code is now handled in the Player script
       //TODO: Enclose this in code that checks to make sure the player is engaged
         if (player.isRunning)
         {
@@ -91,7 +91,7 @@ public class Turret : MonoBehaviour
             if (player.isSprinting) { _time *= sprintBonus; }
             ChargeUp(_time);
         }
-
+        */
 
         #endregion
 

@@ -17,7 +17,7 @@ public class CameraMovement : MonoBehaviour
     {
 
         cam = Camera.main;
-        moveSpeed = player.GetComponent<Player>().speed * 1.5f;
+        moveSpeed = player.GetComponent<Player>().baseSpeed * 1.5f;
     }
 
     void Update()

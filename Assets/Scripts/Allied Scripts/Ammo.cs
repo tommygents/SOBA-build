@@ -39,7 +39,7 @@ public class Ammo : PlayerAttack
 
     }
 
-    public void MakeAmmo(float _range, float _speed, float _angle) //Used by the turret to set the range and speed after instantiation
+    public void MakeAmmo(float _range, float _speed, float _angle) //Used by the turret to set the range and baseSpeed after instantiation
     {
         range = _range;
         speed = _speed;

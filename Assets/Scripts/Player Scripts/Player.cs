@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
 
     //[SerializeField] public InputAction moveAction;
     public Vector2 moveVector = Vector2.zero;
-    public float speed = 1f;
+    public float baseSpeed = 1f;
     [SerializeField] private float actualSpeed;
     [SerializeField] public ControlScheme controller;
     [SerializeField] public HealthManager healthManager;
@@ -38,6 +38,10 @@ public class Player : MonoBehaviour
     [SerializeField] private PlayerTurretDetector turretDetector;
     [SerializeField] private PlayerBuildingPlacement buildingPlacement;
 
+    public float dashTimer = 0f;
+    public float dashDuration = .25f;
+    public float dashSpeed = 3f;
+    public bool isDashing = false;
 
 //Building placement variables
 
@@ -50,7 +54,7 @@ public class Player : MonoBehaviour
 
         controller.gameplay.Enable();
         healthManager = GetComponent<HealthManager>();
-        actualSpeed = speed;
+        actualSpeed = baseSpeed;
 
         turretDetector = GetComponentInChildren<PlayerTurretDetector>();
         buildingPlacement = GetComponent<PlayerBuildingPlacement>();
@@ -100,6 +104,17 @@ public class Player : MonoBehaviour
             }
         }
 
+        if (isDashing) //iterate the dash timer and then check if the dash has ended
+        {
+            dashTimer += Time.deltaTime;
+            if (dashTimer > dashDuration)
+            {
+                actualSpeed = baseSpeed;
+                dashTimer = 0f;
+                isDashing= false;
+            }
+        }
+
 
 
         if (Input.GetKeyDown(KeyCode.R))  // Reloads the current scene
@@ -107,6 +122,8 @@ public class Player : MonoBehaviour
            
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
+
+
 
     } //END OF UPDATE FUNCTION
 
@@ -120,13 +137,13 @@ public class Player : MonoBehaviour
     {
         controller.gameplay.Sprint.started += ctx =>
         {
-            actualSpeed = 2f * speed;
+            actualSpeed = 2f * baseSpeed;
             isRunning = true;
             isSprinting = true;
         };
         controller.gameplay.Sprint.performed += ctx =>
         {
-            actualSpeed = speed;
+            actualSpeed = baseSpeed;
             isRunning = false;
             isSprinting = false;
         };
@@ -220,7 +237,11 @@ public class Player : MonoBehaviour
             {
                 ExitTurret(engagedTurret);
             }
-
+            else 
+            {
+                isDashing = true;
+                actualSpeed *= dashSpeed;
+            }
 
 
             };
