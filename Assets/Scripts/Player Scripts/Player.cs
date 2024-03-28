@@ -36,6 +36,10 @@ public class Player : MonoBehaviour
     public Turret engagedTurret = null;
     public Vector3 positionBeforeEnteringTurret;
     [SerializeField] private PlayerTurretDetector turretDetector;
+    [SerializeField] private PlayerBuildingPlacement buildingPlacement;
+
+
+//Building placement variables
 
     // Start is called before the first frame update
     void Start()
@@ -49,6 +53,7 @@ public class Player : MonoBehaviour
         actualSpeed = speed;
 
         turretDetector = GetComponentInChildren<PlayerTurretDetector>();
+        buildingPlacement = GetComponent<PlayerBuildingPlacement>();
 
     }
 
@@ -77,18 +82,29 @@ public class Player : MonoBehaviour
         Run();
 
 
-        if (isRunning && isEngagedWithTurret)
+        if (isRunning && isEngagedWithTurret) //Passes the time spent running to an engaged turret to charge it up
         {
-            //TODO: Here the running happens. Pass the time value to the turret, which charges.
+           
             float _chargeTime = Time.deltaTime;
             if (isSprinting) { _chargeTime *= 1.5f; }
             engagedTurret.ChargeUp(_chargeTime);
         }
 
-
-        if (Input.GetKeyDown(KeyCode.R))
+        if (isSquating && !isEngagedWithTurret && !turretDetector.detectsTurret) //activate the build timer,
         {
-            // Reloads the current scene
+            float _chargeTime = Time.deltaTime;
+            if (buildingPlacement.IterateBuildCounter(_chargeTime)) //passes the charge time to the building manager, which returns true if enough time to build a turret has passed
+            {
+                Turret _turret = Instantiate(buildingPlacement.turrets[buildingPlacement.activeTurretIndex], transform.position, Quaternion.identity);
+                buildingPlacement.ResetBuildCounter();
+            }
+        }
+
+
+
+        if (Input.GetKeyDown(KeyCode.R))  // Reloads the current scene
+        {
+           
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
@@ -130,7 +146,11 @@ public class Player : MonoBehaviour
         {
 
             isSquating = false;
-            
+            //TODO: when the player stops squatting, reset the building placement counter.
+
+            buildingPlacement.ResetBuildCounter();
+
+
         };
     }
 
@@ -295,4 +315,18 @@ public class Player : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
     }
+
+    #region turret and other building placement
+    //TODO: Player can place turrets by squatting for long enough
+    /*
+     * This involves registering that a player has squatted, checking that there's no turret in the way, showing the player's squat progress,
+     * and then placing a turret that the player immediately enters.
+     * 
+     * 
+     */
+
+
+
+
+    #endregion
 }
