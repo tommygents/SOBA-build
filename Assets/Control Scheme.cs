@@ -309,6 +309,17 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                     ""action"": ""Squat"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""36c35362-74b7-40e5-a997-dcef93c68df3"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": ""Press(behavior=1)"",
+                    ""processors"": """",
+                    ""groups"": ""keyboard playtest"",
+                    ""action"": ""Squat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }

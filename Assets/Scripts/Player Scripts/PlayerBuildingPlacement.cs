@@ -11,10 +11,14 @@ public class PlayerBuildingPlacement : MonoBehaviour
 
 
 
+    [SerializeField] private PlayerBuildingPlacementUI placementUI;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        placementUI = GetComponent<PlayerBuildingPlacementUI>();
     }
 
     // Update is called once per frame
@@ -28,12 +32,17 @@ public class PlayerBuildingPlacement : MonoBehaviour
     public void ResetBuildCounter()
     {
         turretBuildCounter = 0f;
-        //TODO: this will eventually also interact with the UI
+        placementUI.UpdateChargeBar(0f, 0);
+        placementUI.HideChargeBar();
+        
     }
 
     public bool IterateBuildCounter(float _time)
     {
-        turretBuildCounter += _time;
+        turretBuildCounter += _time; //add the new time
+        
+        placementUI.UpdateChargeBar(turretBuildCounter / turretBuildCounterMax, (int)(100 * turretBuildCounter / turretBuildCounterMax)); //Then, update the UI
+
         if (turretBuildCounter >= turretBuildCounterMax)
         {
 

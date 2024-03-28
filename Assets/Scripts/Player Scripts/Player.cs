@@ -90,7 +90,7 @@ public class Player : MonoBehaviour
             engagedTurret.ChargeUp(_chargeTime);
         }
 
-        if (isSquating && !isEngagedWithTurret && !turretDetector.detectsTurret) //activate the build timer,
+        if (isSquating && !isEngagedWithTurret && !turretDetector.detectsTurret) //activate the build timer, so that the player builds a turret
         {
             float _chargeTime = Time.deltaTime;
             if (buildingPlacement.IterateBuildCounter(_chargeTime)) //passes the charge time to the building manager, which returns true if enough time to build a turret has passed
