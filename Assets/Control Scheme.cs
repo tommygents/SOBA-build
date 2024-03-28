@@ -269,8 +269,8 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""a7b1ccf9-275a-41ca-9142-fe01c34cba16"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": ""Press(pressPoint=0.2,behavior=1)"",
+                    ""path"": ""<Keyboard>/n"",
+                    ""interactions"": ""Press(behavior=1)"",
                     ""processors"": """",
                     ""groups"": ""keyboard playtest"",
                     ""action"": ""Sprint"",
