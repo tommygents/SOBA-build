@@ -23,4 +23,14 @@ public class WaveManager : MonoBehaviour
     {
         
     }
+
+
+    /*
+     * The Wave Manager runs the timer and the count of which wave we're on. It gives information to a UI,
+     * and other components look to it to see where we're at. (Or perhaps they listen for an event.)
+     * 
+     * TODO: Set two timers: one for the break, and one for the wave itself.
+     * TODO: A switch that tells us whether we're in wave or in break
+     * TODO: A UI that 
+     */
 }
