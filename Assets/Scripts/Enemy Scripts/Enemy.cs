@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour
     }
 
     [SerializeField]
-    private GameObject targetGO;
+    private GameObject targetGO; //The game object that the unit moves towards
     public virtual GameObject TargetGO
     {
         get { return targetGO; }
