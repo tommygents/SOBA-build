@@ -38,7 +38,7 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
-    void RotateTowardsTarget()
+    protected virtual void RotateTowardsTarget()
     {
         Vector2 direction = targetGO.transform.position - transform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -48,7 +48,7 @@ public class EnemyMovement : MonoBehaviour
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
-    void MoveTowardsTarget()
+    public virtual void MoveTowardsTarget()
     {
         float distance = Vector2.Distance(transform.position, targetGO.transform.position);
 
@@ -97,4 +97,18 @@ public class EnemyMovement : MonoBehaviour
         if (_target == targetGO)
             targetInRange = false;
     }
+
+    public virtual void Move()
+    {
+
+
+        //TODO: Next, it needs a "close enough" detector, which will tell it to get the next waypoint and head in that direction
+    }
+
+    public virtual void UpdateWaypoint(Waypoint _wp)
+    {
+        
+    }
+
+    
 }

@@ -35,7 +35,7 @@ public class HealthManager : MonoBehaviour
         if (healthBar != null)
         {
             healthBar.fillAmount = (float)HP/MaxHP;
-            Debug.Log("HP: " + HP + " Max HP: " + MaxHP + " Ratio: "+ (HP / MaxHP));
+            //Debug.Log("HP: " + HP + " Max HP: " + MaxHP + " Ratio: "+ (HP / MaxHP));
         }
     }
 

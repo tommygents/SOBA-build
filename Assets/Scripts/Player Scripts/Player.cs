@@ -220,7 +220,7 @@ public class Player : MonoBehaviour
 
     public void LightPress()
     {
-        Debug.Log("light press detected");
+        
 
         controller.gameplay.lightpush.performed += ctx => //when the action is performed, a complete light push
         {

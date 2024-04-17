@@ -29,12 +29,13 @@ public class Enemy : MonoBehaviour
         get { return targetGO; }
         set { targetGO = value; }
     }
-    
+
+    protected Waypoint nextWaypoint; //the next waypoint that the enemy is moving toward
     
     
     public SpriteRenderer spriteRenderer;
     //public bool targetInRange = false;
-    public EnemyMovement movementScript;
+    public EnemyWaypointMovement movementScript;
     [SerializeField] private Player player;
 
 
@@ -43,7 +44,10 @@ public class Enemy : MonoBehaviour
     {
         hp = MaxHP;
         spriteRenderer = GetComponent<SpriteRenderer>();
-        movementScript = GetComponent<EnemyMovement>();
+      
+        
+            movementScript = GetComponentInChildren<EnemyWaypointMovement>();
+        
     }
 
     // Update is called once per frame
@@ -58,6 +62,15 @@ public class Enemy : MonoBehaviour
         {
 
         }
+
+        
+        movementScript.Move();
+
+    }
+
+    public void PassNewWaypoint(Waypoint _wp)
+    {
+        movementScript.UpdateWaypoint(_wp);
     }
 
 
@@ -82,8 +95,24 @@ public class Enemy : MonoBehaviour
         movementScript.TargetExit(_target);
     }
 
-    /*
-     *OnCollision is, for now, geting moved to the playerattack itself. 
+    public void InitializeMovement(WaypointSpawner _sp, Waypoint _wp)
+    {
+        Debug.Log("Setting initial movement");
+        if (_wp == null || _sp == null)
+        {
+            Debug.LogError("Initialization failed: Waypoint or WaypointSpawner is null.");
+            return;
+        }
+        Debug.Log("Spawner: " + _sp.name + "; First Waypoint:" + _wp.name + "; Movement script: " + movementScript.name);    
+        movementScript.nextWaypoint = _wp;
+        movementScript.prevWaypoint = _sp;
+        movementScript.parent = this;
+    }
+
+    
+
+
+    /*OnCollision is, for now, geting moved to the playerattack itself. 
      * 
     public void OnCollisionEnter2D(Collision2D collision)
     {
@@ -97,5 +126,7 @@ public class Enemy : MonoBehaviour
 
 
     }
+
+    
     */
 }

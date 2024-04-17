@@ -13,11 +13,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1082777223845990596, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -10.534974
       objectReference: {fileID: 0}
     - target: {fileID: 1082777223845990596, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.16307837
       objectReference: {fileID: 0}
     - target: {fileID: 1082777223845990596, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -53,7 +53,54 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1082777223845990603, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
       propertyPath: m_Name
-      value: Enemy
+      value: EnemyTD
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6541075175018944363, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
+    - {fileID: 3550729931405003692, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
+--- !u!1 &1544697421326344117 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6703404581102340437, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
+  m_PrefabInstance: {fileID: 5217588314429363936}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5612681900338771486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544697421326344117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eecae5d1ffa261a49bb1bfa1879ff1cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyFront: {fileID: 5217588314686465823}
+  moveSpeed: 5
+  attackRange: 1
+  rotationSpeed: 200
+  targetGO: {fileID: 0}
+  targetInRange: 0
+  attackTimerLength: 2
+  attackTimer: 0
+  damage: 1
+  attackAnimation: {fileID: 0}
+  nextWaypoint: {fileID: 0}
+  prevWaypoint: {fileID: 0}
+  directionWaypoint: 1
+  speed: 1
+  waypointTime: 0
+  lastWaypointTime: 0
+  waypointDetector: {fileID: 0}
+--- !u!114 &5217588314686465823 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 819409407, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
+  m_PrefabInstance: {fileID: 5217588314429363936}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3936b34028e830d4d81c183c787eec13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

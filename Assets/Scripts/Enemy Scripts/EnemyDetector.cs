@@ -28,7 +28,7 @@ public class EnemyDetector : MonoBehaviour
     }
 
 
-    private void OnTriggerEnter2D(Collider2D other)
+    protected virtual void OnTriggerEnter2D(Collider2D other)
     {
         Player _player = other.GetComponent<Player>();
         if(_player != null )
@@ -37,7 +37,7 @@ public class EnemyDetector : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    protected virtual void OnTriggerExit2D(Collider2D other)
     {
         Player _player = other.GetComponent<Player>();
         if (_player != null)

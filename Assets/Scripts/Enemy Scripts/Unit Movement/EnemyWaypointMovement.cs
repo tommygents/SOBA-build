@@ -8,6 +8,7 @@ public class EnemyWaypointMovement : EnemyMovement
 
     public Waypoint nextWaypoint;
     public Waypoint prevWaypoint;
+    public Enemy parent;
 
     public int directionWaypoint = 1;
     public float speed = 1.0f;
@@ -19,7 +20,7 @@ public class EnemyWaypointMovement : EnemyMovement
     // Start is called before the first frame update
     void Start()
     {
-        
+        lastWaypointTime = Time.time;
     }
 
     // Update is called once per frame
@@ -29,10 +30,10 @@ public class EnemyWaypointMovement : EnemyMovement
     }
 
 
-    public void Move()
+    public override void Move()
     {
-        
-        
+
+        RotateTowardsTarget();
         Vector3 startPos = prevWaypoint.transform.position;
 
         Vector3 endPos = nextWaypoint.transform.position;
@@ -42,17 +43,27 @@ public class EnemyWaypointMovement : EnemyMovement
         float totalTimeforPathSeg = pathLength / speed;
         float currentTimeOnPathSeg = Time.time - lastWaypointTime;
         waypointTime += Time.deltaTime * speed;
-        transform.position = Vector2.Lerp(startPos, endPos, currentTimeOnPathSeg / totalTimeforPathSeg);
+        parent.transform.position = Vector2.Lerp(startPos, endPos, currentTimeOnPathSeg / totalTimeforPathSeg);
 
         //TODO: Next, it needs a "close enough" detector, which will tell it to get the next waypoint and head in that direction
     }
 
-    public void UpdateWaypoint(Waypoint _wp)
+    public override void UpdateWaypoint(Waypoint _wp)
 
     {
         prevWaypoint = nextWaypoint;
         nextWaypoint= _wp;
+        lastWaypointTime = Time.time;
 
+    }
+    protected override void RotateTowardsTarget()
+    {
+        Vector2 direction = nextWaypoint.transform.position - transform.position;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle - 90)); // Subtract 90 degrees to align the enemy front
+
+        // Smooth rotation
+        parent.transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
@@ -61,8 +72,9 @@ public class EnemyWaypointMovement : EnemyMovement
         if (_go.GetComponent<Waypoint>() == nextWaypoint)
                 {
             
-            Waypoint _nwp = _go.GetComponent<Waypoint>().getNextWaypoint();
+            Waypoint _nwp = _go.GetComponent<Waypoint>().GetNextWaypoint();
             UpdateWaypoint(_nwp);
         }
     }
+
 }
