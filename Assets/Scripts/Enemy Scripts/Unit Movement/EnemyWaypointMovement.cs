@@ -8,6 +8,7 @@ public class EnemyWaypointMovement : EnemyMovement
 
     public Waypoint nextWaypoint;
     public Waypoint prevWaypoint;
+    public Waypoint currentWaypoint;
     public Enemy parent;
 
     public int directionWaypoint = 1;
@@ -32,28 +33,40 @@ public class EnemyWaypointMovement : EnemyMovement
 
     public override void Move()
     {
-
         RotateTowardsTarget();
         Vector3 startPos = prevWaypoint.transform.position;
-
         Vector3 endPos = nextWaypoint.transform.position;
-        
-        //This section moves the thing along the path at its particular speed
+
+        // Move along the path at a designated speed
         float pathLength = Vector3.Distance(startPos, endPos);
-        float totalTimeforPathSeg = pathLength / speed;
+        float totalTimeForPathSeg = pathLength / speed;
         float currentTimeOnPathSeg = Time.time - lastWaypointTime;
         waypointTime += Time.deltaTime * speed;
-        parent.transform.position = Vector2.Lerp(startPos, endPos, currentTimeOnPathSeg / totalTimeforPathSeg);
+        parent.transform.position = Vector2.Lerp(startPos, endPos, currentTimeOnPathSeg / totalTimeForPathSeg);
 
-        //TODO: Next, it needs a "close enough" detector, which will tell it to get the next waypoint and head in that direction
+      
+        // Check if close enough to consider "reaching" the waypoint
+        if (Vector2.Distance(parent.transform.position, endPos) < 0.1f)  // threshold distance
+        {
+            UpdateWaypoint(nextWaypoint.GetNextWaypoint());
+        }
+      
     }
 
     public override void UpdateWaypoint(Waypoint _wp)
 
     {
-        prevWaypoint = nextWaypoint;
-        nextWaypoint= _wp;
-        lastWaypointTime = Time.time;
+        if (_wp == null)
+        {
+            Debug.Log("at the end of the path");
+            ReachEndOfPath();
+        }
+        else
+        {
+            prevWaypoint = nextWaypoint;
+            nextWaypoint = _wp;
+            lastWaypointTime = Time.time;
+        }
 
     }
     protected override void RotateTowardsTarget()
@@ -70,11 +83,23 @@ public class EnemyWaypointMovement : EnemyMovement
     {
         GameObject _go = collision.gameObject;
         if (_go.GetComponent<Waypoint>() == nextWaypoint)
-                {
-            
-            Waypoint _nwp = _go.GetComponent<Waypoint>().GetNextWaypoint();
-            UpdateWaypoint(_nwp);
+        {
+            // Check the distance before updating to avoid "teleporting"
+            if (Vector2.Distance(transform.position, _go.transform.position) < 0.1f) // Small threshold to trigger the transition
+            {
+                Waypoint _nwp = _go.GetComponent<Waypoint>().GetNextWaypoint();
+                
+
+                    UpdateWaypoint(_nwp);
+                
+            }
         }
+    }
+
+    public void ReachEndOfPath() //The function called when a unit reaches the end of a path
+    {
+        Debug.Log("Destroying object");
+        Destroy(parent.gameObject);
     }
 
 }

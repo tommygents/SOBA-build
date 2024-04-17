@@ -16,6 +16,12 @@ public class Endpoint : Waypoint
         
     }
 
+    public override Waypoint GetNextWaypoint()
+    {
+        // No next waypoint, this is the end.
+        return null;
+    }
+
     /*
      * This is the endpoint, the final waypoint in a path that
      * enemies take.

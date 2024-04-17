@@ -51,6 +51,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1082777223845990602, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
+      propertyPath: moveSpeed
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1082777223845990603, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
       propertyPath: m_Name
       value: EnemyTD
@@ -88,6 +92,8 @@ MonoBehaviour:
   attackAnimation: {fileID: 0}
   nextWaypoint: {fileID: 0}
   prevWaypoint: {fileID: 0}
+  currentWaypoint: {fileID: 0}
+  parent: {fileID: 0}
   directionWaypoint: 1
   speed: 1
   waypointTime: 0
