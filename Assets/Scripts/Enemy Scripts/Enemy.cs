@@ -31,8 +31,15 @@ public class Enemy : MonoBehaviour
     }
 
     protected Waypoint nextWaypoint; //the next waypoint that the enemy is moving toward
-    
-    
+
+    [SerializeField]  private int pointsValue = 5;
+    public virtual int PointsValue
+    {
+        get { return pointsValue; }
+        set { pointsValue = value; }
+    }
+
+
     public SpriteRenderer spriteRenderer;
     //public bool targetInRange = false;
     public EnemyWaypointMovement movementScript;
@@ -77,6 +84,7 @@ public class Enemy : MonoBehaviour
     public void Die()
     {
         //Called when an enemy's hp gets to zero
+        GameEvents.EnemyKilled(PointsValue);
         Destroy(this.gameObject);
     }
 
