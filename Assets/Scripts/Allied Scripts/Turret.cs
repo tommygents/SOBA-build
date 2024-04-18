@@ -51,6 +51,8 @@ public class Turret : MonoBehaviour
         //targetingSystem = GetComponent<TurretDetectionRadius>();
         targetingSystem = GetComponentInChildren<TurretDetectionRadius>();  
         turretUI = GetComponent<TurretUI>();
+
+        turretUI.UpdateChargeBar((chargeBar / chargeBarMax), chargeCount); //initialize the charge bar
     }
 
     // Update is called once per frame
@@ -118,7 +120,7 @@ public class Turret : MonoBehaviour
 
     }
 
-
+    /* This code rotates the turrets on move, but isn't necessary or else should be limited to when the player is in the 
 
     public void RotateManually()
     {
@@ -133,6 +135,7 @@ public class Turret : MonoBehaviour
             transform.Rotate(0, 0, -rotationSpeed * Time.deltaTime);
         }
     }
+    */
 
     #region rotation and shooting
     public void Shoot()

@@ -8,6 +8,7 @@ public class TurretUI : MonoBehaviour
 {
     [SerializeField] private Image chargeBar;
     [SerializeField] private TextMeshProUGUI chargeCount;
+    [SerializeField] private Color[] colors;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +25,7 @@ public class TurretUI : MonoBehaviour
     {
         chargeBar.fillAmount = _amount;
         chargeCount.text = _chargeCount.ToString();
+        chargeBar.color = colors[_chargeCount];
 
     }
 
