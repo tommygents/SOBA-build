@@ -71,12 +71,15 @@ public class EnemyWaypointMovement : EnemyMovement
     }
     protected override void RotateTowardsTarget()
     {
-        Vector2 direction = nextWaypoint.transform.position - transform.position;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle - 90)); // Subtract 90 degrees to align the enemy front
+        if (nextWaypoint != null)
+        {
+            Vector2 direction = nextWaypoint.transform.position - transform.position;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle - 90)); // Subtract 90 degrees to align the enemy front
 
-        // Smooth rotation
-        parent.transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            // Smooth rotation
+            parent.transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
     }
 
     public void OnTriggerEnter2D(Collider2D collision)

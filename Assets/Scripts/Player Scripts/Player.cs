@@ -67,7 +67,7 @@ public class Player : MonoBehaviour
         //move the player according to the tilt of the RingCon
         moveVector = controller.gameplay.move.ReadValue<Vector2>();
         if (invertControls) moveVector.y *= -1;
-        if (!isEngagedWithTurret)
+        if (!isEngagedWithTurret && !isSquating)
         {
             OnMove(moveVector);
         }
@@ -153,7 +153,7 @@ public class Player : MonoBehaviour
     {
         controller.gameplay.Squat.started += ctx =>
         {
-
+            Debug.Log("Player is squatting");
             isSquating = true;
             
 
@@ -175,7 +175,7 @@ public class Player : MonoBehaviour
     {
         controller.gameplay.Run.started += ctx =>
         {
-
+            Debug.Log("Player is running");
             isRunning = true;
             //TODO: Set up the charging
 
@@ -195,16 +195,40 @@ public class Player : MonoBehaviour
     {
         controller.gameplay.heavypush.started += ctx =>
         {
+            /*
             if (ctx.interaction is PressInteraction)
             {
                 Debug.Log("Button pressed"); 
                 holdingPress = true;
                 holdingDuration = 1f; //holdingDuration gets iterated in the Update() function
-            }
+            }*/
         };
 
         controller.gameplay.heavypush.performed += ctx =>
         {
+            
+                /* This is the code that formerly triggered an attack.
+                Vector2 direction = moveVector;
+                Vector3 attackPosition = transform.position + new Vector3(direction.x, direction.y, 0) * attackDistance;
+                PlayerAttack _light = Instantiate(attackSet.lightPush, attackPosition, Quaternion.identity, this.gameObject.transform);
+           */
+                if (turretDetector.detectsTurret && engagedTurret == null)
+                {
+                    EnterTurret(turretDetector.DetectedTurret());
+                }
+                else if (engagedTurret != null)
+                {
+                    ExitTurret(engagedTurret);
+                }
+                else
+                {
+                    isDashing = true;
+                    actualSpeed *= dashSpeed;
+                }
+
+
+            };
+            /*
             Debug.Log("Button released, duration:" + holdingDuration);
 
             PlayerAttack _hp = Instantiate(attackSet.heavyPush, this.transform.position, Quaternion.identity, this.gameObject.transform);
@@ -215,7 +239,8 @@ public class Player : MonoBehaviour
         {
             holdingPress = false;
         };
-
+            */
+        
     }
 
     public void LightPress()

@@ -14,7 +14,7 @@ public class WaypointSpawner : Waypoint
 
     public Enemy[] enemies; //the array of enemies to spawn from
     public int enemyIndex = 0; //the index of the enemy to spawn
-
+    private int waveNum;
 
     // Start is called before the first frame update
     protected override void Start()
@@ -30,11 +30,12 @@ public class WaypointSpawner : Waypoint
         
     }
 
-    private void HandleWaveStart(int waveNumber)
+    private void HandleWaveStart(int _waveNumber)
     {
         //TODO: This is the function that starts a wave going
         Debug.Log("Starting a wave and spawning.");
         StartCoroutine(Spawn());
+        waveNum = _waveNumber;
     }
 
     private void HandleWaveEnd()
@@ -52,7 +53,7 @@ public class WaypointSpawner : Waypoint
         {
             Enemy _en = Instantiate(enemies[enemyIndex], this.transform.position, Quaternion.identity);
             _en.movementScript = _en.GetComponentInChildren<EnemyWaypointMovement>();
-            
+            _en.MoveSpeed = (int)(_en.MoveSpeed * (spawnFactor * waveNum));
             _en.InitializeMovement(this, GetNextWaypoint());
             yield return new WaitForSeconds(spawnInterval); 
         }
