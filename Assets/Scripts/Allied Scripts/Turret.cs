@@ -22,7 +22,7 @@ public class Turret : MonoBehaviour
     public Enemy target; //the target is assigned from the targetingSystem
 
     //Turret charging variables
-    public float chargeBar = 0f; //the amount per level of charge
+    public float chargeBar = 0f; //the amount of charge the bar currently has
     private float chargeBarMax = 10f; //the amount of charge before the bar rolls over
     
     public int chargeCount = 0; //the number of accumulated charges
@@ -186,7 +186,7 @@ public class Turret : MonoBehaviour
     #endregion
 
   
-    //TODO: Player can control the turret directly
+    
     #region charging and engagement
 
    public void ChargeUp(float _time)
