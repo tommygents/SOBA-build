@@ -41,6 +41,8 @@ public class WaypointSpawner : Waypoint
     {
         //TODO: This is the function that ends a wave
         StopAllCoroutines();
+        spawnInterval /= spawnFactor; //at the end of each wave, things get faster
+
     }
 
 
@@ -64,7 +66,7 @@ public class WaypointSpawner : Waypoint
      * 
      * It's also a waypoint.
      * 
-     * There's a number of units to spawn; not sure how to calculate that.
+     * There's a number of units to spawn; not sure how to calculate that. Right now, I guess it just spawns as long as the wave... is
      * Ther
      * 
      */

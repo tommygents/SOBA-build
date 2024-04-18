@@ -10,7 +10,7 @@ public class WaveManager : MonoBehaviour
     public float waveDuration = 60f;
     public float breakDuration = 120f;
 
-    public bool isWaveActive = false;
+    public bool isWaveActive = true;
     public float timer = 0f;
 
     public WaveManagerUI waveUI;

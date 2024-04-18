@@ -536,12 +536,12 @@ MonoBehaviour:
   cooldownLength: 0.05
   target: {fileID: 0}
   chargeBar: 0
-  chargeCount: 3
-  chargeCountMax: 10
-  chargeBonus: 0.05
+  chargeCount: 1
+  chargeCountMax: 5
+  chargeBonus: 0.1
   isCharging: 0
   baseCharge: 0.85
-  sprintBonus: 1.5
+  sprintBonus: 1.75
   playerEngaged: 0
   playerCharging: 0
   player: {fileID: 0}
@@ -598,13 +598,8 @@ MonoBehaviour:
   chargeCount: {fileID: 247161052}
   colors:
   - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 1, g: 0.24572605, b: 0, a: 1}
   - {r: 1, g: 0.52399474, b: 0, a: 1}
-  - {r: 1, g: 0.7820964, b: 0, a: 1}
   - {r: 1, g: 0.96495235, b: 0, a: 1}
-  - {r: 0.814726, g: 1, b: 0, a: 1}
   - {r: 0.09708691, g: 1, b: 0, a: 1}
   - {r: 0, g: 1, b: 0.97836685, a: 1}
-  - {r: 0, g: 0.40661025, b: 1, a: 1}
-  - {r: 0.40916252, g: 0, b: 1, a: 1}
   - {r: 0.90526533, g: 0, b: 1, a: 1}

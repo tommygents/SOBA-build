@@ -16,6 +16,7 @@ public class Turret : MonoBehaviour
     [SerializeField] private TurretUI turretUI;
     //Cooldown variables, so the turret doesn't just vomit bullets
     [SerializeField] private float cooldownLength = .05f; // the length between bullets
+    [SerializeField] private float ammoCost = .05f; //the amount of charge used to fire bullets
     private float cooldownCounter = 0f;
 
 
@@ -146,7 +147,7 @@ public class Turret : MonoBehaviour
             Ammo _ammo = Instantiate(ammunition, transform.position, Quaternion.Euler(0, 0, fireAngle));
             _ammo.MakeAmmo(turretRange, turretBulletVelocity, fireAngle);
             cooldownCounter = cooldownLength;
-            chargeBar -= cooldownLength * (1.2f - (chargeCount * .1f));
+            chargeBar -= ammoCost * (1.2f - (chargeCount * .1f));
             if (chargeBar < 0f)
             {
 
