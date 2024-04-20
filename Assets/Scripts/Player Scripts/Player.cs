@@ -94,7 +94,7 @@ public class Player : MonoBehaviour
             engagedTurret.ChargeUp(_chargeTime);
         }
 
-        if (isSquating && !isEngagedWithTurret && !turretDetector.detectsTurret) //activate the build timer, so that the player builds a turret
+        if (isSquating && !isEngagedWithTurret && turretDetector.CanBuild()) //activate the build timer, so that the player builds a turret
         {
             float _chargeTime = Time.deltaTime;
             if (buildingPlacement.IterateBuildCounter(_chargeTime)) //passes the charge time to the building manager, which returns true if enough time to build a turret has passed
@@ -360,6 +360,17 @@ public class Player : MonoBehaviour
             healthManager.HP += healAmount;
             yield return new WaitForSeconds(1f);
         }
+    }
+
+    public void HidePlayerDuringWave()
+    {
+
+
+    }
+
+    public void ReturnPlayerAfterWave()
+    {
+
     }
 
     #region turret and other building placement

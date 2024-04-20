@@ -6,6 +6,7 @@ public class PlayerTurretDetector : MonoBehaviour
 {
     public bool detectsTurret = false;
     public Turret detectedTurret= null;
+    public bool detectsPath = false;
 
     // Start is called before the first frame update
     void Start()
@@ -25,8 +26,12 @@ public class PlayerTurretDetector : MonoBehaviour
         {
             detectsTurret= true;
             detectedTurret = collision.GetComponent<Turret>();
-        }
+        } 
 
+        if (collision.gameObject.layer == LayerMask.NameToLayer("PathCollider"))
+        {
+            detectsPath = true;
+        }
 
     }
 
@@ -36,11 +41,20 @@ public class PlayerTurretDetector : MonoBehaviour
         {
             detectsTurret= false;
             detectedTurret= collision.GetComponent<Turret>();
+        } 
+        if (collision.gameObject.layer == LayerMask.NameToLayer("PathCollider"))
+        {
+            detectsPath = false;
         }
     }
 
     public Turret DetectedTurret()
     {
         return detectedTurret;
+    }
+
+    public bool CanBuild()
+    {
+        return !(detectsTurret || detectsPath);
     }
 }
