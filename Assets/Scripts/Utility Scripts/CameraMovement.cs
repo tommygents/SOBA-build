@@ -12,17 +12,20 @@ public class CameraMovement : MonoBehaviour
     private Camera cam;
     
     public float moveSpeed;
+    private Vector3 fieldCenter;
+    public bool followingPlayer = true;
 
     void Start()
     {
-
+        fieldCenter = transform.position;
         cam = Camera.main;
         moveSpeed = player.GetComponent<Player>().baseSpeed * 1.5f;
     }
 
     void Update()
     {
-        
+        if (followingPlayer)
+        {
             Vector3 playerViewportPos = cam.WorldToViewportPoint(player.position);
             Vector3 direction = Vector3.zero; // Initialize direction as zero
 
@@ -42,7 +45,7 @@ public class CameraMovement : MonoBehaviour
             {
                 transform.Translate(direction.normalized * moveSpeed * Time.deltaTime, Space.World);
             }
-        
+        }
         /*
         // Check if the player is outside the deadzone
         if (playerViewportPos.x > 0.5f + deadzone.x || playerViewportPos.x < 0.5f - deadzone.x ||
@@ -59,5 +62,19 @@ public class CameraMovement : MonoBehaviour
         }
         */
 
+    }
+
+    
+    public void CenterCameraOnField(int waveNumber)
+    {
+        followingPlayer = false;
+        transform.position = fieldCenter;  // Assuming fieldCenter is a Transform that marks the center of the field
+    }
+
+    public void SetCameraToFollowPlayer(Player _player)
+    {
+        followingPlayer = true;
+        player =_player.transform; // Re-find the player after it's reactivated
+                                                                       // Ensure player is not null and then update camera logic to follow player
     }
 }

@@ -36,6 +36,9 @@ public class Turret : MonoBehaviour
     public bool playerCharging = false;
 
     public Player player;
+    private CameraShake cameraShake;
+    public int cameraShakeInterval = 5;
+    public int cameraShakeCounter = 0;
 
 
 
@@ -43,18 +46,21 @@ public class Turret : MonoBehaviour
      * In the next draft, I want to fix the charge rate so that it charges at a consistent rate but burns down faster
      * 
      */
-   
+
 
 
     // Start is called before the first frame update
     void Start()
     {
-        //targetingSystem = GetComponent<TurretDetectionRadius>();
+        cameraShake = Camera.main.GetComponent<CameraShake>();
+        
         targetingSystem = GetComponentInChildren<TurretDetectionRadius>();  
         turretUI = GetComponent<TurretUI>();
-
-        turretUI.UpdateChargeBar((chargeBar / chargeBarMax), chargeCount); //initialize the charge bar
+        turretUI.chargeCountNum = chargeCountMax;
+        turretUI.UpdateChargeBar((chargeBar / chargeBarMax), chargeCount, false); //initialize the charge bar
     }
+
+    
 
     // Update is called once per frame
     void Update()
@@ -79,24 +85,12 @@ public class Turret : MonoBehaviour
             if (cooldownCounter <= 0f && targetingSystem.enemiesInRange.Contains(target)) //check cooldown timer
             {
                 Shoot();
+                cameraShake.TriggerShake();
             }
         }
         #endregion
 
-        #region charging in update
 
-        
-        /* This code is now handled in the Player script
-      //TODO: Enclose this in code that checks to make sure the player is engaged
-        if (player.isRunning)
-        {
-            float _time = Time.deltaTime;
-            if (player.isSprinting) { _time *= sprintBonus; }
-            ChargeUp(_time);
-        }
-        */
-
-        #endregion
 
         // This code will eventually be replaced by code that checks to see if the turret is occupied
         #region debugging turret 
@@ -121,22 +115,7 @@ public class Turret : MonoBehaviour
 
     }
 
-    /* This code rotates the turrets on move, but isn't necessary or else should be limited to when the player is in the 
-
-    public void RotateManually()
-    {
-        if(Input.GetKey(KeyCode.LeftArrow))
-    {
-            // Rotate left
-            transform.Rotate(0, 0, rotationSpeed * Time.deltaTime);
-        }
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            // Rotate right
-            transform.Rotate(0, 0, -rotationSpeed * Time.deltaTime);
-        }
-    }
-    */
+   
 
     #region rotation and shooting
     public void Shoot()
@@ -190,8 +169,12 @@ public class Turret : MonoBehaviour
     
     #region charging and engagement
 
-   public void ChargeUp(float _time)
+   public void ChargeUp(float _time, bool _sprinting)
     {
+        if ( _sprinting)
+        {
+            _time *= 1.5f;
+        }
         float _chargeRate = baseCharge + (chargeBonus * chargeCount); //apply charge bonus for longer charges
         chargeBar += (_time * _chargeRate); //add to the charge bar
         if (chargeBar > chargeBarMax && chargeCount < chargeCountMax) {
@@ -206,14 +189,26 @@ public class Turret : MonoBehaviour
             } //if the last charge is full, just keep it full
         }
 
-        turretUI.UpdateChargeBar((chargeBar / chargeBarMax), chargeCount); //finally, update the UI element
+        turretUI.UpdateChargeBar((chargeBar / chargeBarMax), chargeCount, _sprinting); //finally, update the UI element
     }
 
-    //TODO: check to see if the player is running
-    //TODO: infrastructure for the player to engage with the turret
+
 
 
 
     #endregion
 
+    public void ShakeCamera()
+    {
+        if (cameraShakeCounter == 0)
+        {
+            cameraShake.TriggerShake();
+            cameraShakeCounter = cameraShakeInterval;
+        }
+
+        else
+        {
+            cameraShakeCounter--;
+        }
+    }
 }

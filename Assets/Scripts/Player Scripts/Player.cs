@@ -35,13 +35,21 @@ public class Player : MonoBehaviour
     public Turret nearbyTurret = null;
     public Turret engagedTurret = null;
     public Vector3 positionBeforeEnteringTurret;
-    [SerializeField] private PlayerTurretDetector turretDetector;
+    [SerializeField] public PlayerTurretDetector turretDetector;
     [SerializeField] private PlayerBuildingPlacement buildingPlacement;
 
     public float dashTimer = 0f;
     public float dashDuration = .25f;
     public float dashSpeed = 3f;
     public bool isDashing = false;
+
+    [SerializeField, HideInInspector] public Vector3 positionBeforeDeactivation;
+
+    public bool isMakingUISelection = false;
+    
+    [SerializeField] public PlayerTurretUI turretUI;
+    public Turret turretToBuild;
+    
 
 //Building placement variables
 
@@ -58,6 +66,7 @@ public class Player : MonoBehaviour
 
         turretDetector = GetComponentInChildren<PlayerTurretDetector>();
         buildingPlacement = GetComponent<PlayerBuildingPlacement>();
+        turretToBuild = buildingPlacement.turrets[buildingPlacement.activeTurretIndex];
 
     }
 
@@ -67,9 +76,14 @@ public class Player : MonoBehaviour
         //move the player according to the tilt of the RingCon
         moveVector = controller.gameplay.move.ReadValue<Vector2>();
         if (invertControls) moveVector.y *= -1;
-        if (!isEngagedWithTurret && !isSquating)
+        if (!isEngagedWithTurret && !isSquating && !isMakingUISelection)
         {
             OnMove(moveVector);
+        } 
+
+        if (isMakingUISelection)
+        {
+            turretUI.UpdateSelection(moveVector.x);
         }
 
         //iterate holdingDuration
@@ -90,8 +104,8 @@ public class Player : MonoBehaviour
         {
            
             float _chargeTime = Time.deltaTime;
-            if (isSprinting) { _chargeTime *= 1.5f; }
-            engagedTurret.ChargeUp(_chargeTime);
+            
+            engagedTurret.ChargeUp(_chargeTime, isSprinting);
         }
 
         if (isSquating && !isEngagedWithTurret && turretDetector.CanBuild()) //activate the build timer, so that the player builds a turret
@@ -99,7 +113,7 @@ public class Player : MonoBehaviour
             float _chargeTime = Time.deltaTime;
             if (buildingPlacement.IterateBuildCounter(_chargeTime)) //passes the charge time to the building manager, which returns true if enough time to build a turret has passed
             {
-                Turret _turret = Instantiate(buildingPlacement.turrets[buildingPlacement.activeTurretIndex], transform.position, Quaternion.identity);
+                Turret _turret = Instantiate(turretToBuild, transform.position, Quaternion.identity);
                 buildingPlacement.ResetBuildCounter();
             }
         }
@@ -140,12 +154,14 @@ public class Player : MonoBehaviour
             actualSpeed = 2f * baseSpeed;
             isRunning = true;
             isSprinting = true;
+            Debug.Log("sprinting");
         };
         controller.gameplay.Sprint.performed += ctx =>
         {
             actualSpeed = baseSpeed;
             isRunning = false;
             isSprinting = false;
+            
         };
     }
 
@@ -276,31 +292,32 @@ public class Player : MonoBehaviour
 
     public void HeavyPull()
     {
-        if (inBaseZone)
-        {
+        
             controller.gameplay.heavypull.started += ctx =>
             {
                 
-                    Debug.Log("Pull detected");
+
                     holdingPull = true;
-                    StartCoroutine(Heal());
-                
+                isMakingUISelection = true;
+                turretUI.ShowTowerSelectionPanel();
+                    
             };
             controller.gameplay.heavypull.performed += ctx =>
             {
                 holdingPull = false;
-                StopCoroutine(Heal());
-                StopCoroutine(Heal());
+                turretToBuild = turretUI.MakeTurretSelection();
+                isMakingUISelection = false;
+           
             };
 
             controller.gameplay.heavypull.canceled += ctx =>
             {
                 holdingPull = false;
-                StopCoroutine(Heal());
-                StopCoroutine(Heal());
+                turretToBuild = turretUI.MakeTurretSelection();
+                isMakingUISelection = false;
             };
 
-        }
+        
     }
     public void Die()
     {
@@ -362,16 +379,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void HidePlayerDuringWave()
-    {
-
-
-    }
-
-    public void ReturnPlayerAfterWave()
-    {
-
-    }
+    
 
     #region turret and other building placement
     //TODO: Player can place turrets by squatting for long enough
@@ -386,4 +394,34 @@ public class Player : MonoBehaviour
 
 
     #endregion
+
+   
+
+    public void HidePlayerDuringWave(int waveNumber)
+    {
+        if (!isEngagedWithTurret)
+        {
+            positionBeforeEnteringTurret = transform.position;
+        }
+        this.gameObject.SetActive(false);  // Deactivate player GameObject
+    }
+
+    public void UpdateLastPosition()
+    {
+        if (!isEngagedWithTurret)
+        {
+            positionBeforeEnteringTurret = transform.position;
+        }
+        
+    }
+
+    public void ResetPositionToLastSaved()
+    {
+        transform.position = positionBeforeEnteringTurret;
+    }
+
+    
+
+
+  
 }
