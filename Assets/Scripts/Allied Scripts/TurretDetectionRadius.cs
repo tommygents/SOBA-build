@@ -54,4 +54,20 @@ public class TurretDetectionRadius : MonoBehaviour
 
     }
 
+    public Enemy GetLargestEnemy() //returns the closest enemy. Worried about a null return where an enemy leaves in the middle of this check
+    {
+        Enemy _closestEnemy = null;
+        List<Enemy> _enemies = enemiesInRange;
+        foreach (Enemy _enemy in _enemies)
+        {
+            if (_closestEnemy == null || _enemy.HP > _closestEnemy.HP)
+            { 
+                _closestEnemy = _enemy;
+            }
+        }
+
+        return _closestEnemy;
+
+    }
+
 }

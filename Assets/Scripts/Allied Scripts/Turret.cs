@@ -7,7 +7,7 @@ public class Turret : MonoBehaviour
 {
 
    [SerializeField] private Ammo ammunition; //assign in the editor, this is what the turret will shoot
-    [SerializeField] private TurretDetectionRadius targetingSystem; //gets assigned in Start()
+    [SerializeField] protected TurretDetectionRadius targetingSystem; //gets assigned in Start()
 
     //Firing variables
     [SerializeField] private float turretRange; // how far the turret can shoot
@@ -50,7 +50,7 @@ public class Turret : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+   protected virtual void Start()
     {
         cameraShake = Camera.main.GetComponent<CameraShake>();
         
@@ -63,7 +63,7 @@ public class Turret : MonoBehaviour
     
 
     // Update is called once per frame
-    void Update()
+   protected virtual void Update()
     {
         //the cooldown timer for the turret
         if (cooldownCounter > 0f)
@@ -197,6 +197,11 @@ public class Turret : MonoBehaviour
 
 
     #endregion
+
+    public virtual void GetTarget()
+    {
+        target = targetingSystem.GetClosestEnemy();
+    }
 
     public void ShakeCamera()
     {

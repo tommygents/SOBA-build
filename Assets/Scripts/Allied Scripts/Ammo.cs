@@ -29,7 +29,7 @@ public class Ammo : PlayerAttack
     }
 
 
-    public void CheckDistance()
+    public virtual void CheckDistance()
     {
         //TODO: if the ammo is outside the turrets radius, it self-destructs
         if (Vector2.Distance(transform.position, startingPosition) > range)
@@ -39,7 +39,7 @@ public class Ammo : PlayerAttack
 
     }
 
-    public void MakeAmmo(float _range, float _speed, float _angle) //Used by the turret to set the range and baseSpeed after instantiation
+    public virtual void MakeAmmo(float _range, float _speed, float _angle) //Used by the turret to set the range and baseSpeed after instantiation
     {
         range = _range;
         speed = _speed;
@@ -51,6 +51,8 @@ public class Ammo : PlayerAttack
         // Set velocity
         GetComponent<Rigidbody2D>().velocity = direction * speed;
     }
+
+    
 
     public void Move()
     {
