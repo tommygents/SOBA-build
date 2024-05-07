@@ -33,6 +33,7 @@ public class EnemyWaypointMovement : EnemyMovement
 
     public override void Move()
     {
+        speed = moveSpeed;
         RotateTowardsTarget();
         Vector3 startPos = prevWaypoint.transform.position;
         Vector3 endPos = nextWaypoint.transform.position;

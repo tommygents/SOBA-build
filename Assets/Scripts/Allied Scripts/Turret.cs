@@ -6,25 +6,25 @@ using UnityEngine;
 public class Turret : MonoBehaviour
 {
 
-   [SerializeField] private Ammo ammunition; //assign in the editor, this is what the turret will shoot
+   [SerializeField] protected Ammo ammunition; //assign in the editor, this is what the turret will shoot
     [SerializeField] protected TurretDetectionRadius targetingSystem; //gets assigned in Start()
 
     //Firing variables
-    [SerializeField] private float turretRange; // how far the turret can shoot
-    [SerializeField] private float turretBulletVelocity; // how fast the bullets move
-    [SerializeField] private float rotationSpeed = 120f; //how fast the turret can rotate towards a target
-    [SerializeField] private TurretUI turretUI;
+    [SerializeField] protected float turretRange; // how far the turret can shoot
+    [SerializeField] protected float turretBulletVelocity; // how fast the bullets move
+    [SerializeField] protected float rotationSpeed = 120f; //how fast the turret can rotate towards a target
+    [SerializeField] protected TurretUI turretUI;
     //Cooldown variables, so the turret doesn't just vomit bullets
-    [SerializeField] private float cooldownLength = .05f; // the length between bullets
-    [SerializeField] private float ammoCost = .05f; //the amount of charge used to fire bullets
-    private float cooldownCounter = 0f;
+    [SerializeField] protected float cooldownLength = .05f; // the length between bullets
+    [SerializeField] protected float ammoCost = .05f; //the amount of charge used to fire bullets
+    protected float cooldownCounter = 0f;
 
 
     public Enemy target; //the target is assigned from the targetingSystem
 
     //Turret charging variables
     public float chargeBar = 0f; //the amount of charge the bar currently has
-    private float chargeBarMax = 10f; //the amount of charge before the bar rolls over
+    protected float chargeBarMax = 10f; //the amount of charge before the bar rolls over
     
     public int chargeCount = 0; //the number of accumulated charges
     public int chargeCountMax = 10; //the most charges that it's possible to accumulate
@@ -77,7 +77,7 @@ public class Turret : MonoBehaviour
         #region targeting and rotation in update
         if ((target == null || !targetingSystem.enemiesInRange.Contains(target)) && targetingSystem.enemiesInRange.Count > 0) //checks to see if there's an enemy in range
         {
-            target = targetingSystem.GetClosestEnemy(); //gets the closest enemy
+            GetTarget(); //gets the closest enemy
         }
         else if (target != null) //if there is a target, check to make sure it's still valid, and then shoot at it
         {
@@ -85,7 +85,7 @@ public class Turret : MonoBehaviour
             if (cooldownCounter <= 0f && targetingSystem.enemiesInRange.Contains(target)) //check cooldown timer
             {
                 Shoot();
-                cameraShake.TriggerShake();
+                
             }
         }
         #endregion
@@ -118,13 +118,14 @@ public class Turret : MonoBehaviour
    
 
     #region rotation and shooting
-    public void Shoot()
+    public virtual void Shoot()
     {
         if (chargeCount > 0 || chargeBar > 0f)
         {
             float fireAngle = transform.eulerAngles.z;
             Ammo _ammo = Instantiate(ammunition, transform.position, Quaternion.Euler(0, 0, fireAngle));
             _ammo.MakeAmmo(turretRange, turretBulletVelocity, fireAngle);
+            cameraShake.TriggerShake();
             cooldownCounter = cooldownLength;
             chargeBar -= ammoCost * (1.2f - (chargeCount * .1f));
             if (chargeBar < 0f)

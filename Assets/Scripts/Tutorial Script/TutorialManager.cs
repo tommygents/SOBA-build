@@ -160,11 +160,11 @@ public class TutorialManager : MonoBehaviour
         NextStep();
         
         ShowCurrentStep(); //turret3
-        yield return new WaitUntil(() => _turret.chargeCount > 1);
+        yield return new WaitUntil(() => _turret.chargeCount > 0);
         NextStep();
         ShowCurrentStep(); //turret4
         yield return new WaitUntil(() => player.isSprinting);
-        yield return new WaitUntil(() => _turret.chargeCount > 2);
+        yield return new WaitUntil(() => _turret.chargeCount > 1);
         NextStep();
         ShowCurrentStep(); //secondturret1
         yield return new WaitUntil(() => !player.isEngagedWithTurret);

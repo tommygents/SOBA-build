@@ -229,10 +229,10 @@ MonoBehaviour:
     _value: {r: 0, g: 0, b: 0, a: 0}
     _isDirty: 0
   <SegmentCount>k__BackingField:
-    _value: 5
+    _value: 3
     _isDirty: 0
   <RemoveSegments>k__BackingField:
-    _value: 0
+    _value: 3
     _isDirty: 0
   <SegmentSpacing>k__BackingField:
     _value: 0.02
@@ -610,19 +610,19 @@ MonoBehaviour:
   rotationSpeed: 120
   turretUI: {fileID: 0}
   cooldownLength: 0.05
-  ammoCost: 0.05
+  ammoCost: 0.1
   target: {fileID: 0}
   chargeBar: 0
-  chargeCount: 1
-  chargeCountMax: 5
+  chargeCount: 0
+  chargeCountMax: 3
   chargeBonus: 0.1
   isCharging: 0
-  baseCharge: 0.85
+  baseCharge: 1
   sprintBonus: 1.75
   playerEngaged: 0
   playerCharging: 0
   player: {fileID: 0}
-  cameraShakeInterval: 5
+  cameraShakeInterval: 10
   cameraShakeCounter: 0
 --- !u!50 &2060385094
 Rigidbody2D:
@@ -675,11 +675,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colors:
   - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 1, g: 0.52399474, b: 0, a: 1}
   - {r: 1, g: 0.96495235, b: 0, a: 1}
-  - {r: 0.09708691, g: 1, b: 0, a: 1}
   - {r: 0, g: 1, b: 0.97836685, a: 1}
-  - {r: 0.90526533, g: 0, b: 1, a: 1}
+  - {r: 0.09708691, g: 1, b: 0, a: 1}
   chargeBar: {fileID: 468816589}
   unitBar: {fileID: 6894503224499299300}
   chargeCountNum: 0

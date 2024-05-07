@@ -47,7 +47,7 @@ public class Enemy : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         hp = MaxHP;
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -105,19 +105,23 @@ public class Enemy : MonoBehaviour
 
     public void InitializeMovement(WaypointSpawner _sp, Waypoint _wp)
     {
-        Debug.Log("Setting initial movement");
+        
         if (_wp == null || _sp == null)
         {
             Debug.LogError("Initialization failed: Waypoint or WaypointSpawner is null.");
             return;
         }
-        Debug.Log("Spawner: " + _sp.name + "; First Waypoint:" + _wp.name + "; Movement script: " + movementScript.name);    
+        
         movementScript.nextWaypoint = _wp;
         movementScript.prevWaypoint = _sp;
         movementScript.parent = this;
+        movementScript.moveSpeed = moveSpeed;
+    }
+    public void PassMovementSpeed()
+    {
+        movementScript.moveSpeed = moveSpeed;
     }
 
-    
 
 
     /*OnCollision is, for now, geting moved to the playerattack itself. 
@@ -134,6 +138,8 @@ public class Enemy : MonoBehaviour
 
 
     }
+
+   
 
     
     */

@@ -63,6 +63,14 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1082777223845990602, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
+      propertyPath: maxHP
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082777223845990602, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
+      propertyPath: moveSpeed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1082777223845990603, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
       propertyPath: m_Name
       value: EnemyTD

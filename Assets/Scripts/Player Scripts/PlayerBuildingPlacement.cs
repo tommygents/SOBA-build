@@ -7,7 +7,7 @@ public class PlayerBuildingPlacement : MonoBehaviour
     public Turret[] turrets;
     public int activeTurretIndex;
     public float turretBuildCounter = 0f;
-    public float turretBuildCounterMax = 10.0f;
+    public float turretBuildCounterMax = 5.0f;
 
 
 
