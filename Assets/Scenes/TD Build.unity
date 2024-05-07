@@ -1548,7 +1548,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shakeDuration: 0.5
-  baseShakeMagnitude: 0.005
+  baseShakeMagnitude: 0.0001
   maxShakeMagnitude: 0.5
 --- !u!1 &615850242
 GameObject:
@@ -2460,7 +2460,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &984079016
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3595,7 +3595,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1747497162
 Transform:
   m_ObjectHideFlags: 0
