@@ -48,6 +48,7 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private bool pressHappened = false;
     private bool inputReceived = false;
     private bool squatStarted = false;
+    private bool pullHappened = false;
     
     void Start()
     {
@@ -172,6 +173,12 @@ public class TutorialManager : MonoBehaviour
         yield return new WaitUntil(() => player.turretDetector.detectsTurret);
         _turret = player.turretDetector.detectedTurret;
         NextStep();
+        pullHappened = false;
+        ShowCurrentStep(); //secondturret1.5
+        yield return new WaitUntil(() => player.turretDetector.detectedTurret);
+        yield return new WaitUntil(()=> squatStarted);
+        yield return new WaitUntil(() => player.turretDetector.detectsTurret);
+        NextStep();
         ShowCurrentStep(); //secondturret2
         yield return new WaitUntil(() => player.isEngagedWithTurret);
 
@@ -213,16 +220,7 @@ public class TutorialManager : MonoBehaviour
     }
 
     */
-    private void performStep(string step)
-    {
-        switch (step)
-        {
-            case "movement1":
-                //what to do when movement1's conditions have been fulfilled
-                return;
-            default: return;
-        }
-    }
+  
     private void EndTutorial()
     {
         tutorialPanel.SetActive(false);
@@ -251,6 +249,11 @@ public class TutorialManager : MonoBehaviour
     private void HandleSquatFinish(InputAction.CallbackContext context)
     {
         squatStarted = false;
+    }
+
+    private void HandlePull(InputAction.CallbackContext context)
+    {
+
     }
     private void DisplayPressAnimation()
     {

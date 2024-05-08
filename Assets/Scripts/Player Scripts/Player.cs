@@ -110,6 +110,8 @@ public class Player : MonoBehaviour
 
         if (isSquating && !isEngagedWithTurret && turretDetector.CanBuild()) //activate the build timer, so that the player builds a turret
         {
+            if (turretSelectionActive) 
+                { EndTurretSelectionUI(); }
             float _chargeTime = Time.deltaTime;
             if (buildingPlacement.IterateBuildCounter(_chargeTime)) //passes the charge time to the building manager, which returns true if enough time to build a turret has passed
             {
@@ -129,6 +131,14 @@ public class Player : MonoBehaviour
             }
         }
 
+        if (turretSelectionActive)
+        {
+            turretSelectionTimer += Time.deltaTime;
+            if (turretSelectionTimer > turretSelectionTimeOut)
+            {
+                EndTurretSelectionUI();
+            }
+        }
 
 
         if (Input.GetKeyDown(KeyCode.R))  // Reloads the current scene
@@ -296,25 +306,26 @@ public class Player : MonoBehaviour
             controller.gameplay.heavypull.started += ctx =>
             {
                 
-
+                /*
                     holdingPull = true;
                 isMakingUISelection = true;
                 turretUI.ShowTowerSelectionPanel();
+                */
                     
             };
             controller.gameplay.heavypull.performed += ctx =>
             {
-                holdingPull = false;
-                turretToBuild = turretUI.MakeTurretSelection();
-                isMakingUISelection = false;
+                BeginTurretSelectionUI();
            
             };
 
             controller.gameplay.heavypull.canceled += ctx =>
             {
+                /*
                 holdingPull = false;
                 turretToBuild = turretUI.MakeTurretSelection();
                 isMakingUISelection = false;
+                */
             };
 
         
@@ -379,24 +390,25 @@ public class Player : MonoBehaviour
         }
     }
 
-    
+    public bool turretSelectionActive = false;
+    public float turretSelectionTimer = 0f;
+    public float turretSelectionTimeOut = 1.5f;
 
-    #region turret and other building placement
-    //TODO: Player can place turrets by squatting for long enough
-    /*
-     * This involves registering that a player has squatted, checking that there's no turret in the way, showing the player's squat progress,
-     * and then placing a turret that the player immediately enters.
-     * 
-     * 
-     */
+    public void BeginTurretSelectionUI()
+    {
+        turretSelectionActive = true;
+        turretSelectionTimer = 0f;
+        turretUI.ShowTowerSelectionPanel();
+        turretUI.IterateSelection();
 
-
-
-
-    #endregion
-
+    }
    
-
+    public void EndTurretSelectionUI()
+    {
+        turretSelectionActive = false;
+        turretToBuild = turretUI.MakeTurretSelection();
+        
+    }
     public void HidePlayerDuringWave(int waveNumber)
     {
         if (!isEngagedWithTurret)
