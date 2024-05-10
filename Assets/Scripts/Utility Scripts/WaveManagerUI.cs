@@ -11,6 +11,7 @@ public class WaveManagerUI : MonoBehaviour
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI labelText;
     public TextMeshProUGUI waveText;
+    public GameObject WaveLayer;
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +49,11 @@ public class WaveManagerUI : MonoBehaviour
     public void waveNumberUI(int _wave)
     {
         waveText.text = _wave.ToString();
+    }
+
+    public void TurnOffWaveLayer()
+    {
+        WaveLayer.SetActive(false);
     }
 
 }

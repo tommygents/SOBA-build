@@ -98,6 +98,15 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""88cee8ae-44ac-48f3-93e6-2fa5e4b8a456"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -320,6 +329,28 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                     ""action"": ""Squat"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d88422cb-3435-45f7-a7ad-866ce220b816"",
+                    ""path"": ""<XInputController>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Ringcon play"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2c6b3468-b3ce-47b3-aa91-032e3dce57cb"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard playtest"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -347,6 +378,7 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
         m_gameplay_Sprint = m_gameplay.FindAction("Sprint", throwIfNotFound: true);
         m_gameplay_Run = m_gameplay.FindAction("Run", throwIfNotFound: true);
         m_gameplay_Squat = m_gameplay.FindAction("Squat", throwIfNotFound: true);
+        m_gameplay_Pause = m_gameplay.FindAction("Pause", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -414,6 +446,7 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
     private readonly InputAction m_gameplay_Sprint;
     private readonly InputAction m_gameplay_Run;
     private readonly InputAction m_gameplay_Squat;
+    private readonly InputAction m_gameplay_Pause;
     public struct GameplayActions
     {
         private @ControlScheme m_Wrapper;
@@ -426,6 +459,7 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
         public InputAction @Sprint => m_Wrapper.m_gameplay_Sprint;
         public InputAction @Run => m_Wrapper.m_gameplay_Run;
         public InputAction @Squat => m_Wrapper.m_gameplay_Squat;
+        public InputAction @Pause => m_Wrapper.m_gameplay_Pause;
         public InputActionMap Get() { return m_Wrapper.m_gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -459,6 +493,9 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                 @Squat.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSquat;
                 @Squat.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSquat;
                 @Squat.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSquat;
+                @Pause.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnPause;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -487,6 +524,9 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
                 @Squat.started += instance.OnSquat;
                 @Squat.performed += instance.OnSquat;
                 @Squat.canceled += instance.OnSquat;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
         }
     }
@@ -519,5 +559,6 @@ public partial class @ControlScheme : IInputActionCollection2, IDisposable
         void OnSprint(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnSquat(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
 }

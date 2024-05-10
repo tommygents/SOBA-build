@@ -81,7 +81,7 @@ public class Turret : MonoBehaviour
         }
         else if (target != null) //if there is a target, check to make sure it's still valid, and then shoot at it
         {
-            RotateTowardsTarget();
+            RotateTowardsTargetPredictively();
             if (cooldownCounter <= 0f && targetingSystem.enemiesInRange.Contains(target)) //check cooldown timer
             {
                 Shoot();
@@ -164,13 +164,34 @@ public class Turret : MonoBehaviour
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         }
     }
+
+    void RotateTowardsTargetPredictively() // Update this method to rotate towards the predicted position
+    {
+        if (target != null)
+        {
+            Vector2 targetPosition = target.transform.position;
+            Vector2 targetVelocity = target.velocity;
+            float distance = Vector2.Distance(transform.position, targetPosition);
+            float timeToHit = distance / turretBulletVelocity;
+
+            Vector2 predictedPosition = targetPosition + targetVelocity * timeToHit;
+
+            Vector2 direction = predictedPosition - (Vector2)transform.position;
+            direction.Normalize();
+
+            float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // Adjust if your turret's default orientation is not up
+            Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
+
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        }
+    }
     #endregion
 
-  
-    
+
+
     #region charging and engagement
 
-   public void ChargeUp(float _time, bool _sprinting)
+    public void ChargeUp(float _time, bool _sprinting)
     {
         if ( _sprinting)
         {

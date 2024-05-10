@@ -39,6 +39,9 @@ public class Enemy : MonoBehaviour
         set { pointsValue = value; }
     }
 
+    public Vector2 previousPosition;
+    public Vector2 currentPosition;
+    public Vector2 velocity;
 
     public SpriteRenderer spriteRenderer;
     //public bool targetInRange = false;
@@ -72,7 +75,9 @@ public class Enemy : MonoBehaviour
 
         
         movementScript.Move();
-
+        currentPosition = transform.position;
+        velocity = (currentPosition - previousPosition) / Time.deltaTime;
+        previousPosition = currentPosition;
     }
 
     public void PassNewWaypoint(Waypoint _wp)

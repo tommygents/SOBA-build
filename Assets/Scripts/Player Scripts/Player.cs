@@ -49,6 +49,8 @@ public class Player : MonoBehaviour
     
     [SerializeField] public PlayerTurretUI turretUI;
     public Turret turretToBuild;
+
+    public GameManager gameManager;
     
 
 //Building placement variables
@@ -155,7 +157,24 @@ public class Player : MonoBehaviour
     {
         
         transform.Translate(_vector2 * actualSpeed * Time.deltaTime);
-    }
+        Vector2 camSize = GetCameraBounds();
+        Camera mainCamera = Camera.main;
+        Vector2 camPosition = mainCamera.transform.position;
+
+        float minX = camPosition.x - camSize.x / 2;
+        float maxX = camPosition.x + camSize.x / 2;
+        float minY = camPosition.y - camSize.y / 2;
+        float maxY = camPosition.y + camSize.y / 2;
+
+        // Assuming your player's position is updated in some way here
+        Vector2 playerPosition = transform.position;
+
+        // Clamping the player's position
+        playerPosition.x = Mathf.Clamp(playerPosition.x, minX, maxX);
+        playerPosition.y = Mathf.Clamp(playerPosition.y, minY, maxY);
+
+        transform.position = playerPosition;  
+}
 
     public void Sprint()
     {
@@ -315,6 +334,7 @@ public class Player : MonoBehaviour
             };
             controller.gameplay.heavypull.performed += ctx =>
             {
+                if (!gameManager.isPaused)
                 BeginTurretSelectionUI();
            
             };
@@ -411,11 +431,14 @@ public class Player : MonoBehaviour
     }
     public void HidePlayerDuringWave(int waveNumber)
     {
-        if (!isEngagedWithTurret)
+        
+        if (isEngagedWithTurret)
         {
-            positionBeforeEnteringTurret = transform.position;
+            ExitTurret(engagedTurret);
+            
         }
-        this.gameObject.SetActive(false);  // Deactivate player GameObject
+        positionBeforeEnteringTurret = transform.position;
+        //this.gameObject.SetActive(false);  // Deactivate player GameObject
     }
 
     public void UpdateLastPosition()
@@ -432,8 +455,21 @@ public class Player : MonoBehaviour
         transform.position = positionBeforeEnteringTurret;
     }
 
-    
+    public Vector2 GetCameraBounds()
+    {
+        Camera mainCamera = Camera.main;
+        float camHeight = 2f * mainCamera.orthographicSize;
+        float camWidth = camHeight * mainCamera.aspect;
+
+        Vector2 camPosition = mainCamera.transform.position;
+        float leftBound = camPosition.x - camWidth / 2f;
+        float rightBound = camPosition.x + camWidth / 2f;
+        float lowerBound = camPosition.y - camHeight / 2f;
+        float upperBound = camPosition.y + camHeight / 2f;
+
+        return new Vector2(camWidth, camHeight);
+    }
 
 
-  
+
 }

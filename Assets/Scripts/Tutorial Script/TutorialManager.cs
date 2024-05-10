@@ -32,7 +32,7 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private Animation ringRoll;
     [SerializeField] private Animator ringAnimator;
 
-    public bool tutorialEnabled = true; // Controls whether the tutorial is active or not
+    public bool tutorialEnabled; // Controls whether the tutorial is active or not
 
     private List<TutorialStep> steps;
     private int currentStepIndex = 0;
@@ -56,19 +56,20 @@ public class TutorialManager : MonoBehaviour
 
         controller.gameplay.Enable();
 
-        
 
+        tutorialEnabled = SceneLoader.Instance.TutorialEnabled;
         if (tutorialEnabled)
         {
             LoadTutorialText();
-            
+            StartCoroutine("Tutorial");
         }
         else
         {
             tutorialPanel.SetActive(false);
+            creviceLocation.gameObject.SetActive(false);
         }
 
-        StartCoroutine("Tutorial");
+        
     }
 
     private void LoadTutorialText()
@@ -119,6 +120,7 @@ public class TutorialManager : MonoBehaviour
         inputManager.OnSquatStart += HandleSquatStart;
         inputManager.OnSquatEnd += HandleSquatFinish;
         ShowCurrentStep(); //introduction
+        PlayerPrefs.SetInt("Tutorial", 1);
         yield return new WaitForSeconds(8f);
         NextStep();
         ShowCurrentStep(); //movement1
@@ -169,9 +171,9 @@ public class TutorialManager : MonoBehaviour
         NextStep();
         ShowCurrentStep(); //secondturret1
         yield return new WaitUntil(() => !player.isEngagedWithTurret);
-        yield return new WaitUntil(() => squatStarted);
-        yield return new WaitUntil(() => player.turretDetector.detectsTurret);
-        _turret = player.turretDetector.detectedTurret;
+        
+        
+        
         NextStep();
         pullHappened = false;
         ShowCurrentStep(); //secondturret1.5
@@ -185,21 +187,8 @@ public class TutorialManager : MonoBehaviour
         yield return new WaitUntil(() => _turret.chargeCount > 1);
         NextStep();
         ShowCurrentStep(); //wavestarting
-        //TODO: trigger the wave
 
-
-
-
-
-
-
-
-        //Now, explain the turret
-
-
-
-
-
+       
 
         EndTutorial();
     }
@@ -225,6 +214,7 @@ public class TutorialManager : MonoBehaviour
     {
         tutorialPanel.SetActive(false);
         tutorialEnabled = false;
+        PlayerPrefs.SetInt("Tutorial", 1);
     }
 
     // Update or FixedUpdate could be used to trigger tutorial steps based on game conditions

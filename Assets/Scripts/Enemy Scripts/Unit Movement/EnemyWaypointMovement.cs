@@ -18,6 +18,8 @@ public class EnemyWaypointMovement : EnemyMovement
 
     public Collider2D waypointDetector;
 
+    
+
     // Start is called before the first frame update
     void Start()
     {

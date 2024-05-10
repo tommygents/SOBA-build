@@ -18,8 +18,11 @@ public class WaveManager : MonoBehaviour
 
     public static event Action OnWaveEnd;
     public static event Action<int> OnWaveStart; //passes the number of the wave to delegates
+    public static event Action OnEndGame;
 
 
+    public bool gameOver = false;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -31,7 +34,7 @@ public class WaveManager : MonoBehaviour
     {
         
         
-        if (timer <= 0f)
+        if (timer <= 0f && !gameOver)
         {
             if (isWaveActive)
             {
@@ -52,13 +55,19 @@ public class WaveManager : MonoBehaviour
             
         }
 
-        //TODO: Update the GUI
+        
         waveUI.UpdateTimer(timer);
 
 
     }
 
-    
+    void OnDestroy()
+    {
+        OnWaveEnd = null;
+        OnWaveStart = null;
+        OnEndGame = null;
+    }
+
 
     /*
      * The Wave Manager runs the timer and the count of which wave we're on. It gives information to a UI,
@@ -76,15 +85,25 @@ public class WaveManager : MonoBehaviour
         isWaveActive = false;
         OnWaveEnd?.Invoke();
         waveNumber++;
-        //TODO: Let the UI know to switch over to a break session
-        //TODO: Make UI update to reflect that it's an upcoming wave
-        timer = breakDuration; //Start the break timer
-        waveUI.isWaveActiveUI(isWaveActive);
-        waveUI.waveNumberUI(waveNumber);
+
+        if (waveNumber < 4)
+        {
+            timer = breakDuration; //Start the break timer
+            waveUI.isWaveActiveUI(isWaveActive);
+            waveUI.waveNumberUI(waveNumber);
+        }
+        else
+        {
+            gameOver = true;
+            waveUI.gameObject.SetActive(false);
+            OnEndGame?.Invoke(); }
+
     }
 
     public void StartWave()
     {
+
+        
         isWaveActive = true;
         OnWaveStart?.Invoke(waveNumber);
         timer = waveDuration; //Start the wave timer
@@ -94,6 +113,8 @@ public class WaveManager : MonoBehaviour
 
 
     }
+
+    
 
     
 }
