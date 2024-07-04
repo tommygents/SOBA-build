@@ -33,8 +33,7 @@ public class WaypointSpawner : Waypoint
 
     private void HandleWaveStart(int _waveNumber)
     {
-        //TODO: This is the function that starts a wave going
-        Debug.Log("Starting a wave and spawning.");
+        
         StartCoroutine(Spawn());
         if (_waveNumber > 1)
         {
@@ -52,7 +51,7 @@ public class WaypointSpawner : Waypoint
 
     }
 
-
+    
     public IEnumerator Spawn()
     {
         while (true)
@@ -61,7 +60,7 @@ public class WaypointSpawner : Waypoint
             _en.movementScript = _en.GetComponentInChildren<EnemyWaypointMovement>();
             _en.MoveSpeed = (int)(_en.MoveSpeed * (Mathf.Pow( spawnFactor,waveNum)));
             _en.InitializeMovement(this, GetNextWaypoint());
-            yield return new WaitForSeconds(spawnInterval); 
+            yield return new WaitForSeconds(Random.Range(spawnInterval * .8f, spawnInterval * 1.2f)); 
         }
     }
 
@@ -73,7 +72,7 @@ public class WaypointSpawner : Waypoint
             _en.movementScript = _en.GetComponentInChildren<EnemyWaypointMovement>();
             _en.MoveSpeed = (int)(_en.MoveSpeed * (spawnFactor * waveNum));
             _en.InitializeMovement(this, GetNextWaypoint());
-            yield return new WaitForSeconds(bigSpawnInterval);
+            yield return new WaitForSeconds(Random.Range(bigSpawnInterval * .8f, bigSpawnInterval * 1.2f));
         }
     }
     //

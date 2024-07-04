@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
         get { return moveSpeed; }
         set { moveSpeed = value; }
     }
+    [SerializeField] protected float incrementalDamage = 0f;
 
     [SerializeField]
     private GameObject targetGO; //The game object that the unit moves towards
@@ -47,6 +48,8 @@ public class Enemy : MonoBehaviour
     //public bool targetInRange = false;
     public EnemyWaypointMovement movementScript;
     [SerializeField] private Player player;
+    public ParticleSystem deathParticles;
+    public AudioClip deathSound;
 
 
     // Start is called before the first frame update
@@ -57,6 +60,7 @@ public class Enemy : MonoBehaviour
       
         
             movementScript = GetComponentInChildren<EnemyWaypointMovement>();
+       
         
     }
 
@@ -89,15 +93,28 @@ public class Enemy : MonoBehaviour
     public void Die()
     {
         //Called when an enemy's hp gets to zero
-        GameEvents.EnemyKilled(PointsValue);
-        Destroy(this.gameObject);
+        ScoreThisEnemy();
+        ParticleSystem _dp = Instantiate(deathParticles, this.transform.position, Quaternion.identity);
+        _dp.Play();
+        AudioManager.Instance.enemyAudio.clip = deathSound;
+        AudioManager.Instance.enemyAudio.Play();
+        
+        RemoveThisEnemy();
+
     }
 
-    public void Attack(GameObject _target)
+    private void ScoreThisEnemy()
     {
-        //TODO: needs some sort of UI to let us know the attack is happening
-
+        GameEvents.EnemyKilled(PointsValue);
     }
+
+    private void RemoveThisEnemy()
+    {
+    GameEvents.EnemyDestroyed();
+    Destroy(this.gameObject);
+    }
+
+
 
     public void TargetEnter(GameObject _target)
     {
@@ -120,32 +137,30 @@ public class Enemy : MonoBehaviour
         movementScript.nextWaypoint = _wp;
         movementScript.prevWaypoint = _sp;
         movementScript.parent = this;
-        movementScript.moveSpeed = moveSpeed;
+        PassMovementSpeed();
     }
     public void PassMovementSpeed()
     {
-        movementScript.moveSpeed = moveSpeed;
+        movementScript.speed = moveSpeed;
     }
 
-
-
-    /*OnCollision is, for now, geting moved to the playerattack itself. 
-     * 
-    public void OnCollisionEnter2D(Collision2D collision)
+    public void TakeIncrementalDamage(float _damage)
     {
-        GameObject _go = collision.gameObject;
-        if (_go.GetComponent<PlayerAttack>() != null)
+        int _intDamage = (int)_damage;
+        float _floatDamage = _damage - _intDamage;
+        hp -= _intDamage;
+        incrementalDamage += _floatDamage;
+        if (incrementalDamage >= 1f)
         {
-            //Code here for taking damage from an attack
-        PlayerAttack _pa = _go.GetComponent<PlayerAttack>();
-
+            hp--;
+            incrementalDamage -= 1f;
         }
 
-
     }
 
-   
+    public void SetMovementPenalty(float _penalty)
+    {
+        movementScript.speed = moveSpeed * (1 - _penalty);
+    }
 
-    
-    */
 }

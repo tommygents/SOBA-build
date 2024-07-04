@@ -8,7 +8,7 @@ public class PlayerBuildingPlacement : MonoBehaviour
     public int activeTurretIndex;
     public float turretBuildCounter = 0f;
     public float turretBuildCounterMax = 5.0f;
-
+    public Turret currentTurret;
 
 
     [SerializeField] private PlayerBuildingPlacementUI placementUI;
@@ -42,7 +42,7 @@ public class PlayerBuildingPlacement : MonoBehaviour
         turretBuildCounter += _time; //add the new time
         
         placementUI.UpdateChargeBar(turretBuildCounter / turretBuildCounterMax, (int)(100 * turretBuildCounter / turretBuildCounterMax)); //Then, update the UI
-
+        
         if (turretBuildCounter >= turretBuildCounterMax)
         {
 

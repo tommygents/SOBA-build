@@ -8,12 +8,14 @@ public class Turret : MonoBehaviour
 
    [SerializeField] protected Ammo ammunition; //assign in the editor, this is what the turret will shoot
     [SerializeField] protected TurretDetectionRadius targetingSystem; //gets assigned in Start()
+     [SerializeField] protected TurretUI turretUI;
 
     //Firing variables
     [SerializeField] protected float turretRange; // how far the turret can shoot
     [SerializeField] protected float turretBulletVelocity; // how fast the bullets move
     [SerializeField] protected float rotationSpeed = 120f; //how fast the turret can rotate towards a target
-    [SerializeField] protected TurretUI turretUI;
+   
+
     //Cooldown variables, so the turret doesn't just vomit bullets
     [SerializeField] protected float cooldownLength = .05f; // the length between bullets
     [SerializeField] protected float ammoCost = .05f; //the amount of charge used to fire bullets
@@ -29,6 +31,7 @@ public class Turret : MonoBehaviour
     public int chargeCount = 0; //the number of accumulated charges
     public int chargeCountMax = 10; //the most charges that it's possible to accumulate
     public float chargeBonus = .05f; //the bonus for having lots of charges
+    protected float maxCharge;
     public bool isCharging = false;
     public float baseCharge = .85f; //the starting charge rate: .8 seconds for each second running
     public float sprintBonus = 1.5f;//the rate charging happens when the player is sprinting
@@ -57,7 +60,8 @@ public class Turret : MonoBehaviour
         targetingSystem = GetComponentInChildren<TurretDetectionRadius>();  
         turretUI = GetComponent<TurretUI>();
         turretUI.chargeCountNum = chargeCountMax;
-        turretUI.UpdateChargeBar((chargeBar / chargeBarMax), chargeCount, false); //initialize the charge bar
+        turretUI.UpdateChargeBar(ChargeBarFullPercentage(), chargeCount, false); //initialize the charge bar
+        maxCharge = chargeBarMax * chargeCountMax;
     }
 
     
@@ -66,23 +70,20 @@ public class Turret : MonoBehaviour
    protected virtual void Update()
     {
         //the cooldown timer for the turret
-        if (cooldownCounter > 0f)
-        {
-            cooldownCounter -= Time.deltaTime;
-        }
+    IterateCooldownCounter();
 
 
 
 
         #region targeting and rotation in update
-        if ((target == null || !targetingSystem.enemiesInRange.Contains(target)) && targetingSystem.enemiesInRange.Count > 0) //checks to see if there's an enemy in range
+        if (NeedsTarget() && EnemyInRange()) //if the turret needs a target and there's an enemy in range, get the target
         {
             GetTarget(); //gets the closest enemy
         }
         else if (target != null) //if there is a target, check to make sure it's still valid, and then shoot at it
         {
             RotateTowardsTargetPredictively();
-            if (cooldownCounter <= 0f && targetingSystem.enemiesInRange.Contains(target)) //check cooldown timer
+            if (ReadyToShoot()) //check to make sure the turret is ready to shoot
             {
                 Shoot();
                 
@@ -92,25 +93,7 @@ public class Turret : MonoBehaviour
 
 
 
-        // This code will eventually be replaced by code that checks to see if the turret is occupied
-        #region debugging turret 
-        //this is the code for manually operating the turret
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            // Rotate left
-            transform.Rotate(0, 0, rotationSpeed * Time.deltaTime);
-        }
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            // Rotate right
-            transform.Rotate(0, 0, -rotationSpeed * Time.deltaTime);
-        }
-        if (Input.GetKey(KeyCode.Space) && cooldownCounter <= 0f)
-        {
-            Shoot();
-        }
 
-        #endregion
 
 
     }
@@ -120,32 +103,48 @@ public class Turret : MonoBehaviour
     #region rotation and shooting
     public virtual void Shoot()
     {
-        if (chargeCount > 0 || chargeBar > 0f)
-        {
+        
             float fireAngle = transform.eulerAngles.z;
             Ammo _ammo = Instantiate(ammunition, transform.position, Quaternion.Euler(0, 0, fireAngle));
             _ammo.MakeAmmo(turretRange, turretBulletVelocity, fireAngle);
             cameraShake.TriggerShake();
             cooldownCounter = cooldownLength;
-            chargeBar -= ammoCost * (1.2f - (chargeCount * .1f));
-            if (chargeBar < 0f)
-            {
-
-                if (chargeCount == 0)
-                {
-                    chargeBar = 0f;
-                }
-                else
-                {
-                    chargeCount--;
-                    chargeBar = chargeBarMax;
-                }
-                
-            }
-            turretUI.UpdateChargeBar((chargeBar / chargeBarMax), chargeCount);
-        }
+            DecrementChargeBar(GetAmmoCost());
+            turretUI.UpdateChargeBar(ChargeBarFullPercentage(), chargeCount);
+        
         //if the turret is pointing at an enemy, fire at it
     }
+
+
+protected virtual float GetAmmoCost()
+{
+    return ammoCost * (1.2f - (chargeCount * .1f));
+}
+protected virtual void DecrementChargeBar(float _usedcharge)
+    {
+        chargeBar -= _usedcharge;
+        DecrementChargeCount();
+    }
+
+protected virtual void DecrementChargeCount()
+    {
+        if (ChargeBarEmpty())
+        {
+
+            if (chargeCount == 0)
+            {
+                chargeBar = 0f;
+            }
+            else
+            {
+                chargeCount--;
+                chargeBar = chargeBarMax;
+            }
+
+        }
+    }
+
+  
 
 
     void RotateTowardsTarget() //rotates toward a target
@@ -191,8 +190,9 @@ public class Turret : MonoBehaviour
 
     #region charging and engagement
 
-    public void ChargeUp(float _time, bool _sprinting)
+    public virtual void ChargeUp(bool _sprinting)
     {
+        float _time = Time.deltaTime;
         if ( _sprinting)
         {
             _time *= 1.5f;
@@ -237,5 +237,59 @@ public class Turret : MonoBehaviour
         {
             cameraShakeCounter--;
         }
+    }
+
+    public virtual float GetTargetingRadius()
+    {
+       return targetingSystem.GetTargetingRadius();
+    }
+
+public virtual void ShowTargetingArea(Transform _origin)
+{
+
+}
+    public float ChargeBarFullPercentage()
+    {
+        return chargeBar / chargeBarMax;
+    }
+
+
+
+    protected virtual bool NeedsTarget()
+    {
+        return target == null || !targetingSystem.enemiesInRange.Contains(target);
+    }
+    protected virtual bool EnemyInRange()
+    {
+        return targetingSystem.enemiesInRange.Count > 0;
+    }
+
+    protected virtual bool ShootCooldownOver()
+    {
+        return cooldownCounter <= 0f;
+    }
+
+
+    protected virtual bool HasCharge()
+    {
+        return chargeBar > 0f || chargeCount > 0;
+    }
+
+    protected virtual bool ChargeBarEmpty()
+    {
+        return chargeBar <= 0f;
+    }
+
+    protected virtual void IterateCooldownCounter()
+    {
+        if (!ShootCooldownOver())
+        {
+            cooldownCounter -= Time.deltaTime;
+        }
+    }
+
+    protected virtual bool ReadyToShoot()
+    {
+        return ShootCooldownOver() && targetingSystem.enemiesInRange.Contains(target) && HasCharge();
     }
 }

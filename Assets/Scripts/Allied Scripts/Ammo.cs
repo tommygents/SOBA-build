@@ -24,7 +24,7 @@ public class Ammo : PlayerAttack
     protected override void Update()
     {
         base.Update();
-        Move();
+        
         CheckDistance();
     }
 
@@ -54,10 +54,6 @@ public class Ammo : PlayerAttack
 
     
 
-    public void Move()
-    {
-        //TODO: bullets move
-    }
 
     public void SetDirection(float angle)
     {

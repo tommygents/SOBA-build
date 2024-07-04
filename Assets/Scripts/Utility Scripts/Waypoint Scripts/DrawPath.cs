@@ -13,7 +13,7 @@ public class DrawPath : MonoBehaviour
 
     private List<Vector3[]> paths = new List<Vector3[]>();
 
-    void Start()
+    void Awake()
     {
         pathLayer = LayerMask.NameToLayer("PathCollider");
         WaypointSpawner spawner = GetComponent<WaypointSpawner>();

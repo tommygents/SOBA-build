@@ -58,7 +58,7 @@ public class ScoreManager : MonoBehaviour
     public void ScorePoints(int _points)
     {
         score += _points;
-        scoreText.text = "Score: " + score.ToString();
+        scoreText.text = score.ToString();
 
     }
 

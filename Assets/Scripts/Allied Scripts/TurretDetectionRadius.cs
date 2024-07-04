@@ -6,10 +6,10 @@ public class TurretDetectionRadius : MonoBehaviour
 {
     [SerializeField] private Turret turret;
     public List<Enemy> enemiesInRange;
-    private CircleCollider2D circleCollider;
+    [SerializeField] protected CircleCollider2D circleCollider;
     public Enemy target; //the enemy being targeted. Determined below in a function. 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
      turret = GetComponent<Turret>();
      enemiesInRange = new List<Enemy>();
@@ -17,12 +17,12 @@ public class TurretDetectionRadius : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    protected virtual void OnTriggerEnter2D(Collider2D other)
     {
         if (other.GetComponent<Enemy>() != null)
         {
@@ -30,7 +30,7 @@ public class TurretDetectionRadius : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    protected virtual void OnTriggerExit2D(Collider2D other)
     {
         if (other.GetComponent<Enemy>() != null)
         {
@@ -69,5 +69,14 @@ public class TurretDetectionRadius : MonoBehaviour
         return _closestEnemy;
 
     }
+
+    public float GetTargetingRadius()
+    {
+        if (circleCollider != null)
+            return circleCollider.radius;
+
+        else return 0f;
+    }
+
 
 }

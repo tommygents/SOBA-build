@@ -12,6 +12,7 @@ public class PlayerBuildingPlacementUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI chargeCount;
     [SerializeField] private Canvas chargeUICanvas;
     [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private GameObject radiusCircle;
 
 
     // Start is called before the first frame update
@@ -39,10 +40,22 @@ public class PlayerBuildingPlacementUI : MonoBehaviour
     public void HideChargeBar()
     {
         canvasGroup.alpha = 0f;
+        
     }
 
     public void ShowChargeBar()
     {
         canvasGroup.alpha = 1f;
+    }
+
+    public void ShowRadius(float _rad)
+    {
+        radiusCircle.transform.localScale = Vector3.one * _rad * 2f;
+        
+    }
+
+    public void HideRadius()
+    {
+        radiusCircle.transform.localScale = Vector3.zero;
     }
 }
