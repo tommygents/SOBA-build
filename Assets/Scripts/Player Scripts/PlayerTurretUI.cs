@@ -1,0 +1,130 @@
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+
+public class PlayerTurretUI : MonoBehaviour
+{
+    [SerializeField] public GameObject towerSelectionPanel;
+    [SerializeField] public TurretImage[] turretPrefabs;
+    private List<TurretImage> instantiatedTurrets = new List<TurretImage>();
+    public int selectedIndex = 0;
+    public GameObject highlightBorder;
+    public TextMeshProUGUI turretName;
+    [SerializeField] private float unitSize = .1f; // Base unit size
+    [SerializeField] private float paddingInUnits = 1f; // Padding in units
+    [SerializeField] private float turretSizeInUnits = 10f; // Size of turret image in units
+
+    private void Start()
+    {
+        InitializeTurretList();
+        towerSelectionPanel.SetActive(false);
+        UpdateHighlightPosition();
+        selectedIndex = 0;
+    }
+
+    public void InitializeTurretList()
+    {
+        int _width = Mathf.Min(turretPrefabs.Length, 4);
+        int _height = Mathf.CeilToInt(turretPrefabs.Length / 4f);
+
+        RectTransform panelRect = towerSelectionPanel.GetComponent<RectTransform>();
+        float panelWidth = (_width * turretSizeInUnits + (_width + 1) * paddingInUnits) * unitSize;
+        float panelHeight = (_height * turretSizeInUnits + (_height + 1) * paddingInUnits) * unitSize;
+        panelRect.sizeDelta = new Vector2(panelWidth, panelHeight);
+
+        float startX = -panelWidth / 2 + (paddingInUnits + turretSizeInUnits / 2) * unitSize;
+        float startY = panelHeight / 2 - (paddingInUnits + turretSizeInUnits / 2) * unitSize;
+
+        for (int i = 0; i < turretPrefabs.Length; i++)
+        {
+            int row = i / 4;
+            int col = i % 4;
+
+            float xPos = startX + col * (turretSizeInUnits + paddingInUnits) * unitSize;
+            float yPos = startY - row * (turretSizeInUnits + paddingInUnits) * unitSize;
+
+            TurretImage turretInstance = Instantiate(turretPrefabs[i], new Vector2(xPos, yPos), Quaternion.identity, towerSelectionPanel.transform);
+            instantiatedTurrets.Add(turretInstance);
+
+
+
+        }
+    }
+
+    public void ShowTowerSelectionPanel()
+    {
+        towerSelectionPanel.SetActive(true);
+        turretName.gameObject.SetActive(true);
+        UpdateHighlightPosition();
+    }
+
+    public void HideTowerSelectionPanel()
+    {
+        towerSelectionPanel.SetActive(false);
+        turretName.gameObject.SetActive(false);
+    }
+
+/*
+    public void UpdateSelection(float _direction)
+    {
+        if (_direction < -.2f)
+        {
+            selectedIndex = Mathf.Max(selectedIndex - 1, 0);
+        }
+        if (_direction > .2f)
+        {
+            selectedIndex = Mathf.Min(selectedIndex + 1, instantiatedTurrets.Count - 1);
+        }
+
+        UpdateHighlightPosition();
+    }
+
+    public void UpdateSelection()
+    {
+        float _direction = InputManager.Instance.GetMoveVector().y;
+        UpdateSelection(_direction);
+    }
+
+*/
+    public void IterateSelection()
+    {
+        selectedIndex = (selectedIndex + 1) % instantiatedTurrets.Count;
+        UpdateHighlightPosition();
+        Debug.Log($"Selected turret index: {selectedIndex}");
+    }
+
+    public void UpdateHighlightPosition()
+    {
+        if (selectedIndex >= 0 && selectedIndex < instantiatedTurrets.Count)
+        {
+            TurretImage selectedTurret = instantiatedTurrets[selectedIndex];
+            highlightBorder.transform.position = selectedTurret.transform.position;
+      
+
+            turretName.text = selectedTurret.turretName;
+            Debug.Log($"Updated highlight for turret {selectedIndex}: {selectedTurret.name}");
+        }
+        else
+        {
+            Debug.LogWarning($"Invalid selectedIndex: {selectedIndex}. Total turrets: {instantiatedTurrets.Count}");
+        }
+    }
+
+
+    public Turret MakeTurretSelection()
+    {
+        if (selectedIndex >= 0 && selectedIndex < instantiatedTurrets.Count)
+        {
+            Turret _turret = instantiatedTurrets[selectedIndex].GetTurretPrefab();
+            towerSelectionPanel.SetActive(false);
+            Debug.Log($"Selected turret {selectedIndex}: {_turret.name}");
+            return _turret;
+        }
+        else
+        {
+            Debug.LogError($"Cannot make selection. Invalid selectedIndex: {selectedIndex}. Total turrets: {instantiatedTurrets.Count}");
+            return null;
+        }
+    }
+}
+        

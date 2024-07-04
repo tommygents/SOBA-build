@@ -1,0 +1,359 @@
+{
+    "name": "Control Scheme",
+    "maps": [
+        {
+            "name": "gameplay",
+            "id": "34d19f93-c416-4abc-90be-11aa26679e5c",
+            "actions": [
+                {
+                    "name": "move",
+                    "type": "Value",
+                    "id": "3e3da90e-fe8b-41f7-b231-fb74373db0ab",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "heavy push",
+                    "type": "Button",
+                    "id": "012d1126-3de2-4b3b-a937-e73a25ed84d2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "heavy pull",
+                    "type": "Button",
+                    "id": "070e3c94-d736-44b1-8cb8-16c8e201710e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "light push",
+                    "type": "Button",
+                    "id": "e9a11950-ca26-4966-9e12-de5d9b3c4fe3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Sprint",
+                    "type": "Button",
+                    "id": "27478abb-384a-4513-9c4b-bb62e2da37fc",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Run",
+                    "type": "Button",
+                    "id": "68c76340-3b02-455b-a858-ceef6551e43e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Squat",
+                    "type": "Button",
+                    "id": "6a894020-486e-4229-bb3f-e4ae14f02c22",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "88cee8ae-44ac-48f3-93e6-2fa5e4b8a456",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "light pull",
+                    "type": "Button",
+                    "id": "2a51cef9-1d5b-4c15-9283-c6840e885d12",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "4788cb8e-a2dd-4979-a678-7230db5591c5",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "Ringcon play",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "2D Vector",
+                    "id": "8147eb59-208b-4bbc-b4ab-6bf5e2fa5d0c",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "b2b9761f-189a-4bf7-b35a-7305b59b784c",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard playtest",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "e8dfe1f3-e608-4139-8893-99c7cd7a64fe",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard playtest",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "48d5d8b7-91d1-44f4-834f-ef5039a7a891",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard playtest",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "46de5b4c-6a98-4bc8-822b-57ad4f4852b5",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard playtest",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "89777591-0acc-414b-a99e-bab0db5b5499",
+                    "path": "<XInputController>/leftTrigger",
+                    "interactions": "Press(pressPoint=0.7,behavior=1)",
+                    "processors": "",
+                    "groups": "Ringcon play",
+                    "action": "heavy push",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "63568940-c6ae-4740-9081-0a292ff1d393",
+                    "path": "<Keyboard>/a",
+                    "interactions": "Press(pressPoint=0.5,behavior=1)",
+                    "processors": "",
+                    "groups": "keyboard playtest",
+                    "action": "heavy push",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3be75bca-f723-4278-a567-10217b0d5f42",
+                    "path": "<XInputController>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Ringcon play",
+                    "action": "light push",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "55bc3485-63af-4705-9967-a4386b4a8915",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard playtest",
+                    "action": "light push",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e674226c-89b9-492f-8f65-bc988896570b",
+                    "path": "<XInputController>/rightTrigger",
+                    "interactions": "Press(pressPoint=0.3,behavior=1)",
+                    "processors": "",
+                    "groups": "Ringcon play",
+                    "action": "heavy pull",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4bdb6c42-9673-4a70-8b2a-fd3abd4375e1",
+                    "path": "<XInputController>/rightShoulder",
+                    "interactions": "Press(pressPoint=0.2,behavior=1)",
+                    "processors": "",
+                    "groups": "Ringcon play",
+                    "action": "heavy pull",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ee263efb-2f00-4192-bc89-1e331dae8299",
+                    "path": "<Keyboard>/s",
+                    "interactions": "Press(pressPoint=0.2,behavior=1)",
+                    "processors": "",
+                    "groups": "keyboard playtest",
+                    "action": "heavy pull",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b1ee460f-1b64-4d57-8e83-8995b097a9dc",
+                    "path": "<XInputController>/rightStickPress",
+                    "interactions": "Press(pressPoint=0.2,behavior=1)",
+                    "processors": "",
+                    "groups": "Ringcon play",
+                    "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a7b1ccf9-275a-41ca-9142-fe01c34cba16",
+                    "path": "<Keyboard>/n",
+                    "interactions": "Press(behavior=1)",
+                    "processors": "",
+                    "groups": "keyboard playtest",
+                    "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4a98b34c-68c0-4748-9fe3-bb92ef1862ba",
+                    "path": "<XInputController>/leftStickPress",
+                    "interactions": "Press(pressPoint=0.2,behavior=1)",
+                    "processors": "",
+                    "groups": "Ringcon play",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "45aaad3c-16f5-4780-9c4c-87115842dbdf",
+                    "path": "<Keyboard>/m",
+                    "interactions": "Press(behavior=1)",
+                    "processors": "",
+                    "groups": "keyboard playtest",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "60e28be5-6665-4da3-a5aa-e8d41e3dc501",
+                    "path": "<XInputController>/select",
+                    "interactions": "Press(behavior=1)",
+                    "processors": "",
+                    "groups": "Ringcon play",
+                    "action": "Squat",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "36c35362-74b7-40e5-a997-dcef93c68df3",
+                    "path": "<Keyboard>/q",
+                    "interactions": "Press(behavior=1)",
+                    "processors": "",
+                    "groups": "keyboard playtest",
+                    "action": "Squat",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d88422cb-3435-45f7-a7ad-866ce220b816",
+                    "path": "<XInputController>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Ringcon play",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2c6b3468-b3ce-47b3-aa91-032e3dce57cb",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard playtest",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3c7b2572-ec68-43f4-abf4-6520e69b0d5e",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard playtest",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4ab0036d-4181-4736-ae98-e942657b421c",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "light pull",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Ringcon play",
+            "bindingGroup": "Ringcon play",
+            "devices": []
+        },
+        {
+            "name": "keyboard playtest",
+            "bindingGroup": "keyboard playtest",
+            "devices": []
+        }
+    ]
+}
