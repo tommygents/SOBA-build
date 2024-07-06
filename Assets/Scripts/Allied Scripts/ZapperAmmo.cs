@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class ZapperAmmo : Ammo
 {
 
     private bool activated;
     public List<Enemy> enemiesInRange;
     private Zapper zapper;
+    private ZapperCounterpart zapperCounterpart;
     private float movementPenalty = 0.5f;
 
 
@@ -82,6 +84,15 @@ public void ResetActivated()
         zapper = _zapper;
     }
 
+    public void SetZapperCounterpart(ZapperCounterpart _zapperCounterpart)
+    {
+        zapperCounterpart = _zapperCounterpart;
+    }
+
+    public override void Initialize()
+{
+
+}
     public void SetMovementPenalty(float _penalty)
     {
         movementPenalty = _penalty;

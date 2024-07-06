@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3a546e0285aecf4ba6828bb45ca24c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turretPrefab: {fileID: 2332483936228660618, guid: 74cc98b6c0f5d794cb951cc7f162f76f, type: 3}
+  turretPrefab: {fileID: 7186971313756505398, guid: 74cc98b6c0f5d794cb951cc7f162f76f, type: 3}
   spriteRenderer: {fileID: 0}
   turretName: Super Turret
 --- !u!212 &286767652344152109

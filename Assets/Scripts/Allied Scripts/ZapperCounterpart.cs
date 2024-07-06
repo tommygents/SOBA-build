@@ -15,4 +15,9 @@ public class ZapperCounterpart : MonoBehaviour
     {
         
     }
+
+    public Vector3 GetWorldPosition()
+    {
+        return transform.TransformPoint(Vector3.zero);
+    }
 }

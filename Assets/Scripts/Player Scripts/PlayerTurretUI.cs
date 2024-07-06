@@ -8,21 +8,57 @@ public class PlayerTurretUI : MonoBehaviour
     [SerializeField] public TurretImage[] turretPrefabs;
     private List<TurretImage> instantiatedTurrets = new List<TurretImage>();
     public int selectedIndex = 0;
-    public GameObject highlightBorder;
+    public GameObject selectionHighlightBorder;
     public TextMeshProUGUI turretName;
     [SerializeField] private float unitSize = .1f; // Base unit size
     [SerializeField] private float paddingInUnits = 1f; // Padding in units
-    [SerializeField] private float turretSizeInUnits = 10f; // Size of turret image in units
+    [SerializeField] private float turretSizeInUnits = 10f; // Size of turret image in unit
+    [SerializeField] private Vector2 unitSpacing = new Vector2(1f, 1f);
 
     private void Start()
     {
-        InitializeTurretList();
-        towerSelectionPanel.SetActive(false);
-        UpdateHighlightPosition();
+        //InitializeTurretList();
+        PlaceTurretImages();
+        HideTowerSelectionPanel();
         selectedIndex = 0;
+        UpdateHighlightPosition();
+        
     }
 
-    public void InitializeTurretList()
+
+    public void PlaceTurretImages()
+    {
+//TODO: make sure the spacing works out more cleanly
+
+        int _width = Mathf.Min(turretPrefabs.Length, 4);
+        int _height = Mathf.CeilToInt(turretPrefabs.Length / 4f);
+        unitSpacing.x = selectionHighlightBorder.transform.localScale.x;
+        unitSpacing.y = selectionHighlightBorder.transform.localScale.y;    
+        Vector2 _startingOffset = new Vector2(-towerSelectionPanel.GetComponent<RectTransform>().rect.width/2 + (unitSpacing.x / 2f), -towerSelectionPanel.GetComponent<RectTransform>().rect.height/2 + (unitSpacing.y / 2f));
+        Vector2 _padding = new Vector2(paddingInUnits * unitSpacing.x, paddingInUnits * unitSpacing.y);
+        
+        int _turretCount = 0;
+        for (int i = 0; i < _height; i++)
+            for (int j = 0; j < _width; j++)
+            {
+               
+                if (_turretCount < turretPrefabs.Length)
+                    {
+                instantiatedTurrets.Add(PlaceTurretImage(turretPrefabs[_turretCount], _startingOffset + new Vector2(j * (unitSpacing.x + _padding.x) * 2f, i * (unitSpacing.y + _padding.y))));
+                _turretCount++;
+                    }
+            }
+    }
+
+    private TurretImage PlaceTurretImage(TurretImage _turret, Vector2 _position)
+    {
+
+        TurretImage _turretInstance = Instantiate(_turret, _position, Quaternion.identity, towerSelectionPanel.transform);
+        return _turretInstance;
+        
+    }
+
+    public void InitializeTurretList() //No longer using this one
     {
         int _width = Mathf.Min(turretPrefabs.Length, 4);
         int _height = Mathf.CeilToInt(turretPrefabs.Length / 4f);
@@ -98,7 +134,7 @@ public class PlayerTurretUI : MonoBehaviour
         if (selectedIndex >= 0 && selectedIndex < instantiatedTurrets.Count)
         {
             TurretImage selectedTurret = instantiatedTurrets[selectedIndex];
-            highlightBorder.transform.position = selectedTurret.transform.position;
+            selectionHighlightBorder.transform.position = selectedTurret.transform.position;
       
 
             turretName.text = selectedTurret.turretName;
@@ -116,7 +152,7 @@ public class PlayerTurretUI : MonoBehaviour
         if (selectedIndex >= 0 && selectedIndex < instantiatedTurrets.Count)
         {
             Turret _turret = instantiatedTurrets[selectedIndex].GetTurretPrefab();
-            towerSelectionPanel.SetActive(false);
+            HideTowerSelectionPanel();
             Debug.Log($"Selected turret {selectedIndex}: {_turret.name}");
             return _turret;
         }

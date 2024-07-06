@@ -15,7 +15,12 @@ public class ZapperDetectionRadius : MonoBehaviour
     circleCollider = GetComponent<CircleCollider2D>();
     }
 
-   
+   public Vector2 GetNearestPathPoint()
+   {
+    GameObject nearestPath = GetNearestPath();
+    Collider2D _collider = nearestPath.GetComponent<Collider2D>();
+    return _collider.ClosestPoint(transform.position);
+   }
     
     public GameObject GetNearestPath()
     {
@@ -23,7 +28,8 @@ public class ZapperDetectionRadius : MonoBehaviour
         float nearestDistance = Mathf.Infinity;
         foreach (GameObject path in pathInRange)
         {
-            float distance = Vector2.Distance(transform.position, path.transform.position);
+            Collider2D _collider = path.GetComponent<Collider2D>();
+            float distance = Vector2.Distance(transform.position, _collider.ClosestPoint(transform.position));
             if (distance < nearestDistance)
             {
                 nearestDistance = distance;
@@ -32,6 +38,14 @@ public class ZapperDetectionRadius : MonoBehaviour
         }
         Debug.Log("Nearest path: " + nearestPath);
         return nearestPath;
+    }
+
+    public float GetPathWidth()
+    {
+        GameObject nearestPath = GetNearestPath();
+        BoxCollider2D _collider = nearestPath.GetComponent<BoxCollider2D>();
+        return _collider.size.x < _collider.size.y ? _collider.size.x : _collider.size.y;
+        
     }
 
     protected void GetAllPathsInRange()

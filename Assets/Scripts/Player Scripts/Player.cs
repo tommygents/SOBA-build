@@ -105,13 +105,7 @@ Initialize();
                 ShowRadius(turretToBuild.GetTargetingRadius());
                 if (buildingPlacement.IterateBuildCounter(_chargeTime)) //passes the charge time to the building manager, which returns true if enough time to build a turret has passed
                 {
-                    Turret _turret = Instantiate(turretToBuild, transform.position, Quaternion.identity);
-                    buildingPlacement.ResetBuildCounter();
-                    HideRadius();
-                    UpdateText(squatText, "Build");
-                    buildingStarted = false;
-                    AudioManager.Instance.StopClip(construction);
-                    EnterTurret(_turret);
+                    FinishBuildingTurret();
                 }
             }
            
@@ -156,7 +150,21 @@ Initialize();
 
     } //END OF UPDATE FUNCTION
 
+    private void FinishBuildingTurret()
+    {
+        Turret _turret = Instantiate(turretToBuild, transform.position, Quaternion.identity);
+        buildingPlacement.ResetBuildCounter();
+        HideRadius();
+        UpdateText(squatText, "Build");
+        buildingStarted = false;
+        AudioManager.Instance.StopClip(construction);
+        EnterTurret(_turret);
+    }
 
+    public void FinishBuildingTurretDebug()
+    {
+        FinishBuildingTurret();
+    }
 
     public void Sprint()
     {
@@ -391,6 +399,7 @@ Initialize();
     public void EndTurretSelectionUI()
     {
         turretSelectionActive = false;
+        playerTurretUI.HideTowerSelectionPanel();
         turretToBuild = playerTurretUI.MakeTurretSelection();
         
     }

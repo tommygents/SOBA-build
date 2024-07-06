@@ -292,4 +292,10 @@ public virtual void ShowTargetingArea(Transform _origin)
     {
         return ShootCooldownOver() && targetingSystem.enemiesInRange.Contains(target) && HasCharge();
     }
+
+    public void FillMeterDebugging()
+    {
+        chargeBar = chargeBarMax;
+        chargeCount = chargeCountMax;
+    }
 }
