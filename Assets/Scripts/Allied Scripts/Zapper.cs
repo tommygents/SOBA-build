@@ -5,6 +5,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+
+[RequireComponent(typeof(LineRenderer))]
 public class Zapper : Turret
 {
     [SerializeField] private ZapperDetectionRadius zapperDetectionRadius;
@@ -15,7 +17,10 @@ public class Zapper : Turret
     bool zapperActive = true;
     [SerializeField] private float movementPenalty = 0.5f;
     [SerializeField] private float offsetDistance = 1.2f;
-    
+    [SerializeField] private float ammoWidth = 0.1f;
+    [SerializeField] private Material ammoMaterial;
+    [SerializeField] private Color ammoColor = Color.yellow;
+
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -23,7 +28,8 @@ public class Zapper : Turret
         zapperDetectionRadius = GetComponentInChildren<ZapperDetectionRadius>();
         zapperDetectionRadius.Initialize();
         CreateCounterpart();
-        InstantiateZapperAmmoWorldSpace();
+        //InstantiateZapperAmmoWorldSpace();
+        DrawAmmo();
         EnemyCounter.OnEnemyCountZero += HandleLastEnemy;
         WaveManager.OnWaveStart += HandleWaveStart;
     }
@@ -201,6 +207,48 @@ private void HandleWaveStart(int _i)
 private float MinimumChargeReduction()
 {
     return (Time.deltaTime * maxCharge) / targetUninteractedRunTime;
+}
+
+private void DrawAmmo()
+{
+    GameObject ammo = new GameObject("ZapperAmmo");
+    ammo.transform.SetParent(transform);
+    LineRenderer lineRenderer = ammo.AddComponent<LineRenderer>();
+    lineRenderer.SetPosition(0, transform.position);
+    lineRenderer.SetPosition(1, zapperCounterpart.GetWorldPosition());
+    ConfigureAmmoRenderer(lineRenderer);
+    AddAmmoCollider(ammo, transform.position, zapperCounterpart.GetWorldPosition());
+    zapperAmmo = ammo.AddComponent<ZapperAmmo>();
+    zapperAmmo.SetZapper(this);
+    zapperAmmo.SetMovementPenalty(movementPenalty);
+
+
+}
+
+private void ConfigureAmmoRenderer(LineRenderer _lineRenderer)
+
+{
+    _lineRenderer.material = ammoMaterial;
+    _lineRenderer.startColor = ammoColor;
+    _lineRenderer.endColor = ammoColor;
+    _lineRenderer.startWidth = ammoWidth;
+    _lineRenderer.endWidth = ammoWidth;
+}
+
+private void AddAmmoCollider(GameObject _ammo, Vector3 start, Vector3 end)
+{
+    Vector3 midPoint = (start + end) / 2;
+        _ammo.transform.position = midPoint;
+    BoxCollider2D ammoCollider = _ammo.AddComponent<BoxCollider2D>();
+    float lineLength = Vector3.Distance(start, end);
+    ammoCollider.size = new Vector2(lineLength, ammoWidth);
+    
+    ammoCollider.isTrigger = true;
+    Vector3 direction = (end - start).normalized;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+        // Rotate the collider to align with the path
+        _ammo.transform.rotation = Quaternion.Euler(0, 0, angle);
 }
 
 }

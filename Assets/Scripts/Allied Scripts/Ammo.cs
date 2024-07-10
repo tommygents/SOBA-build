@@ -23,7 +23,7 @@ public class Ammo : PlayerAttack
     // Update is called once per frame
     protected override void Update()
     {
-        base.Update();
+       
         
         CheckDistance();
     }

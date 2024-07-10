@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-[RequireComponent(typeof(LineRenderer))]
+
 public class ZapperAmmo : Ammo
 {
 
@@ -11,7 +11,7 @@ public class ZapperAmmo : Ammo
     public List<Enemy> enemiesInRange;
     private Zapper zapper;
     private ZapperCounterpart zapperCounterpart;
-    private float movementPenalty = 0.5f;
+    [SerializeField] private float movementPenalty = 0.5f;
 
 
     // Start is called before the first frame update
