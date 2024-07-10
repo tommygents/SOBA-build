@@ -217,10 +217,11 @@ private void DrawAmmo()
     lineRenderer.SetPosition(0, transform.position);
     lineRenderer.SetPosition(1, zapperCounterpart.GetWorldPosition());
     ConfigureAmmoRenderer(lineRenderer);
-    AddAmmoCollider(ammo, transform.position, zapperCounterpart.GetWorldPosition());
+    
     zapperAmmo = ammo.AddComponent<ZapperAmmo>();
     zapperAmmo.SetZapper(this);
     zapperAmmo.SetMovementPenalty(movementPenalty);
+    AddAmmoCollider(ammo, transform.position, zapperCounterpart.GetWorldPosition());
 
 
 }

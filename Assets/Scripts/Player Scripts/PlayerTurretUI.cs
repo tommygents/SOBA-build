@@ -6,7 +6,7 @@ public class PlayerTurretUI : MonoBehaviour
 {
     [SerializeField] public GameObject towerSelectionPanel;
     [SerializeField] public TurretImage[] turretPrefabs;
-    private List<TurretImage> instantiatedTurrets = new List<TurretImage>();
+    private List<TurretImage> turretBuildListItems = new List<TurretImage>();
     public int selectedIndex = 0;
     public GameObject selectionHighlightBorder;
     public TextMeshProUGUI turretName;
@@ -44,7 +44,7 @@ public class PlayerTurretUI : MonoBehaviour
                
                 if (_turretCount < turretPrefabs.Length)
                     {
-                instantiatedTurrets.Add(PlaceTurretImage(turretPrefabs[_turretCount], _startingOffset + new Vector2(j * (unitSpacing.x + _padding.x) * 2f, i * (unitSpacing.y + _padding.y))));
+                turretBuildListItems.Add(PlaceTurretImage(turretPrefabs[_turretCount], _startingOffset + new Vector2(j * (unitSpacing.x + _padding.x) * 2f, i * (unitSpacing.y + _padding.y))));
                 _turretCount++;
                     }
             }
@@ -80,7 +80,7 @@ public class PlayerTurretUI : MonoBehaviour
             float yPos = startY - row * (turretSizeInUnits + paddingInUnits) * unitSize;
 
             TurretImage turretInstance = Instantiate(turretPrefabs[i], new Vector2(xPos, yPos), Quaternion.identity, towerSelectionPanel.transform);
-            instantiatedTurrets.Add(turretInstance);
+            turretBuildListItems.Add(turretInstance);
 
 
 
@@ -124,16 +124,16 @@ public class PlayerTurretUI : MonoBehaviour
 */
     public void IterateSelection()
     {
-        selectedIndex = (selectedIndex + 1) % instantiatedTurrets.Count;
+        selectedIndex = (selectedIndex + 1) % turretBuildListItems.Count;
         UpdateHighlightPosition();
         Debug.Log($"Selected turret index: {selectedIndex}");
     }
 
     public void UpdateHighlightPosition()
     {
-        if (selectedIndex >= 0 && selectedIndex < instantiatedTurrets.Count)
+        if (selectedIndex >= 0 && selectedIndex < turretBuildListItems.Count)
         {
-            TurretImage selectedTurret = instantiatedTurrets[selectedIndex];
+            TurretImage selectedTurret = turretBuildListItems[selectedIndex];
             selectionHighlightBorder.transform.position = selectedTurret.transform.position;
       
 
@@ -142,23 +142,23 @@ public class PlayerTurretUI : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"Invalid selectedIndex: {selectedIndex}. Total turrets: {instantiatedTurrets.Count}");
+            Debug.LogWarning($"Invalid selectedIndex: {selectedIndex}. Total turrets: {turretBuildListItems.Count}");
         }
     }
 
 
     public Turret MakeTurretSelection()
     {
-        if (selectedIndex >= 0 && selectedIndex < instantiatedTurrets.Count)
+        if (selectedIndex >= 0 && selectedIndex < turretBuildListItems.Count)
         {
-            Turret _turret = instantiatedTurrets[selectedIndex].GetTurretPrefab();
+            Turret _turret = turretBuildListItems[selectedIndex].GetTurretPrefab();
             HideTowerSelectionPanel();
             Debug.Log($"Selected turret {selectedIndex}: {_turret.name}");
             return _turret;
         }
         else
         {
-            Debug.LogError($"Cannot make selection. Invalid selectedIndex: {selectedIndex}. Total turrets: {instantiatedTurrets.Count}");
+            Debug.LogError($"Cannot make selection. Invalid selectedIndex: {selectedIndex}. Total turrets: {turretBuildListItems.Count}");
             return null;
         }
     }

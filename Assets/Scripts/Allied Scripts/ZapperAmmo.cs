@@ -8,7 +8,7 @@ public class ZapperAmmo : Ammo
 {
 
     private bool activated;
-    public List<Enemy> enemiesInRange;
+    public List<Enemy> enemiesInRange = new List<Enemy>();
     private Zapper zapper;
     private ZapperCounterpart zapperCounterpart;
     [SerializeField] private float movementPenalty = 0.5f;
@@ -17,7 +17,10 @@ public class ZapperAmmo : Ammo
     // Start is called before the first frame update
    protected override void Start()
     {
-        
+        if (enemiesInRange == null)
+        {
+            enemiesInRange = new List<Enemy>();
+        }
     }
 
     // Update is called once per frame
@@ -62,6 +65,10 @@ public void ResetActivated()
         {
             enemiesInRange.Add(other.GetComponent<Enemy>()); //Add the enemy to the list of enemies
             other.GetComponent<Enemy>().SetMovementPenalty(0.5f);
+            if (debug)
+            {
+                Debug.Log("Enemy in range");
+            }
         }
     }
 
@@ -71,6 +78,10 @@ public void ResetActivated()
         {
             enemiesInRange.Remove(other.GetComponent<Enemy>()); //Remove the enemy from the list of enemies when they leave detection radius
             other.GetComponent<Enemy>().SetMovementPenalty(0f);
+            if (debug)
+            {
+                Debug.Log("Enemy out of range");
+            }
         }
     }
 
@@ -97,4 +108,11 @@ public void ResetActivated()
     {
         movementPenalty = _penalty;
     }
+
+
+    #region debugging
+    [SerializeField] private bool debug = false;
+
+    #endregion
+
 }

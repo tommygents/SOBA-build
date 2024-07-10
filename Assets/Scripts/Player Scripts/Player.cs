@@ -163,6 +163,7 @@ Initialize();
 
     public void FinishBuildingTurretDebug()
     {
+        EndTurretSelectionUI();
         FinishBuildingTurret();
     }
 
@@ -472,6 +473,8 @@ Initialize();
         radiusCircle.transform.localScale = Vector3.zero;
     }
 
+#region UI text in lower right corner
+
     public TextMeshProUGUI squatText;
     public TextMeshProUGUI pullText;
     public TextMeshProUGUI pushText;
@@ -480,7 +483,7 @@ Initialize();
         _field.text = _text;
     }
 
-
+#endregion
     #region Refactoring
 private void Initialize()
 {
@@ -493,7 +496,7 @@ private void Initialize()
 
         turretDetector = GetComponentInChildren<PlayerTurretDetector>();
         buildingPlacement = GetComponent<PlayerBuildingPlacement>();
-        turretToBuild = buildingPlacement.turrets[buildingPlacement.activeTurretIndex];
+        turretToBuild = playerTurretUI.MakeTurretSelection();
         HideRadius();
         UpdateText(squatText, "Build Turret");
         UpdateText(pullText, "Switch Turret Selection");
@@ -588,14 +591,14 @@ if (!gameManager.isPaused)
 
 public void OnPullStart(InputAction.CallbackContext _context)
 {
-    isMakingUISelection = true;
-    playerTurretUI.ShowTowerSelectionPanel();
+    //isMakingUISelection = true;
+    //playerTurretUI.ShowTowerSelectionPanel();
 }
 
 public void OnPullEnd(InputAction.CallbackContext _context)
 {
-    isMakingUISelection = false;
-    playerTurretUI.HideTowerSelectionPanel();
+    //isMakingUISelection = false;
+    //playerTurretUI.HideTowerSelectionPanel();
 }
 
 #endregion
