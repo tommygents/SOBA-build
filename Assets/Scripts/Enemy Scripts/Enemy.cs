@@ -163,7 +163,13 @@ public class Enemy : MonoBehaviour
         incrementalDamage += _floatDamage;
         if (incrementalDamage >= 1f)
         {
-            hp--;
+            if (armored)
+            {
+                armorHP -= 1;
+                if (armorHP <= 0)
+                    DestroyArmor();
+            }
+            else hp--;
             incrementalDamage -= 1f;
         }
 
