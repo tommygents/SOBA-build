@@ -148,7 +148,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.59941
+  m_Radius: 1.59
 --- !u!1 &5742583842794718306
 GameObject:
   m_ObjectHideFlags: 0
@@ -591,9 +591,9 @@ MonoBehaviour:
   ammunition: {fileID: 6047662502705813423, guid: 5b4ddf9fe2bcaa14386f0f0a58e6c793, type: 3}
   targetingSystem: {fileID: 4120685630083168460}
   turretUI: {fileID: 0}
-  turretRange: 2
   turretBulletVelocity: 20
   rotationSpeed: 200
+  targetingFactor: 1.333
   cooldownLength: 0.025
   ammoCost: 0.05
   target: {fileID: 0}

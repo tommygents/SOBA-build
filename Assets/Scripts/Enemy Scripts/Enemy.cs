@@ -163,4 +163,35 @@ public class Enemy : MonoBehaviour
         movementScript.speed = moveSpeed * (1 - _penalty);
     }
 
+
+    #region adding in armor
+    public bool armored;
+    public Material armorMaterial;
+    public int armorHP;
+
+    public void TakeIncrementalDamage(float _damage, DamageTypes _dt)
+    {
+        if (armored)
+        {
+            if (_dt == DamageTypes.electric)
+            {
+            _damage *= 2f;
+            }
+            if (_dt == DamageTypes.explosive)
+            {
+                _damage = Damage;
+            }
+            else
+            {
+                _damage *= .5f;
+            } 
+
+        }
+        TakeIncrementalDamage(_damage);
+
+    }
+
+
+    #endregion
+
 }

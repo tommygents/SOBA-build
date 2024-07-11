@@ -7,6 +7,7 @@ public class CannonBall : Ammo
 
     protected CircleCollider2D damageCollider;
     protected Enemy[] enemiesInRange;
+    protected DamageTypes damageType = explosive;
 
     // Start is called before the first frame update
     protected override void Start()
@@ -58,6 +59,11 @@ public class CannonBall : Ammo
             }
         }
         
+    }
+
+    public override void DealDamage(Enemy _enemy)
+    {
+        _enemy.TakeIncrementalDamage(Damage, damageType);
     }
 
 

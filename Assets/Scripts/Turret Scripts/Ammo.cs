@@ -4,6 +4,14 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+public enum DamageTypes
+{
+    normal,
+    electric,
+    explosive
+
+}
+
 public class Ammo : PlayerAttack
 {
 

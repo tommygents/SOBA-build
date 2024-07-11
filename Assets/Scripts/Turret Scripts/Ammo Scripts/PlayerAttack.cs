@@ -54,24 +54,16 @@ public class PlayerAttack : MonoBehaviour
 
     public virtual void DealDamage(Enemy _enemy)
     {
-        _enemy.HP -= Damage;
-
+        enemy.TakeIncrementalDamage((float) Damage);
     }
     public virtual void DealDamage(EnemySpawner _enemy)
     {
         _enemy.HP -= Damage;
-        Debug.Log(Damage + "Damage");
-        Debug.Log("hp: " + _enemy.HP);
     }
-
 
     public virtual void Initialize()
     {
-        //attackStarted = true;
+        
     }
 
-    public virtual void Initialize(float _duration)
-    {
-        Initialize();
-    }
 }

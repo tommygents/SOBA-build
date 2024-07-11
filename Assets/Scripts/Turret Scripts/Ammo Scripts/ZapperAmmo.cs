@@ -55,7 +55,7 @@ public void ResetActivated()
 
     public override void DealDamage(Enemy _enemy)
     {
-        _enemy.TakeIncrementalDamage(CalculateDamagePerFrame());
+        _enemy.TakeIncrementalDamage(CalculateDamagePerFrame(), electric);
     }
 
 

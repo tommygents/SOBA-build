@@ -12,6 +12,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1082777223845990596, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082777223845990596, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082777223845990596, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082777223845990596, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10.534974
       objectReference: {fileID: 0}
@@ -51,6 +63,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -0.431
       objectReference: {fileID: 0}
+    - target: {fileID: 1082777223845990596, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1082777223845990597, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
       propertyPath: m_Size.x
       value: 1.28
@@ -69,6 +85,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1082777223845990602, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
       propertyPath: maxHP
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082777223845990602, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
+      propertyPath: moveSpeed
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1082777223845990602, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
@@ -81,7 +101,7 @@ PrefabInstance:
       objectReference: {fileID: 659176646413853399, guid: 8e34338426509c54fb1d1c09bc192eb5, type: 3}
     - target: {fileID: 1082777223845990603, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
       propertyPath: m_Name
-      value: EnemyTD
+      value: SmallEnemyTD
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}

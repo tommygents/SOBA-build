@@ -6,14 +6,15 @@ using UnityEngine;
 public class Turret : MonoBehaviour
 {
 
-   [SerializeField] protected Ammo ammunition; //assign in the editor, this is what the turret will shoot
+    [SerializeField] protected Ammo ammunition; //assign in the editor, this is what the turret will shoot
     [SerializeField] protected TurretDetectionRadius targetingSystem; //gets assigned in Start()
      [SerializeField] protected TurretUI turretUI;
 
     //Firing variables
-    [SerializeField] protected float turretRange; // how far the turret can shoot
+    protected float turretRange; // how far the turret can shoot
     [SerializeField] protected float turretBulletVelocity; // how fast the bullets move
     [SerializeField] protected float rotationSpeed = 120f; //how fast the turret can rotate towards a target
+    [SerializeField] protected float targetingFactor = 1.333f; //the targeting radius gets multiplied by this number to get the turret's range, passed to bullets
    
 
     //Cooldown variables, so the turret doesn't just vomit bullets
@@ -62,6 +63,7 @@ public class Turret : MonoBehaviour
         turretUI.chargeCountNum = chargeCountMax;
         turretUI.UpdateChargeBar(ChargeBarFullPercentage(), chargeCount, false); //initialize the charge bar
         maxCharge = chargeBarMax * chargeCountMax;
+        turretRange = targetingSystem.GetTargetingRadius() * targetingFactor;
     }
 
     
@@ -70,10 +72,7 @@ public class Turret : MonoBehaviour
    protected virtual void Update()
     {
         //the cooldown timer for the turret
-    IterateCooldownCounter();
-
-
-
+        CountDownCooldownCounter();
 
         #region targeting and rotation in update
         if (NeedsTarget() && EnemyInRange()) //if the turret needs a target and there's an enemy in range, get the target
@@ -90,12 +89,6 @@ public class Turret : MonoBehaviour
             }
         }
         #endregion
-
-
-
-
-
-
     }
 
    
@@ -280,7 +273,7 @@ public virtual void ShowTargetingArea(Transform _origin)
         return chargeBar <= 0f;
     }
 
-    protected virtual void IterateCooldownCounter()
+    protected virtual void CountDownCooldownCounter()
     {
         if (!ShootCooldownOver())
         {
@@ -292,6 +285,8 @@ public virtual void ShowTargetingArea(Transform _origin)
     {
         return ShootCooldownOver() && targetingSystem.enemiesInRange.Contains(target) && HasCharge();
     }
+
+
 
     public void FillMeterDebugging()
     {
