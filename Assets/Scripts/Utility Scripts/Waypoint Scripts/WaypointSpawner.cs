@@ -38,9 +38,11 @@ public class WaypointSpawner : Waypoint
     {
         
         StartCoroutine(Spawn());
+        StartCoroutine(SmallSpawner());
         if (_waveNumber > 1)
         {
             StartCoroutine(BigSpawner());
+            
         }
         waveNum = _waveNumber;
     }

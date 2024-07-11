@@ -225,9 +225,12 @@ public class Enemy : MonoBehaviour
 
     public void MakeArmored(int armorStrength)
     {
+        if (spriteRenderer == null)
+
+            spriteRenderer = GetComponent<SpriteRenderer>();
         armored = true;
         armorHP = armorStrength;
-        if (armorMaterial != null)
+        if (armorMaterial != null && spriteRenderer != null)
         {
             spriteRenderer.material = armorMaterial;
             

@@ -40,7 +40,7 @@ public class Turret : MonoBehaviour
     public bool playerCharging = false;
 
     public Player player;
-    private CameraShake cameraShake;
+    protected CameraShake cameraShake;
     public int cameraShakeInterval = 5;
     public int cameraShakeCounter = 0;
 

@@ -79,6 +79,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6894503224499299300, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}
+      propertyPath: <RemoveSegments>k__BackingField._value
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 7984402139635472848, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}
       propertyPath: m_Name
       value: super turret

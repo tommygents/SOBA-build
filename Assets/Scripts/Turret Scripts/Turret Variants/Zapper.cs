@@ -24,7 +24,14 @@ public class Zapper : Turret
     // Start is called before the first frame update
     protected override void Start()
     {
-        base.Start();
+        //base.Start();
+        cameraShake = Camera.main.GetComponent<CameraShake>();
+        
+        targetingSystem = GetComponentInChildren<TurretDetectionRadius>();  
+        turretUI = GetComponent<TurretUI>();
+        turretUI.chargeCountNum = chargeCountMax;
+        turretUI.UpdateChargeBar(ChargeBarFullPercentage(), chargeCount, false); //initialize the charge bar
+        maxCharge = chargeBarMax * chargeCountMax;
         zapperDetectionRadius = GetComponentInChildren<ZapperDetectionRadius>();
         zapperDetectionRadius.Initialize();
         CreateCounterpart();
