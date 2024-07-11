@@ -179,7 +179,7 @@ public class Enemy : MonoBehaviour
             }
             if (_dt == DamageTypes.explosive)
             {
-                _damage = Damage;
+                _damage = _damage;
             }
             else
             {

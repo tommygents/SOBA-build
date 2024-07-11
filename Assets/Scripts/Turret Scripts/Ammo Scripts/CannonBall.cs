@@ -7,7 +7,7 @@ public class CannonBall : Ammo
 
     protected CircleCollider2D damageCollider;
     protected Enemy[] enemiesInRange;
-    protected DamageTypes damageType = explosive;
+    protected DamageTypes damageType = DamageTypes.explosive;
 
     // Start is called before the first frame update
     protected override void Start()

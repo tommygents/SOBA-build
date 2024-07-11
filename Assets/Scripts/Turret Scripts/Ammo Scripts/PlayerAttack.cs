@@ -54,7 +54,7 @@ public class PlayerAttack : MonoBehaviour
 
     public virtual void DealDamage(Enemy _enemy)
     {
-        enemy.TakeIncrementalDamage((float) Damage);
+        _enemy.TakeIncrementalDamage((float)Damage);
     }
     public virtual void DealDamage(EnemySpawner _enemy)
     {
