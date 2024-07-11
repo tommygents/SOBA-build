@@ -95,6 +95,10 @@ PrefabInstance:
       propertyPath: pointsValue
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 5147144643845277226, guid: 616fda1ccd71bbd4c8d69b61456882e2, type: 3}
+      propertyPath: defaultArmorHP
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 5147144643845277227, guid: 616fda1ccd71bbd4c8d69b61456882e2, type: 3}
       propertyPath: m_Name
       value: BigEnemyTD

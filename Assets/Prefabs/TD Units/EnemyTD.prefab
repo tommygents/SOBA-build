@@ -79,6 +79,10 @@ PrefabInstance:
       propertyPath: deathParticles
       value: 
       objectReference: {fileID: 659176646413853399, guid: 8e34338426509c54fb1d1c09bc192eb5, type: 3}
+    - target: {fileID: 1082777223845990602, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
+      propertyPath: defaultArmorHP
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1082777223845990603, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
       propertyPath: m_Name
       value: EnemyTD

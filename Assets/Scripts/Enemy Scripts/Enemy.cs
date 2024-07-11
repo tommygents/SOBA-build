@@ -146,8 +146,19 @@ public class Enemy : MonoBehaviour
 
     public void TakeIncrementalDamage(float _damage)
     {
+        
         int _intDamage = (int)_damage;
         float _floatDamage = _damage - _intDamage;
+        if (armored)
+        {
+            armorHP -= _intDamage;
+            if (armorHP <= 0)
+            {
+                armorHP = 0;
+                DestroyArmor();
+            }
+            _intDamage = 0;
+        }
         hp -= _intDamage;
         incrementalDamage += _floatDamage;
         if (incrementalDamage >= 1f)
@@ -168,30 +179,61 @@ public class Enemy : MonoBehaviour
     public bool armored;
     public Material armorMaterial;
     public int armorHP;
+    public int defaultArmorHP;
 
     public void TakeIncrementalDamage(float _damage, DamageTypes _dt)
     {
         if (armored)
         {
-            if (_dt == DamageTypes.electric)
+            if (armorHP/GetArmorFactor(_dt) <= _damage) //Case 1: The damage will wipe out the armor entirely
             {
-            _damage *= 2f;
+                _damage -= armorHP/GetArmorFactor(_dt);
+                armorHP = 0;
+                DestroyArmor();
             }
-            if (_dt == DamageTypes.explosive)
+            else //Case 2: the damage will not wipe out the armor.
             {
-                _damage = _damage;
+                _damage *= GetArmorFactor(_dt);
+                armorHP -= (int)_damage;
+                _damage -= (int)_damage;
             }
-            else
-            {
-                _damage *= .5f;
-            } 
-
-        }
         TakeIncrementalDamage(_damage);
 
+        }
     }
 
+    protected float GetArmorFactor(DamageTypes _dt)
+    {
+        if (_dt == DamageTypes.electric)
+            return 2f;
+        if (_dt == DamageTypes.explosive)
+            return 1f;
+        return .5f;
+    }
+    public void DestroyArmor()
+    {
+        armored = false;
+        spriteRenderer.material = null;
+        spriteRenderer.color = Color.white;
+    }
 
+    public void MakeArmored(int armorStrength)
+    {
+        armored = true;
+        armorHP = armorStrength;
+        if (armorMaterial != null)
+        {
+            spriteRenderer.material = armorMaterial;
+            
+        }
+        spriteRenderer.color = Color.gray;
+        
+    }
+
+    public void MakeArmored()
+    {
+        MakeArmored(defaultArmorHP);
+    }
     #endregion
 
 }
