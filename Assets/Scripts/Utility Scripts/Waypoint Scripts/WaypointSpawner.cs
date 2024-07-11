@@ -16,6 +16,9 @@ public class WaypointSpawner : Waypoint
     public int enemyIndex = 0; //the index of the enemy to spawn
     private int waveNum;
     public float bigSpawnInterval;
+    public float smallSpawnInterval;
+    public int maxSmallWaveSize = 4;
+    public float armorProbability = 0f;
 
     // Start is called before the first frame update
     protected override void Start()
@@ -48,6 +51,8 @@ public class WaypointSpawner : Waypoint
         StopAllCoroutines();
         spawnInterval /= spawnFactor;
         bigSpawnInterval /= (2 * spawnFactor);//at the end of each wave, things get faster
+        maxSmallWaveSize++;
+        armorProbability += .1f;
 
     }
 
@@ -60,6 +65,10 @@ public class WaypointSpawner : Waypoint
             _en.movementScript = _en.GetComponentInChildren<EnemyWaypointMovement>();
             _en.MoveSpeed = (int)(_en.MoveSpeed * (Mathf.Pow( spawnFactor,waveNum)));
             _en.InitializeMovement(this, GetNextWaypoint());
+            if (Random.Range(0f, 1f) < armorProbability)
+            {
+                _en.MakeArmored();
+            }
             yield return new WaitForSeconds(Random.Range(spawnInterval * .8f, spawnInterval * 1.2f)); 
         }
     }
@@ -72,7 +81,35 @@ public class WaypointSpawner : Waypoint
             _en.movementScript = _en.GetComponentInChildren<EnemyWaypointMovement>();
             _en.MoveSpeed = (int)(_en.MoveSpeed * (spawnFactor * waveNum));
             _en.InitializeMovement(this, GetNextWaypoint());
+            if (Random.Range(0f, 1f) < armorProbability)
+            {
+                _en.MakeArmored();
+            }
             yield return new WaitForSeconds(Random.Range(bigSpawnInterval * .8f, bigSpawnInterval * 1.2f));
+        }
+    }
+
+    public IEnumerator SmallSpawner()
+    {
+        while (true)
+        {
+            int _packSize = Random.Range(1, maxSmallWaveSize);
+            while (_packSize > 0)
+            {
+                
+            
+            Enemy _en = Instantiate(enemies[enemyIndex+2], this.transform.position, Quaternion.identity);
+            _en.movementScript = _en.GetComponentInChildren<EnemyWaypointMovement>();
+            _en.MoveSpeed = (int)(_en.MoveSpeed * (spawnFactor * waveNum));
+            _en.InitializeMovement(this, GetNextWaypoint());
+            if (Random.Range(0f, 1f) < armorProbability)
+            {
+                _en.MakeArmored();
+            }
+            _packSize--;
+            yield return new WaitForSeconds(Random.Range(.1f, .3f));
+            }
+            yield return new WaitForSeconds(Random.Range(smallSpawnInterval * .8f, smallSpawnInterval * 1.2f));
         }
     }
     //

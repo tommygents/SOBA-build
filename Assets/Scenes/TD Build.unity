@@ -1922,8 +1922,12 @@ MonoBehaviour:
   enemies:
   - {fileID: 5147144643845277226, guid: 616fda1ccd71bbd4c8d69b61456882e2, type: 3}
   - {fileID: 2605840431590677112, guid: c25c7d4300228a14688ed0aa5c427fc5, type: 3}
+  - {fileID: 5147144643845277226, guid: 31e3a122179f4984db34830f2aa20f0a, type: 3}
   enemyIndex: 0
   bigSpawnInterval: 20
+  smallSpawnInterval: 8
+  maxSmallWaveSize: 4
+  armorProbability: 0
 --- !u!58 &431239807
 CircleCollider2D:
   m_ObjectHideFlags: 0
