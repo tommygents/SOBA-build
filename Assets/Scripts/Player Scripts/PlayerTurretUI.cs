@@ -15,12 +15,13 @@ public class PlayerTurretUI : MonoBehaviour
     [SerializeField] private float turretSizeInUnits = 10f; // Size of turret image in unit
     [SerializeField] private Vector2 unitSpacing = new Vector2(1f, 1f);
 
-    private void Start()
+    private void Awake()
     {
         //InitializeTurretList();
+        selectedIndex = 0;
         PlaceTurretImages();
         HideTowerSelectionPanel();
-        selectedIndex = 0;
+        
         UpdateHighlightPosition();
         
     }

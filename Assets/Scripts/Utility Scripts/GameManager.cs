@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour
             //selectedButton.Select();
         }
 
-        Time.timeScale = isPaused ? 0 : 1; // Pause or unpause the game
+        //Time.timeScale = isPaused ? 0 : 1; // Pause or unpause the game
 
     }
 

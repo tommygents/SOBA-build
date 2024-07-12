@@ -63,6 +63,7 @@ public class Player : MonoBehaviour
 
 Initialize();
 
+
         
 
     }
@@ -496,11 +497,13 @@ private void Initialize()
 
         turretDetector = GetComponentInChildren<PlayerTurretDetector>();
         buildingPlacement = GetComponent<PlayerBuildingPlacement>();
+        //playerTurretUI = GetComponentInChildren<PlayerTurretUI>();
         turretToBuild = playerTurretUI.MakeTurretSelection();
         HideRadius();
         UpdateText(squatText, "Build Turret");
         UpdateText(pullText, "Switch Turret Selection");
         SubscribeToInputEvents();
+        
 }
 
 /// <summary>
