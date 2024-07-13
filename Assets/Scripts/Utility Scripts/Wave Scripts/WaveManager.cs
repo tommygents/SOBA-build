@@ -1,135 +1,207 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public class WaveManager : MonoBehaviour
 {
-
     public static WaveManager Instance;
-    public int waveNumber = 1;
-    public float waveDuration = 60f;
-    public float breakDuration = 120f;
+    public TextAsset waveDataCSV;
+    [SerializeField] public Dictionary<string, Enemy> enemyPrefabs = new Dictionary<string, Enemy>();
 
-    public bool isWaveActive = true;
-    public float timer = 0f;
-
-    public WaveManagerUI waveUI;
+    [SerializeField] private Dictionary<int, Wave> waves = new Dictionary<int, Wave>();
     
+    public int currentWaveNumber = 0;
+    public float waveTimer = 0f;
+    public float breakTimer = 0f;
+    public float breakDuration = 30f; // Duration between waves
+    public bool isWaveActive = false;
+    public bool isGameOver = false;
 
+    public static event Action<int> OnWaveStart;
     public static event Action OnWaveEnd;
-    public static event Action<int> OnWaveStart; //passes the number of the wave to delegates
+    public static event Action OnGameOver;
     public static event Action OnEndGame;
 
-
-    public bool gameOver = false;
-    
     void Awake()
     {
         if (Instance == null)
         {
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            LoadWaveData();
         }
         else
         {
-        Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-      
-    }
 
-    // Update is called once per frame
     void Update()
     {
-        
-        
-        if (timer <= 0f && !gameOver)
+        if (isGameOver) return;
+
+        if (isWaveActive)
         {
-            if (isWaveActive)
+            waveTimer -= Time.deltaTime;
+            if (waveTimer <= 0f)
             {
-                
                 EndWave();
-
-            }
-            else
-            {
-                
-                StartWave();
-
             }
         }
         else
         {
-            timer -= Time.deltaTime;
-            
+            breakTimer -= Time.deltaTime;
+            if (breakTimer <= 0f)
+            {
+                StartNextWave();
+            }
         }
-
-        
-        waveUI.UpdateTimer(timer);
-
-
     }
 
-    void OnDestroy()
+    private void LoadWaveData()
     {
-        OnWaveEnd = null;
-        OnWaveStart = null;
-        OnEndGame = null;
+        string[] lines = waveDataCSV.text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        
+        for (int i = 1; i < lines.Length; i++) // Skip header row
+        {
+            string line = lines[i].Trim();
+            if (string.IsNullOrWhiteSpace(line)) continue; // Skip blank lines
+
+            string[] values = line.Split(',');
+            if (values.Length < 9)
+            {
+                Debug.LogWarning($"Line {i + 1} in CSV file does not have enough values. Skipping.");
+                continue;
+            }
+
+            try
+            {
+                int waveNumber = int.Parse(values[0]);
+                if (!waves.ContainsKey(waveNumber))
+                {
+                    waves[waveNumber] = ScriptableObject.CreateInstance<Wave>();
+                    waves[waveNumber].waveNumber = waveNumber;
+                }
+
+                if (!enemyPrefabs.ContainsKey(values[2]))
+                {
+                    Debug.LogError($"Enemy type '{values[2]}' not found in enemyPrefabs dictionary. Skipping line {i + 1}.");
+                    continue;
+                }
+
+                Wave.SpawnEvent spawnEvent = new Wave.SpawnEvent
+                {
+                    startTime = float.Parse(values[1]),
+                    enemyPrefab = enemyPrefabs[values[2]],
+                    count = int.Parse(values[3]),
+                    duration = float.Parse(values[4]),
+                    randomizeSpawnTimes = bool.Parse(values[5]),
+                    armorProbability = float.Parse(values[6]),
+                    minSpawnIntervalFactor = float.Parse(values[7]),
+                    maxSpawnIntervalFactor = float.Parse(values[8])
+                };
+
+                waves[waveNumber].AddSpawnEvent(spawnEvent);
+            }
+            catch (FormatException e)
+            {
+                Debug.LogError($"Error parsing values in line {i + 1}: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Unexpected error processing line {i + 1}: {e.Message}");
+            }
+        }
     }
 
+    public Wave GetWave(int waveNumber)
+    {
+        if (waves.TryGetValue(waveNumber, out Wave wave))
+        {
+            return wave;
+        }
+        Debug.LogWarning($"Wave {waveNumber} not found.");
+        return null;
+    }
 
-    /*
-     * The Wave Manager runs the timer and the count of which wave we're on. It gives information to a UI,
-     * and other components look to it to see where we're at. (Or perhaps they listen for an event.)
-     * 
-     * Set two timers: one for the break, and one for the wave itself.
-     * A switch that tells us whether we're in wave or in break
+    public int GetTotalWaveCount()
+    {
+        return waves.Count;
+    }
 
-     */
+    public float GetWaveDuration(int waveNumber)
+    {
+        if (waves.TryGetValue(waveNumber, out Wave wave))
+        {
+            return wave.spawnEvents.Max(e => e.startTime + e.duration);
+        }
+        Debug.LogWarning($"Wave {waveNumber} not found.");
+        return 0f;
+    }
 
+     public bool HasNextWave()
+    {
+        return waves.ContainsKey(currentWaveNumber + 1);
+    }
+
+    public void StartNextWave()
+    {
+        currentWaveNumber++;
+        if (waves.TryGetValue(currentWaveNumber, out Wave wave))
+        {
+            isWaveActive = true;
+            waveTimer = GetWaveDuration(currentWaveNumber);
+            OnWaveStart?.Invoke(currentWaveNumber);
+        }
+        else
+        {
+            EndGame();
+        }
+    }
 
     public void EndWave()
     {
         isWaveActive = false;
         OnWaveEnd?.Invoke();
-        waveNumber++;
-
-        if (waveNumber < 4)
+        if (HasNextWave())
         {
-            timer = breakDuration; //Start the break timer
-            waveUI.isWaveActiveUI(isWaveActive);
-            waveUI.waveNumberUI(waveNumber);
+            breakTimer = breakDuration;
         }
         else
         {
-            gameOver = true;
-            waveUI.gameObject.SetActive(false);
-            OnEndGame?.Invoke(); }
-
+            EndGame();
+        }
     }
 
-    public void StartWave()
+    public void EndGame()
     {
-
-        
-        isWaveActive = true;
-        OnWaveStart?.Invoke(waveNumber);
-        timer = waveDuration; //Start the wave timer
-        //TODO: Let the UI know to start a wave
-        waveUI.isWaveActiveUI(isWaveActive);
-        waveUI.waveNumberUI(waveNumber);
-
-
+        isGameOver = true;
+        OnGameOver?.Invoke();
+        OnEndGame?.Invoke(); // Invoke the new event
     }
-
-    public void JumpTimerForDebugging()
+    public float GetRemainingWaveTime()
     {
-        timer = 0f;
+        return waveTimer;
     }
 
-    
+    public float GetRemainingBreakTime()
+    {
+        return breakTimer;
+    }
+
+        public void JumpTimerForDebugging()
+{
+    if (isWaveActive)
+    {
+        // If we're in a wave, jump to the end of the wave
+        waveTimer = 0.1f; // Set to a small value to trigger wave end on next update
+    }
+    else
+    {
+        // If we're in a break, jump to the end of the break
+        breakTimer = 0.1f; // Set to a small value to trigger next wave start on next update
+    }
+}
+
 }

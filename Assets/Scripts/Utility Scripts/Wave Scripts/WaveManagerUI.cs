@@ -25,9 +25,6 @@ public class WaveManagerUI : MonoBehaviour
         
     }
 
-    //TODO: A function that keeps the score updated
-    //TODO: A function that updates the timer
-    //TODO: 
 
     public void UpdateTimer(float _sec)
     {
