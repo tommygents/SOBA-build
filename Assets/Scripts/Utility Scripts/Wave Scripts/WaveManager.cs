@@ -5,11 +5,20 @@ using System.Linq;
 
 public class WaveManager : MonoBehaviour
 {
-    public static WaveManager Instance;
-    public TextAsset waveDataCSV;
-    [SerializeField] public Dictionary<string, Enemy> enemyPrefabs = new Dictionary<string, Enemy>();
+public static WaveManager Instance;
 
-    [SerializeField] private Dictionary<int, Wave> waves = new Dictionary<int, Wave>();
+    [Serializable]
+    public class EnemyPrefabEntry
+    {
+        public string enemyType;
+        public Enemy enemyPrefab;
+    }
+
+    public TextAsset waveDataCSV;
+    [SerializeField] private List<EnemyPrefabEntry> enemyPrefabList = new List<EnemyPrefabEntry>();
+    [HideInInspector] public Dictionary<string, Enemy> enemyPrefabs = new Dictionary<string, Enemy>();
+
+    private Dictionary<int, Wave> waves = new Dictionary<int, Wave>();
     
     public int currentWaveNumber = 0;
     public float waveTimer = 0f;
@@ -23,18 +32,24 @@ public class WaveManager : MonoBehaviour
     public static event Action OnGameOver;
     public static event Action OnEndGame;
 
-    void Awake()
+void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            InitializeEnemyPrefabsDictionary();
             LoadWaveData();
         }
         else
         {
             Destroy(gameObject);
         }
+    }
+
+    private void InitializeEnemyPrefabsDictionary()
+    {
+        enemyPrefabs = enemyPrefabList.ToDictionary(entry => entry.enemyType, entry => entry.enemyPrefab);
     }
 
     void Update()
