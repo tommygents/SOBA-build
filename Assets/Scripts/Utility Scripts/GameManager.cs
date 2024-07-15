@@ -11,8 +11,8 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public Player player;  // Assign in inspector or find dynamically
-    public CameraMovement cameraMovement;  // Assign in inspector or find dynamically
+    public Player player;
+    public CameraMovement cameraMovement;
     public GameObject pauseScreen;
     public Button resumeButton;
     public Button restartButton;
@@ -31,26 +31,27 @@ public class GameManager : MonoBehaviour
     public string squatCache;
     public string pullCache;
 
-
     void Awake()
     {
         Time.timeScale = 1.0f;
         WaveManager.OnWaveStart += HandleWaveStart;
         WaveManager.OnWaveEnd += HandleWaveEnd;
+        WaveManager.OnGameOver += HandleGameOver;
         selectedButton.Select();
         pauseScreen.SetActive(false);
-        //InputManager.Instance.OnPause += Pause;
         isPaused = false;
-        
     }
 
     void OnDisable()
     {
-        //InputManager.Instance.OnPause -= Pause;
+        WaveManager.OnWaveStart -= HandleWaveStart;
+        WaveManager.OnWaveEnd -= HandleWaveEnd;
+        WaveManager.OnGameOver -= HandleGameOver;
         InputManager.Instance.OnPull -= HandlePull;
         InputManager.Instance.OnSquatStart -= HandleSquatStart;
         InputManager.Instance.OnSquatEnd -= HandleSquatEnd;
     }
+
     private void HandleWaveStart(int waveNumber)
     {
         player.HidePlayerDuringWave(waveNumber);
@@ -61,14 +62,20 @@ public class GameManager : MonoBehaviour
     private void HandleWaveEnd()
     {
         player.gameObject.SetActive(true);
-        player.ResetPositionToLastSaved();  // Make sure the Player script can handle this
+        player.ResetPositionToLastSaved();
         cameraMovement.SetCameraToFollowPlayer(player);
+    }
+
+    private void HandleGameOver()
+    {
+        // Implement game over logic here
+        Debug.Log("Game Over!");
+        // You might want to show a game over screen, stop spawning enemies, etc.
     }
 
     public void Pause()
     {
         isPaused = !isPaused;
-        
 
         if (isPaused)
         {
@@ -83,7 +90,6 @@ public class GameManager : MonoBehaviour
             pullText.text = "Select";
             squatCache = squatText.text;
             squatText.text = "Confirm";
-
         }
         else
         {
@@ -101,12 +107,8 @@ public class GameManager : MonoBehaviour
         }
         if (pauseScreen != null)
         {
-            pauseScreen.SetActive(isPaused); // Show or hide the pause menu
-            //selectedButton.Select();
+            pauseScreen.SetActive(isPaused);
         }
-
-        //Time.timeScale = isPaused ? 0 : 1; // Pause or unpause the game
-
     }
 
     public void Restart()
