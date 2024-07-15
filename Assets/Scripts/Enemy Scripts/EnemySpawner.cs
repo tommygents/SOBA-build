@@ -17,7 +17,7 @@ public class EnemySpawner : Enemy
 
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
         collider2D = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();

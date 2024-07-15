@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
@@ -8,24 +9,21 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
 {
 
-    //[SerializeField] public InputAction moveAction;
-    public Vector2 moveVector = Vector2.zero;
+ 
+    
     public float baseSpeed = 1f;
     [SerializeField] private float actualSpeed;
     [SerializeField] public ControlScheme controller;
     [SerializeField] public HealthManager healthManager;
-    //[SerializeField] public PlayerInput playerInput;
 
-    public PlayerAttackSet attackSet; //AttackSet is a collection of moves that are specified elsewhere
+
+    
 
 
     public bool holdingPress = false;
     public bool holdingPull = false;
-    public bool inBaseZone = true;
-    public float holdingDuration = 1f;
-    public float attackDistance = 2f;
-    public int healAmount = 5;
-    public bool invertControls = true;
+
+    
     public bool isRunning = false;
     public bool isSprinting = false;
     public bool isSquating = false;
@@ -35,7 +33,7 @@ public class Player : MonoBehaviour
     public Turret nearbyTurret = null;
     public Turret engagedTurret = null;
     public Vector3 positionBeforeEnteringTurret;
-    [SerializeField] private PlayerTurretDetector turretDetector;
+    [SerializeField] public PlayerTurretDetector turretDetector;
     [SerializeField] private PlayerBuildingPlacement buildingPlacement;
 
     public float dashTimer = 0f;
@@ -43,65 +41,75 @@ public class Player : MonoBehaviour
     public float dashSpeed = 3f;
     public bool isDashing = false;
 
+    [SerializeField, HideInInspector] public Vector3 positionBeforeDeactivation;
+
+    public bool isMakingUISelection = false;
+    
+    [SerializeField] public PlayerTurretUI playerTurretUI;
+    public Turret turretToBuild;
+
+    public GameManager gameManager;
+
+    [SerializeField] private GameObject radiusCircle;
+    public AudioClip construction;
+    public bool buildingStarted = false;
+    
+
 //Building placement variables
 
     // Start is called before the first frame update
     void Start()
     {
-        attackSet = GetComponent<PlayerAttackSet>();
-        //playerInput = GetComponent<PlayerInput>();
-        controller = new ControlScheme();
 
-        controller.gameplay.Enable();
-        healthManager = GetComponent<HealthManager>();
-        actualSpeed = baseSpeed;
+Initialize();
 
-        turretDetector = GetComponentInChildren<PlayerTurretDetector>();
-        buildingPlacement = GetComponent<PlayerBuildingPlacement>();
+
+        
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        //move the player according to the tilt of the RingCon
-        moveVector = controller.gameplay.move.ReadValue<Vector2>();
-        if (invertControls) moveVector.y *= -1;
-        if (!isEngagedWithTurret && !isSquating)
-        {
-            OnMove(moveVector);
-        }
+        Move();
 
-        //iterate holdingDuration
-        if (holdingPress)
-        {
-            holdingDuration += Time.deltaTime;
-        }
-        //Check to see if any actions are currently in progress
-        HeavyPress();
-        LightPress();
-        HeavyPull();
-        Sprint();
-        Squat();
-        Run();
+
 
 
         if (isRunning && isEngagedWithTurret) //Passes the time spent running to an engaged turret to charge it up
         {
-           
-            float _chargeTime = Time.deltaTime;
-            if (isSprinting) { _chargeTime *= 1.5f; }
-            engagedTurret.ChargeUp(_chargeTime);
+
+            engagedTurret.ChargeUp(isSprinting);
         }
 
-        if (isSquating && !isEngagedWithTurret && !turretDetector.detectsTurret) //activate the build timer, so that the player builds a turret
+        if (isSquating && !isEngagedWithTurret) //activate the build timer, so that the player builds a turret
         {
-            float _chargeTime = Time.deltaTime;
-            if (buildingPlacement.IterateBuildCounter(_chargeTime)) //passes the charge time to the building manager, which returns true if enough time to build a turret has passed
+            if (!turretDetector.CanBuild())
             {
-                Turret _turret = Instantiate(buildingPlacement.turrets[buildingPlacement.activeTurretIndex], transform.position, Quaternion.identity);
-                buildingPlacement.ResetBuildCounter();
+                UpdateText(squatText, "Too close!");
+                
             }
+            if (turretDetector.CanBuild())
+            {
+                if (turretSelectionActive) //turns off the selectionUI and begins building the turret
+                { EndTurretSelectionUI(); }
+                if (!buildingStarted)
+                {
+                    buildingStarted = true;
+                    AudioManager.Instance.PlayerClip(construction);
+                }
+
+                UpdateText(squatText, "Building...");
+
+
+                float _chargeTime = Time.deltaTime;
+                ShowRadius(turretToBuild.GetTargetingRadius());
+                if (buildingPlacement.IterateBuildCounter(_chargeTime)) //passes the charge time to the building manager, which returns true if enough time to build a turret has passed
+                {
+                    FinishBuildingTurret();
+                }
+            }
+           
         }
 
         if (isDashing) //iterate the dash timer and then check if the dash has ended
@@ -115,6 +123,14 @@ public class Player : MonoBehaviour
             }
         }
 
+        if (turretSelectionActive)
+        {
+            turretSelectionTimer += Time.deltaTime;
+            if (turretSelectionTimer > turretSelectionTimeOut)
+            {
+                EndTurretSelectionUI();
+            }
+        }
 
 
         if (Input.GetKeyDown(KeyCode.R))  // Reloads the current scene
@@ -123,14 +139,33 @@ public class Player : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
+        if (turretDetector.detectsTurret && engagedTurret == null)
+        {
+            UpdateText(pushText, "Enter");
+        } else if (!isEngagedWithTurret)
+        {
+            UpdateText(pushText, "Dash");
+        }
+
 
 
     } //END OF UPDATE FUNCTION
 
-    public void OnMove(Vector2 _vector2)
+    private void FinishBuildingTurret()
     {
-        
-        transform.Translate(_vector2 * actualSpeed * Time.deltaTime);
+        Turret _turret = Instantiate(turretToBuild, transform.position, Quaternion.identity);
+        buildingPlacement.ResetBuildCounter();
+        HideRadius();
+        UpdateText(squatText, "Build");
+        buildingStarted = false;
+        AudioManager.Instance.StopClip(construction);
+        EnterTurret(_turret);
+    }
+
+    public void FinishBuildingTurretDebug()
+    {
+        EndTurretSelectionUI();
+        FinishBuildingTurret();
     }
 
     public void Sprint()
@@ -140,12 +175,14 @@ public class Player : MonoBehaviour
             actualSpeed = 2f * baseSpeed;
             isRunning = true;
             isSprinting = true;
+            Debug.Log("sprinting");
         };
         controller.gameplay.Sprint.performed += ctx =>
         {
             actualSpeed = baseSpeed;
             isRunning = false;
             isSprinting = false;
+            
         };
     }
 
@@ -163,9 +200,13 @@ public class Player : MonoBehaviour
         {
 
             isSquating = false;
-            //TODO: when the player stops squatting, reset the building placement counter.
+      
 
             buildingPlacement.ResetBuildCounter();
+            HideRadius();
+            UpdateText(squatText, "Build");
+            buildingStarted = false;
+            AudioManager.Instance.StopClip(construction);
 
 
         };
@@ -191,57 +232,49 @@ public class Player : MonoBehaviour
         };
     }
 
-    public void HeavyPress()
+ #region Press/Push Refactor
+
+
+ 
+    public void HeavyPress() //refactored into all presses
     {
-        controller.gameplay.heavypush.started += ctx =>
+
+
+        if (InTurretEntryProximity())
         {
-            /*
-            if (ctx.interaction is PressInteraction)
-            {
-                Debug.Log("Button pressed"); 
-                holdingPress = true;
-                holdingDuration = 1f; //holdingDuration gets iterated in the Update() function
-            }*/
-        };
-
-        controller.gameplay.heavypush.performed += ctx =>
+            EnterTurret(turretDetector.DetectedTurret());
+        }
+        else if (InTurret())
         {
-            
-                /* This is the code that formerly triggered an attack.
-                Vector2 direction = moveVector;
-                Vector3 attackPosition = transform.position + new Vector3(direction.x, direction.y, 0) * attackDistance;
-                PlayerAttack _light = Instantiate(attackSet.lightPush, attackPosition, Quaternion.identity, this.gameObject.transform);
-           */
-                if (turretDetector.detectsTurret && engagedTurret == null)
-                {
-                    EnterTurret(turretDetector.DetectedTurret());
-                }
-                else if (engagedTurret != null)
-                {
-                    ExitTurret(engagedTurret);
-                }
-                else
-                {
-                    isDashing = true;
-                    actualSpeed *= dashSpeed;
-                }
-
-
-            };
-            /*
-            Debug.Log("Button released, duration:" + holdingDuration);
-
-            PlayerAttack _hp = Instantiate(attackSet.heavyPush, this.transform.position, Quaternion.identity, this.gameObject.transform);
-;           _hp.Initialize(holdingDuration); 
-            holdingPress = false;
-        };
-        controller.gameplay.heavypush.canceled += ctx =>
+            ExitTurret(engagedTurret);
+        }
+        else
         {
-            holdingPress = false;
-        };
-            */
-        
+            TriggerDash();
+        }
+
+
     }
+
+    private void TriggerDash()
+    {
+        isDashing = true;
+        actualSpeed *= dashSpeed;
+    }
+
+    private bool InTurretEntryProximity()
+    {
+        return turretDetector.detectsTurret && engagedTurret == null;
+    }
+    private bool InTurret()
+    {
+        return engagedTurret != null;
+    }
+
+
+
+
+
 
     public void LightPress()
     {
@@ -249,11 +282,7 @@ public class Player : MonoBehaviour
 
         controller.gameplay.lightpush.performed += ctx => //when the action is performed, a complete light push
         {
-            /* This is the code that formerly triggered an attack.
-            Vector2 direction = moveVector;
-            Vector3 attackPosition = transform.position + new Vector3(direction.x, direction.y, 0) * attackDistance;
-            PlayerAttack _light = Instantiate(attackSet.lightPush, attackPosition, Quaternion.identity, this.gameObject.transform);
-       */
+            
             if (turretDetector.detectsTurret && engagedTurret == null)
             {
                 EnterTurret(turretDetector.DetectedTurret());
@@ -273,34 +302,36 @@ public class Player : MonoBehaviour
 
      
     }
-
-    public void HeavyPull()
+     #endregion
+    public void HeavyPull() //refactored
     {
-        if (inBaseZone)
-        {
+        
             controller.gameplay.heavypull.started += ctx =>
             {
                 
-                    Debug.Log("Pull detected");
+                /*
                     holdingPull = true;
-                    StartCoroutine(Heal());
-                
+                isMakingUISelection = true;
+                turretUI.ShowTowerSelectionPanel();
+                */
+                    
             };
             controller.gameplay.heavypull.performed += ctx =>
             {
-                holdingPull = false;
-                StopCoroutine(Heal());
-                StopCoroutine(Heal());
+                OnPull(ctx);
+           
             };
 
             controller.gameplay.heavypull.canceled += ctx =>
             {
+                /*
                 holdingPull = false;
-                StopCoroutine(Heal());
-                StopCoroutine(Heal());
+                turretToBuild = turretUI.MakeTurretSelection();
+                isMakingUISelection = false;
+                */
             };
 
-        }
+        
     }
     public void Die()
     {
@@ -336,7 +367,7 @@ public class Player : MonoBehaviour
         engagedTurret = _turret;
         this.GetComponent<SpriteRenderer>().enabled = false; // Hide player sprite
         Camera.main.transform.position = new Vector3(_turret.transform.position.x, _turret.transform.position.y, Camera.main.transform.position.z); // Center camera on turret
-
+        UpdateText(pushText, "Exit");
 
     }
 
@@ -351,28 +382,272 @@ public class Player : MonoBehaviour
         this.transform.position = positionBeforeEnteringTurret;
         positionBeforeEnteringTurret = new Vector3();// Adjust position as needed
     }
-    public IEnumerator Heal()
+
+
+    public bool turretSelectionActive = false;
+    public float turretSelectionTimer = 0f;
+    public float turretSelectionTimeOut = 1.5f;
+
+    public void UpdateTurretSelection()
     {
-        Debug.Log("Healing");
-        while (holdingPull)
+        turretSelectionActive = true;
+        turretSelectionTimer = 0f;
+        playerTurretUI.ShowTowerSelectionPanel();
+        playerTurretUI.IterateSelection();
+        
+
+    }
+   
+    public void EndTurretSelectionUI()
+    {
+        turretSelectionActive = false;
+        playerTurretUI.HideTowerSelectionPanel();
+        turretToBuild = playerTurretUI.MakeTurretSelection();
+        
+    }
+    public void HidePlayerDuringWave(int waveNumber)
+    {
+        
+        if (isEngagedWithTurret)
         {
-            Instantiate(attackSet.heavyPull, this.transform.position, Quaternion.identity, this.gameObject.transform);
-            healthManager.HP += healAmount;
-            yield return new WaitForSeconds(1f);
+            ExitTurret(engagedTurret);
+            
         }
+        positionBeforeEnteringTurret = transform.position;
+        //this.gameObject.SetActive(false);  // Deactivate player GameObject
     }
 
-    #region turret and other building placement
-    //TODO: Player can place turrets by squatting for long enough
-    /*
-     * This involves registering that a player has squatted, checking that there's no turret in the way, showing the player's squat progress,
-     * and then placing a turret that the player immediately enters.
-     * 
-     * 
-     */
+    public void UpdateLastPosition()
+    {
+        if (!isEngagedWithTurret)
+        {
+            positionBeforeEnteringTurret = transform.position;
+        }
+        
+    }
+
+    public void ResetPositionToLastSaved()
+    {
+        transform.position = positionBeforeEnteringTurret;
+    }
+
+    public Vector2 GetCameraBounds()
+    {
+        Camera mainCamera = Camera.main;
+        float camHeight = 2f * mainCamera.orthographicSize;
+        float camWidth = camHeight * mainCamera.aspect;
 
 
+        return new Vector2(camWidth, camHeight);
+    }
+
+    /// <summary>
+    /// Enforces the camera boundson a position; returns the position, or the nearest in-bounds position.
+    /// </summary>
+    /// <param name="_position">The player's position.</param>
+    /// <returns>The updated, in-bounds position.</returns>
+    private Vector2 EnforceCameraBounds(Vector2 _position)
+    {
+        Vector2 camSize = GetCameraBounds();
+        Camera mainCamera = Camera.main;
+        Vector2 camPosition = mainCamera.transform.position;
 
 
-    #endregion
+        float minX = camPosition.x - camSize.x / 2;
+        float maxX = camPosition.x + camSize.x / 2;
+        float minY = camPosition.y - camSize.y / 2;
+        float maxY = camPosition.y + camSize.y / 2;
+
+        _position.x = Mathf.Clamp(_position.x, minX, maxX);
+        _position.y = Mathf.Clamp(_position.y, minY, maxY);
+        return _position;
+    }
+
+    public void ShowRadius(float _rad)
+    {
+        radiusCircle.transform.localScale = Vector3.one * _rad;
+
+    }
+
+    public void HideRadius()
+    {
+        radiusCircle.transform.localScale = Vector3.zero;
+    }
+
+#region UI text in lower right corner
+
+    public TextMeshProUGUI squatText;
+    public TextMeshProUGUI pullText;
+    public TextMeshProUGUI pushText;
+    public void UpdateText(TextMeshProUGUI _field, string _text)
+    {
+        _field.text = _text;
+    }
+
+#endregion
+    #region Refactoring
+private void Initialize()
+{
+
+  
+
+    healthManager = GetComponent<HealthManager>();
+       
+        actualSpeed = baseSpeed;
+
+        turretDetector = GetComponentInChildren<PlayerTurretDetector>();
+        buildingPlacement = GetComponent<PlayerBuildingPlacement>();
+        //playerTurretUI = GetComponentInChildren<PlayerTurretUI>();
+        turretToBuild = playerTurretUI.MakeTurretSelection();
+        HideRadius();
+        UpdateText(squatText, "Build Turret");
+        UpdateText(pullText, "Switch Turret Selection");
+        SubscribeToInputEvents();
+        
 }
+
+/// <summary>
+/// Checks whether the player is in a state to move, then moves the player
+/// </summary>
+private void Move()
+{
+    
+    if (IsMobile())
+    {
+        
+        transform.Translate(InputManager.Instance.GetMoveVector() * actualSpeed * Time.deltaTime); 
+        transform.position = EnforceCameraBounds(transform.position);  
+
+    } 
+}
+
+private bool IsMobile() {
+    return (
+    !isEngagedWithTurret && 
+    !isSquating && 
+    !isMakingUISelection
+    );
+}
+    #endregion
+
+#region Input Handlers
+
+
+public void OnRunStart(InputAction.CallbackContext _context)
+{
+    isRunning = true;
+}
+public void OnRunEnd(InputAction.CallbackContext _context)
+{
+    isRunning = false;
+}
+
+public void OnSprintStart(InputAction.CallbackContext _context)
+{
+    OnRunStart(_context);
+    isSprinting = true;
+}
+public void OnSprintEnd(InputAction.CallbackContext _context)
+{
+    OnRunEnd(_context);
+    isSprinting = false;
+}
+
+public void OnSquatStart(InputAction.CallbackContext _context)
+{
+    isSquating = true;
+}
+public void OnSquatEnd(InputAction.CallbackContext _context)
+{
+   isSquating = false;
+      
+
+            buildingPlacement.ResetBuildCounter();
+            HideRadius();
+            UpdateText(squatText, "Build");
+            buildingStarted = false;
+            AudioManager.Instance.StopClip(construction);
+}
+
+public void OnPress(InputAction.CallbackContext _context)
+{
+     if (InTurretEntryProximity())
+        {
+            EnterTurret(turretDetector.DetectedTurret());
+        }
+        else if (InTurret())
+        {
+            ExitTurret(engagedTurret);
+        }
+        else
+        {
+            TriggerDash();
+        }
+}
+
+public void OnPull(InputAction.CallbackContext _context)
+{
+if (!gameManager.isPaused)
+                UpdateTurretSelection();
+}
+
+
+public void OnPullStart(InputAction.CallbackContext _context)
+{
+    //isMakingUISelection = true;
+    //playerTurretUI.ShowTowerSelectionPanel();
+}
+
+public void OnPullEnd(InputAction.CallbackContext _context)
+{
+    //isMakingUISelection = false;
+    //playerTurretUI.HideTowerSelectionPanel();
+}
+
+#endregion
+
+
+    #region Event Management
+ void OnEnable()
+{
+    
+SubscribeToInputEvents();
+}
+
+
+private void SubscribeToInputEvents()
+{
+    InputManager.Instance.OnSprintStart += OnSprintStart;
+    InputManager.Instance.OnSprintEnd += OnSprintEnd;
+    InputManager.Instance.OnSquatStart += OnSquatStart;
+    InputManager.Instance.OnSquatEnd += OnSquatEnd;
+    InputManager.Instance.OnRunStart += OnRunStart;
+    InputManager.Instance.OnRunEnd += OnRunEnd;
+    InputManager.Instance.OnPress += OnPress;
+    
+    InputManager.Instance.OnPullStart += OnPullStart;
+    InputManager.Instance.OnPull += OnPull;
+    InputManager.Instance.OnPullEnd += OnPullEnd;
+
+}
+ void OnDisable()
+{
+    
+    InputManager.Instance.OnSprintStart -= OnSprintStart;
+    InputManager.Instance.OnSprintEnd -= OnSprintEnd;
+    InputManager.Instance.OnSquatStart -= OnSquatStart;
+    InputManager.Instance.OnSquatEnd -= OnSquatEnd;
+    InputManager.Instance.OnRunStart -= OnRunStart;
+    InputManager.Instance.OnRunEnd -= OnRunEnd;
+    InputManager.Instance.OnPress -= OnPress;
+
+    InputManager.Instance.OnPullStart -= OnPullStart;
+    InputManager.Instance.OnPull -= OnPull;
+    InputManager.Instance.OnPullEnd -= OnPullEnd;
+}
+    #endregion
+
+}
+
+
+

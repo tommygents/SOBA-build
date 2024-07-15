@@ -1,0 +1,67 @@
+{
+    "tutorialSteps": [
+        {
+            "step": "introduction",
+            "text": "This is Tower Runner! In just a minute, units are going to start coming from the left side of the path."
+        },
+        {
+            "step": "movement1",
+            "text": "Here's a good place to put a defense turret! You can move there by turning and tilting the Ringcon. Give it a try."
+        },
+
+
+        {
+            "step": "movement3",
+            "text": "Good job! While you're moving, you can dash by pressing on the Ringcon."
+        },
+
+        {
+            "step": "turret1",
+            "text": "Great! Now, perform a squat to place a turret. You'll see it start to charge."
+
+        },
+        {
+            "step": "turret2",
+            "text": "Good job. To enter a turret and begin charging it, dash into the turret by pressing the Ringcon."
+
+        },
+        {
+            "step": "turret3",
+            "text": "Now, run in place—you'll see the turret accumulating charge. If the turret runs out of charge, it won't shoot until you charge it back up. Turrets can be supercharged, and you'll get a capacity bonus if you charge past the first level.'"
+
+        },
+        {
+            "step": "turret4",
+            "text": "You can also sprint in place or lift your knees higher to charge the turret even faster!"
+
+        },
+
+        {
+            "step": "secondturret1",
+            "text": "You can come back to charge this turret more later. For now, let's set up a cannon, which is slower but does more damage. To exit this turret, dash out by pressing the Ringcon."
+
+        },
+
+
+        {
+            "step": "secondturret1.5",
+            "text": "Great. If you pull outward on the Ringcon, you'll see the turrets you're able to build, and you'll cycle through the options. Select the cannon, and build one a bit further from the path."
+
+        },
+        {
+            "step": "secondturret2",
+            "text": "Perfect. Once you charge this turret up a bit, the first wave of enemies will start. Dash to enter the turret, charge up the first level, and then we'll get started."
+
+        },
+
+        {
+            "step": "wavestarting",
+            "text": "Okay, we've done all we can do for now. While the waves are coming, you won't be able to act—you're just waiting to see how you fare. There's no penalty if units get through, but you're score will be lower at the end.'"
+
+        },
+        {
+            "step": "startWave",
+            "text": "Press this button to start the wave."
+        }
+    ]
+}

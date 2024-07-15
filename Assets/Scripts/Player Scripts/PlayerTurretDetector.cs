@@ -6,6 +6,9 @@ public class PlayerTurretDetector : MonoBehaviour
 {
     public bool detectsTurret = false;
     public Turret detectedTurret= null;
+    public bool detectsPath = false;
+    public Turret nearestTurret = null;
+    public List<Turret> detectedTurrets = new List<Turret>();
 
     // Start is called before the first frame update
     void Start()
@@ -25,8 +28,13 @@ public class PlayerTurretDetector : MonoBehaviour
         {
             detectsTurret= true;
             detectedTurret = collision.GetComponent<Turret>();
-        }
+            detectedTurrets.Add(collision.GetComponent<Turret>());
+        } 
 
+        if (collision.gameObject.layer == LayerMask.NameToLayer("PathCollider"))
+        {
+            detectsPath = true;
+        }
 
     }
 
@@ -34,8 +42,14 @@ public class PlayerTurretDetector : MonoBehaviour
     {
         if (collision.GetComponent<Turret>() != null)
         {
-            detectsTurret= false;
+            
             detectedTurret= collision.GetComponent<Turret>();
+            detectedTurrets.Remove(collision.GetComponent<Turret>());
+            detectedTurret = GetNearestTurret();
+        } 
+        if (collision.gameObject.layer == LayerMask.NameToLayer("PathCollider"))
+        {
+            detectsPath = false;
         }
     }
 
@@ -43,4 +57,37 @@ public class PlayerTurretDetector : MonoBehaviour
     {
         return detectedTurret;
     }
+
+    public bool CanBuild()
+    {
+        return !(detectsTurret || detectsPath);
+    }
+
+private void UpdateNearestTurret()
+    {
+        if (detectedTurrets.Count == 0)
+        {
+            nearestTurret = null;
+            detectsTurret = false;
+        }
+        else
+        {
+            detectsTurret = true;
+        nearestTurret = detectedTurrets[0];
+        foreach (Turret turret in detectedTurrets)
+        {
+            if (Vector3.Distance(transform.position, turret.transform.position) < Vector3.Distance(transform.position, nearestTurret.transform.position))
+            {
+                nearestTurret = turret;
+            }
+        }
+    }
+    }
+    public Turret GetNearestTurret()
+    {
+        UpdateNearestTurret();
+        return nearestTurret;
+    }
+
+    
 }

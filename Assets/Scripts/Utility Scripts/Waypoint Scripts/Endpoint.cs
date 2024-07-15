@@ -11,10 +11,7 @@ public class Endpoint : Waypoint
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 
     public override Waypoint GetNextWaypoint()
     {

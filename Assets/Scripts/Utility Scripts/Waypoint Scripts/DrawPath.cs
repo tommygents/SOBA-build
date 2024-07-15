@@ -8,11 +8,14 @@ public class DrawPath : MonoBehaviour
     public Material lineMaterial;          // Material to be used for the paths
     public Color lineStartColor = Color.red; // Default start color
     public Color lineEndColor = Color.red;   // Default end color
+    public float colliderWidth = 0.5f;     // Width of the collider along the path
+    private int pathLayer;
 
     private List<Vector3[]> paths = new List<Vector3[]>();
 
-    void Start()
+    void Awake()
     {
+        pathLayer = LayerMask.NameToLayer("PathCollider");
         WaypointSpawner spawner = GetComponent<WaypointSpawner>();
 
         if (spawner != null)
@@ -55,11 +58,17 @@ public class DrawPath : MonoBehaviour
         if (pathPoints.Length == 0)
             return;
 
-        LineRenderer lineRenderer = new GameObject("Path").AddComponent<LineRenderer>();
-        lineRenderer.transform.SetParent(transform);
+        GameObject pathObject = new GameObject("Path");
+        pathObject.layer = pathLayer;
+        pathObject.transform.SetParent(transform);
+
+        LineRenderer lineRenderer = pathObject.AddComponent<LineRenderer>();
         lineRenderer.positionCount = pathPoints.Length;
         lineRenderer.SetPositions(pathPoints);
         ConfigureLineRenderer(lineRenderer);
+
+        // Add colliders along the path
+        AddCollidersToPath(pathObject, pathPoints);
     }
 
     void ConfigureLineRenderer(LineRenderer lr)
@@ -69,5 +78,41 @@ public class DrawPath : MonoBehaviour
         lr.material = lineMaterial;
         lr.startColor = lineStartColor;
         lr.endColor = lineEndColor;
+    }
+
+    // Method to add colliders along the path
+    private void AddCollidersToPath(GameObject pathObject, Vector3[] pathPoints)
+    {
+        for (int i = 1; i < pathPoints.Length; i++)
+        {
+            AddColliderBetweenPoints(pathObject, pathPoints[i - 1], pathPoints[i]);
+        }
+    }
+
+    private void AddColliderBetweenPoints(GameObject parent, Vector3 start, Vector3 end)
+    {
+        GameObject colliderGameObject = new GameObject("PathCollider2D");
+        colliderGameObject.layer = pathLayer;
+        colliderGameObject.transform.parent = parent.transform;
+
+        BoxCollider2D collider = colliderGameObject.AddComponent<BoxCollider2D>();
+        collider.isTrigger = true;
+
+        // Position the collider at the midpoint between start and end
+        Vector3 midPoint = (start + end) / 2;
+        colliderGameObject.transform.position = midPoint;
+
+        // Calculate the distance between start and end to set the length of the box
+        float lineLength = Vector3.Distance(start, end);
+
+        // Set the size of the collider: length along the path and the specified width
+        collider.size = new Vector2(lineLength, colliderWidth);
+
+        // Calculate the angle to rotate the collider to align with the path
+        Vector3 direction = (end - start).normalized;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+        // Rotate the collider to align with the path
+        colliderGameObject.transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 }

@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
         get { return moveSpeed; }
         set { moveSpeed = value; }
     }
+    [SerializeField] protected float incrementalDamage = 0f;
 
     [SerializeField]
     private GameObject targetGO; //The game object that the unit moves towards
@@ -39,21 +40,27 @@ public class Enemy : MonoBehaviour
         set { pointsValue = value; }
     }
 
+    public Vector2 previousPosition;
+    public Vector2 currentPosition;
+    public Vector2 velocity;
 
     public SpriteRenderer spriteRenderer;
     //public bool targetInRange = false;
     public EnemyWaypointMovement movementScript;
     [SerializeField] private Player player;
+    public ParticleSystem deathParticles;
+    public AudioClip deathSound;
 
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         hp = MaxHP;
         spriteRenderer = GetComponent<SpriteRenderer>();
       
         
             movementScript = GetComponentInChildren<EnemyWaypointMovement>();
+       
         
     }
 
@@ -72,7 +79,9 @@ public class Enemy : MonoBehaviour
 
         
         movementScript.Move();
-
+        currentPosition = transform.position;
+        velocity = (currentPosition - previousPosition) / Time.deltaTime;
+        previousPosition = currentPosition;
     }
 
     public void PassNewWaypoint(Waypoint _wp)
@@ -84,15 +93,28 @@ public class Enemy : MonoBehaviour
     public void Die()
     {
         //Called when an enemy's hp gets to zero
-        GameEvents.EnemyKilled(PointsValue);
-        Destroy(this.gameObject);
+        ScoreThisEnemy();
+        ParticleSystem _dp = Instantiate(deathParticles, this.transform.position, Quaternion.identity);
+        _dp.Play();
+        AudioManager.Instance.enemyAudio.clip = deathSound;
+        AudioManager.Instance.enemyAudio.Play();
+        
+        RemoveThisEnemy();
+
     }
 
-    public void Attack(GameObject _target)
+    private void ScoreThisEnemy()
     {
-        //TODO: needs some sort of UI to let us know the attack is happening
-
+        GameEvents.EnemyKilled(PointsValue);
     }
+
+    private void RemoveThisEnemy()
+    {
+    GameEvents.EnemyDestroyed();
+    Destroy(this.gameObject);
+    }
+
+
 
     public void TargetEnter(GameObject _target)
     {
@@ -105,36 +127,122 @@ public class Enemy : MonoBehaviour
 
     public void InitializeMovement(WaypointSpawner _sp, Waypoint _wp)
     {
-        Debug.Log("Setting initial movement");
+        
         if (_wp == null || _sp == null)
         {
             Debug.LogError("Initialization failed: Waypoint or WaypointSpawner is null.");
             return;
         }
-        Debug.Log("Spawner: " + _sp.name + "; First Waypoint:" + _wp.name + "; Movement script: " + movementScript.name);    
+        
         movementScript.nextWaypoint = _wp;
         movementScript.prevWaypoint = _sp;
         movementScript.parent = this;
+        PassMovementSpeed();
+    }
+    public void PassMovementSpeed()
+    {
+        movementScript.speed = moveSpeed;
     }
 
-    
-
-
-    /*OnCollision is, for now, geting moved to the playerattack itself. 
-     * 
-    public void OnCollisionEnter2D(Collision2D collision)
+    public void TakeIncrementalDamage(float _damage)
     {
-        GameObject _go = collision.gameObject;
-        if (_go.GetComponent<PlayerAttack>() != null)
+        
+        int _intDamage = (int)_damage;
+        float _floatDamage = _damage - _intDamage;
+        if (armored)
         {
-            //Code here for taking damage from an attack
-        PlayerAttack _pa = _go.GetComponent<PlayerAttack>();
-
+            armorHP -= _intDamage;
+            if (armorHP <= 0)
+            {
+                armorHP = 0;
+                DestroyArmor();
+            }
+            _intDamage = 0;
+        }
+        hp -= _intDamage;
+        incrementalDamage += _floatDamage;
+        if (incrementalDamage >= 1f)
+        {
+            if (armored)
+            {
+                armorHP -= 1;
+                if (armorHP <= 0)
+                    DestroyArmor();
+            }
+            else hp--;
+            incrementalDamage -= 1f;
         }
 
-
     }
 
-    
-    */
+    public void SetMovementPenalty(float _penalty)
+    {
+        movementScript.speed = moveSpeed * (1 - _penalty);
+    }
+
+
+    #region adding in armor
+    public bool armored;
+    public Material armorMaterial;
+    public int armorHP;
+    public int defaultArmorHP;
+
+    public void TakeIncrementalDamage(float _damage, DamageTypes _dt)
+    {
+        if (armored)
+        {
+            if (armorHP/GetArmorFactor(_dt) <= _damage) //Case 1: The damage will wipe out the armor entirely
+            {
+                _damage -= armorHP/GetArmorFactor(_dt);
+                armorHP = 0;
+                DestroyArmor();
+            }
+            else //Case 2: the damage will not wipe out the armor.
+            {
+                _damage *= GetArmorFactor(_dt);
+                armorHP -= (int)_damage;
+                _damage -= (int)_damage;
+            }
+        TakeIncrementalDamage(_damage);
+
+        }
+    }
+
+    protected float GetArmorFactor(DamageTypes _dt)
+    {
+        if (_dt == DamageTypes.electric)
+            return 2f;
+        if (_dt == DamageTypes.explosive)
+            return 1f;
+        return .5f;
+    }
+    public void DestroyArmor()
+    {
+        armored = false;
+        spriteRenderer.material = null;
+        spriteRenderer.color = Color.white;
+    }
+
+    public void MakeArmored(int armorStrength)
+    {
+        if (spriteRenderer == null)
+
+            spriteRenderer = GetComponent<SpriteRenderer>();
+        armored = true;
+        armorHP = armorStrength;
+        if (armorMaterial != null && spriteRenderer != null)
+        {
+            spriteRenderer.material = armorMaterial;
+            
+        }
+        spriteRenderer.color = Color.gray;
+        
+    }
+
+    public void MakeArmored()
+    {
+        MakeArmored(defaultArmorHP);
+    }
+    #endregion
+
 }

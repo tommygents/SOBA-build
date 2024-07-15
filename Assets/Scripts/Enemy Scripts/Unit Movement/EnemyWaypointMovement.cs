@@ -12,16 +12,20 @@ public class EnemyWaypointMovement : EnemyMovement
     public Enemy parent;
 
     public int directionWaypoint = 1;
-    public float speed = 1.0f;
+    public float speed;
     public float waypointTime = 0;
     public float lastWaypointTime;
+    public float distanceTraveled = 0f;
 
     public Collider2D waypointDetector;
+
+    
 
     // Start is called before the first frame update
     void Start()
     {
         lastWaypointTime = Time.time;
+        
     }
 
     // Update is called once per frame
@@ -31,27 +35,32 @@ public class EnemyWaypointMovement : EnemyMovement
     }
 
 
-    public override void Move()
+   public override void Move()
+{
+    RotateTowardsTarget();
+    Vector3 startPos = prevWaypoint.transform.position;
+    Vector3 endPos = nextWaypoint.transform.position;
+
+    // Calculate the total path length
+    float pathLength = Vector3.Distance(startPos, endPos);
+
+    // Move along the path at the current speed
+    distanceTraveled += speed * Time.deltaTime;
+
+    // Calculate the new position
+    float t = distanceTraveled / pathLength;
+    if (t >= 1f)
     {
-        RotateTowardsTarget();
-        Vector3 startPos = prevWaypoint.transform.position;
-        Vector3 endPos = nextWaypoint.transform.position;
-
-        // Move along the path at a designated speed
-        float pathLength = Vector3.Distance(startPos, endPos);
-        float totalTimeForPathSeg = pathLength / speed;
-        float currentTimeOnPathSeg = Time.time - lastWaypointTime;
-        waypointTime += Time.deltaTime * speed;
-        parent.transform.position = Vector2.Lerp(startPos, endPos, currentTimeOnPathSeg / totalTimeForPathSeg);
-
-      
-        // Check if close enough to consider "reaching" the waypoint
-        if (Vector2.Distance(parent.transform.position, endPos) < 0.1f)  // threshold distance
-        {
-            UpdateWaypoint(nextWaypoint.GetNextWaypoint());
-        }
-      
+        // Reached or passed the waypoint
+        UpdateWaypoint(nextWaypoint.GetNextWaypoint());
     }
+    else
+    {
+        // Move directly towards the next waypoint at a constant speed
+        Vector3 direction = (endPos - startPos).normalized;
+        parent.transform.position = startPos + direction * distanceTraveled;
+    }
+}
 
     public override void UpdateWaypoint(Waypoint _wp)
 
@@ -66,6 +75,7 @@ public class EnemyWaypointMovement : EnemyMovement
             prevWaypoint = nextWaypoint;
             nextWaypoint = _wp;
             lastWaypointTime = Time.time;
+            distanceTraveled = 0f;
         }
 
     }
@@ -102,6 +112,7 @@ public class EnemyWaypointMovement : EnemyMovement
     public void ReachEndOfPath() //The function called when a unit reaches the end of a path
     {
         Debug.Log("Destroying object");
+        GameEvents.EnemyDestroyed();
         Destroy(parent.gameObject);
     }
 
