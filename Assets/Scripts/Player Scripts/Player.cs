@@ -617,7 +617,7 @@ SubscribeToInputEvents();
 
 private void SubscribeToInputEvents()
 {
-        InputManager.Instance.OnSprintStart += OnSprintStart;
+    InputManager.Instance.OnSprintStart += OnSprintStart;
     InputManager.Instance.OnSprintEnd += OnSprintEnd;
     InputManager.Instance.OnSquatStart += OnSquatStart;
     InputManager.Instance.OnSquatEnd += OnSquatEnd;

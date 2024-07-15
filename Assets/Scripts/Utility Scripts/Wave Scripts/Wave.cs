@@ -9,22 +9,26 @@ public class Wave : ScriptableObject
     [Serializable]
     public class SpawnEvent
     {
-        public Enemy enemyPrefab;
         public float startTime;
-        public int count = 1;
-        public float duration = 0f;
-        public bool randomizeSpawnTimes = false;
-        [Range(0f, 1f)]
-        public float armorProbability = 0f;
-        [Range(0.5f, 1f)]
-        public float minSpawnIntervalFactor = 0.8f;
-        [Range(1f, 1.5f)]
-        public float maxSpawnIntervalFactor = 1.2f;
+        public Enemy enemyPrefab;
+        public int count;
+        public float duration;
+        public bool randomizeSpawnTimes;
+        public float armorProbability;
+        public float minSpawnIntervalFactor;
+        public float maxSpawnIntervalFactor;
+
+        public float GetEndTime()
+        {
+            return startTime + duration;
+        }
     }
 
     public int waveNumber;
     public List<SpawnEvent> spawnEvents = new List<SpawnEvent>();
 
+
+    
     public void AddSpawnEvent(SpawnEvent spawnEvent)
     {
         spawnEvents.Add(spawnEvent);
