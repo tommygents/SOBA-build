@@ -308,7 +308,7 @@ MonoBehaviour:
   turretUI: {fileID: 0}
   turretBulletVelocity: 0
   rotationSpeed: 120
-  targetingFactor: 1.333
+  rangeAsMultipleOfTargetingRadius: 1.333
   cooldownLength: 0.05
   ammoCost: 0.05
   target: {fileID: 0}
@@ -327,8 +327,8 @@ MonoBehaviour:
   zapperDetectionRadius: {fileID: 2316671208861911640}
   counterpartPrefab: {fileID: 4742496800121745920, guid: 1ac9d309f9452844ab98c746bcbe63c8, type: 3}
   zapperCounterpart: {fileID: 2026473443, guid: 1ac9d309f9452844ab98c746bcbe63c8, type: 3}
-  targetUninteractedRunTime: 90
-  movementPenalty: 0.3
+  targetUninteractedRunTime: 120
+  movementPenalty: 0.7
   offsetDistance: 1.2
   ammoWidth: 0.1
   ammoMaterial: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}

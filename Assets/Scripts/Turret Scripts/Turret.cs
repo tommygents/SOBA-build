@@ -14,7 +14,7 @@ public class Turret : MonoBehaviour
     protected float turretRange; // how far the turret can shoot
     [SerializeField] protected float turretBulletVelocity; // how fast the bullets move
     [SerializeField] protected float rotationSpeed = 120f; //how fast the turret can rotate towards a target
-    [SerializeField] protected float targetingFactor = 1.333f; //the targeting radius gets multiplied by this number to get the turret's range, passed to bullets
+    [SerializeField] protected float rangeAsMultipleOfTargetingRadius = 1.333f; //the targeting radius gets multiplied by this number to get the turret's range, passed to bullets
    
 
     //Cooldown variables, so the turret doesn't just vomit bullets
@@ -63,7 +63,7 @@ public class Turret : MonoBehaviour
         turretUI.chargeCountNum = chargeCountMax;
         turretUI.UpdateChargeBar(ChargeBarFullPercentage(), chargeCount, false); //initialize the charge bar
         maxCharge = chargeBarMax * chargeCountMax;
-        turretRange = targetingSystem.GetTargetingRadius() * targetingFactor;
+        turretRange = targetingSystem.GetTargetingRadius() * rangeAsMultipleOfTargetingRadius;
     }
 
     
