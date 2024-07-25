@@ -592,9 +592,9 @@ MonoBehaviour:
   targetingSystem: {fileID: 4120685630083168460}
   turretUI: {fileID: 0}
   turretBulletVelocity: 20
-  rotationSpeed: 200
-  targetingFactor: 1.333
-  cooldownLength: 0.025
+  rotationSpeed: 120
+  rangeAsMultipleOfTargetingRadius: 1.333
+  cooldownLength: 0.1
   ammoCost: 0.05
   target: {fileID: 0}
   chargeBar: 0
