@@ -1,20 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class TurretImage : MonoBehaviour
+public class TurretImage : Image
 {
     // Start is called before the first frame update
 
     public Turret turretPrefab;
-    public SpriteRenderer spriteRenderer;
+    
+    
     public string turretName;
+
+    
     
 
-    void Start()
+    protected override void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-       // spriteRenderer.sprite = turretPrefab.GetComponentInChildren<SpriteRenderer>().sprite;
+        base.Awake();
+    
+
     }
 
     // Update is called once per frame
@@ -26,5 +31,10 @@ public class TurretImage : MonoBehaviour
     public Turret GetTurretPrefab()
     {
         return turretPrefab;
+    }
+
+    public Vector2 GetRectTransformPosition()
+    {
+        return rectTransform.anchoredPosition;
     }
 }
