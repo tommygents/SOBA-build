@@ -44,7 +44,7 @@ public class HealthManager : MonoBehaviour
         Player _player = GetComponentInParent<Player>();
         if (_player != null)
         {
-            _player.Die();
+            
         }
 
         else

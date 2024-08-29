@@ -11,43 +11,120 @@ public class TurretSelectionUI : MonoBehaviour
     [SerializeField]  private TextMeshProUGUI selectedTurretName;
     [SerializeField] private GameObject turretSelectionIndicator;
     [SerializeField] private GameObject turretSelectionPanel;
-    [SerializeField] private TurretImage[] turretImagePrefabs;
+    [SerializeField] private TurretSelectionUIIcon[] turretUIPrefabs;
     [SerializeField] private GameObject turretSelectionWheel;
+    [SerializeField] private int selectedTurretIndex;
 
-    // Start is called before the first frame update
+    public static TurretSelectionUI Instance;
+
+    [SerializeField] private bool turretSelectionActive = false;
+    [SerializeField] private float turretSelectionTimer = 0f;
+    [SerializeField] private float turretSelectionTimeOut = 1.5f;
+
+
+    void Awake()
+    {
+    if (Instance == null)
+    {
+    Instance = this;
+    DontDestroyOnLoad(gameObject);
+    }
+    else
+    {
+    Destroy(gameObject);
+    }
+    selectedTurretIndex = 0;
+    turretSelectionActive = false;
+    
+    
+    }
+
     void Start()
     {
-        
+        UpdateSelectedTurret(turretUIPrefabs[selectedTurretIndex]);
+        HideTurretSelectionWheel();
+ 
     }
 
     // Update is called once per frame
     void Update()
     {
+        IterateTurretSelectionUITimer();
+    }
+
+    private void IterateTurretSelectionUITimer()
+    {
+        if (turretSelectionActive)
+        {
+            turretSelectionTimer += Time.deltaTime;
+            if (turretSelectionTimer > turretSelectionTimeOut)
+            {
+                turretSelectionActive = false;
+                HideTurretSelectionWheel();
+            }
+        }
+    }
+
+    public Turret UpdateSelection() //THIS is the function that returns the turret to build
+    {
+        turretSelectionTimer = 0f;
+       
+       if (!turretSelectionActive)
+       {
+        turretSelectionActive = true;
         
+        ShowTurretSelectionWheel();
+        return GetTurretToBuild();
+       }
+       //if the selection is already active, advance the selection
+       else
+       {
+        AdvanceTurretSelection();
+        
+
+       }
+        return GetTurretToBuild();
     }
 
-    //TODO:
-    // Advance the selection indicator around the wheel
-    // Update the selected turret image and name
-    // Show and hide the wheel
-
-    public void AdvanceSelectionIndicator()
+    
+    public Turret GetTurretToBuild()
     {
-        //TODO: Implement this
+        return turretUIPrefabs[selectedTurretIndex].GetTurretPrefab();
     }
 
-    public void UpdateSelectedTurret(Turret turret)
+    public void UpdateSelectedTurret(TurretSelectionUIIcon _turretUI)
     {
+        selectedTurretImage.sprite = _turretUI.icon.sprite;
+        selectedTurretName.text = _turretUI.turretName;
         //TODO: Implement this
+        //TODO: change the image in the center of the wheel to be the new selected turret
+        //TOD: change the name in the center of the wheel to be the name of the new selected turret
+    }
+
+    public void AdvanceTurretSelection()
+    {
+        selectedTurretIndex++;
+        if (selectedTurretIndex >= turretUIPrefabs.Length)
+        {
+            selectedTurretIndex = 0;
+        }
+        //Move the selection indicator
+        turretSelectionIndicator.GetComponent<RectTransform>().position = turretUIPrefabs[selectedTurretIndex].rectTransform.position;
+        UpdateSelectedTurret(turretUIPrefabs[selectedTurretIndex]);
+
     }
 
     public void ShowTurretSelectionWheel()
     {
-        //TODO: Implement this
+        turretSelectionWheel.SetActive(true);
     }
 
     public void HideTurretSelectionWheel()
     {
-        //TODO: Implement this
+        turretSelectionWheel.SetActive(false);
     }
+
+    
+
+
 }

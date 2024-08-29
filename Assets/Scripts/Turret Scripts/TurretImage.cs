@@ -3,23 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(RectTransform))]
 public class TurretImage : Image
 {
-    // Start is called before the first frame update
+    [SerializeField] public Turret turretPrefab;
+    [SerializeField] public string turretName;
 
-    public Turret turretPrefab;
-    
-    
-    public string turretName;
-
-    
-    
+    public Turret TurretPrefab { get => turretPrefab; set => turretPrefab = value; }
+    public string TurretName { get => turretName; set => turretName = value; }
 
     protected override void Awake()
     {
         base.Awake();
-    
-
     }
 
     // Update is called once per frame

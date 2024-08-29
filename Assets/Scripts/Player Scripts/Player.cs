@@ -72,27 +72,18 @@ Initialize();
     void Update()
     {
         Move();
-
-
-
-
-        if (isRunning && isEngagedWithTurret) //Passes the time spent running to an engaged turret to charge it up
-        {
-
-            engagedTurret.ChargeUp(isSprinting);
-        }
+        CheckRunningAndPassCharge();
 
         if (isSquating && !isEngagedWithTurret) //activate the build timer, so that the player builds a turret
         {
             if (!turretDetector.CanBuild())
             {
                 UpdateText(squatText, "Too close!");
-                
+
             }
             if (turretDetector.CanBuild())
             {
-                if (turretSelectionActive) //turns off the selectionUI and begins building the turret
-                { EndTurretSelectionUI(); }
+                
                 if (!buildingStarted)
                 {
                     buildingStarted = true;
@@ -109,9 +100,43 @@ Initialize();
                     FinishBuildingTurret();
                 }
             }
-           
+
         }
 
+        AdvanceDashTimerandCheckForDash();
+
+        
+
+
+        if (Input.GetKeyDown(KeyCode.R))  // Reloads the current scene
+        {
+
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        if (turretDetector.detectsTurret && engagedTurret == null)
+        {
+            UpdateText(pushText, "Enter");
+        }
+        else if (!isEngagedWithTurret)
+        {
+            UpdateText(pushText, "Dash");
+        }
+
+        
+    } //END OF UPDATE FUNCTION
+    
+    private void CheckRunningAndPassCharge()
+        {
+            if (isRunning && isEngagedWithTurret) //Passes the time spent running to an engaged turret to charge it up
+            {
+
+                engagedTurret.ChargeUp(isSprinting);
+            }
+        }
+
+    private void AdvanceDashTimerandCheckForDash()
+    {
         if (isDashing) //iterate the dash timer and then check if the dash has ended
         {
             dashTimer += Time.deltaTime;
@@ -119,37 +144,10 @@ Initialize();
             {
                 actualSpeed = baseSpeed;
                 dashTimer = 0f;
-                isDashing= false;
+                isDashing = false;
             }
         }
-
-        if (turretSelectionActive)
-        {
-            turretSelectionTimer += Time.deltaTime;
-            if (turretSelectionTimer > turretSelectionTimeOut)
-            {
-                EndTurretSelectionUI();
-            }
-        }
-
-
-        if (Input.GetKeyDown(KeyCode.R))  // Reloads the current scene
-        {
-           
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-
-        if (turretDetector.detectsTurret && engagedTurret == null)
-        {
-            UpdateText(pushText, "Enter");
-        } else if (!isEngagedWithTurret)
-        {
-            UpdateText(pushText, "Dash");
-        }
-
-
-
-    } //END OF UPDATE FUNCTION
+    }
 
     private void FinishBuildingTurret()
     {
@@ -164,97 +162,15 @@ Initialize();
 
     public void FinishBuildingTurretDebug()
     {
-        EndTurretSelectionUI();
+        
         FinishBuildingTurret();
     }
 
-    public void Sprint()
-    {
-        controller.gameplay.Sprint.started += ctx =>
-        {
-            actualSpeed = 2f * baseSpeed;
-            isRunning = true;
-            isSprinting = true;
-            Debug.Log("sprinting");
-        };
-        controller.gameplay.Sprint.performed += ctx =>
-        {
-            actualSpeed = baseSpeed;
-            isRunning = false;
-            isSprinting = false;
-            
-        };
-    }
 
-    public void Squat()
-    {
-        controller.gameplay.Squat.started += ctx =>
-        {
-            Debug.Log("Player is squatting");
-            isSquating = true;
-            
-
-            
-        };
-        controller.gameplay.Squat.performed += ctx =>
-        {
-
-            isSquating = false;
-      
-
-            buildingPlacement.ResetBuildCounter();
-            HideRadius();
-            UpdateText(squatText, "Build");
-            buildingStarted = false;
-            AudioManager.Instance.StopClip(construction);
-
-
-        };
-    }
-
-    public void Run()
-    {
-        controller.gameplay.Run.started += ctx =>
-        {
-            Debug.Log("Player is running");
-            isRunning = true;
-            //TODO: Set up the charging
-
-
-
-        };
-        controller.gameplay.Run.performed += ctx =>
-        {
-
-            isRunning = false;
-            //TODO: Stop charging
-
-        };
-    }
-
- #region Press/Push Refactor
 
 
  
-    public void HeavyPress() //refactored into all presses
-    {
-
-
-        if (InTurretEntryProximity())
-        {
-            EnterTurret(turretDetector.DetectedTurret());
-        }
-        else if (InTurret())
-        {
-            ExitTurret(engagedTurret);
-        }
-        else
-        {
-            TriggerDash();
-        }
-
-
-    }
+    
 
     private void TriggerDash()
     {
@@ -270,74 +186,7 @@ Initialize();
     {
         return engagedTurret != null;
     }
-
-
-
-
-
-
-    public void LightPress()
-    {
-        
-
-        controller.gameplay.lightpush.performed += ctx => //when the action is performed, a complete light push
-        {
-            
-            if (turretDetector.detectsTurret && engagedTurret == null)
-            {
-                EnterTurret(turretDetector.DetectedTurret());
-            } 
-            else if (engagedTurret != null)
-            {
-                ExitTurret(engagedTurret);
-            }
-            else 
-            {
-                isDashing = true;
-                actualSpeed *= dashSpeed;
-            }
-
-
-            };
-
-     
-    }
-     #endregion
-    public void HeavyPull() //refactored
-    {
-        
-            controller.gameplay.heavypull.started += ctx =>
-            {
-                
-                /*
-                    holdingPull = true;
-                isMakingUISelection = true;
-                turretUI.ShowTowerSelectionPanel();
-                */
-                    
-            };
-            controller.gameplay.heavypull.performed += ctx =>
-            {
-                OnPull(ctx);
-           
-            };
-
-            controller.gameplay.heavypull.canceled += ctx =>
-            {
-                /*
-                holdingPull = false;
-                turretToBuild = turretUI.MakeTurretSelection();
-                isMakingUISelection = false;
-                */
-            };
-
-        
-    }
-    public void Die()
-    {
-        //TODO: player dies, and loses
-    }
-
+   
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
@@ -374,6 +223,7 @@ Initialize();
 
     public void ExitTurret(Turret _turret)
     {
+        Debug.Log("Exiting turret from ExitTurret function");
         isNearTurret = true;
         isEngagedWithTurret = false;
         nearbyTurret = _turret;
@@ -388,28 +238,22 @@ Initialize();
     public float turretSelectionTimer = 0f;
     public float turretSelectionTimeOut = 1.5f;
 
+ 
+
     public void UpdateTurretSelection()
     {
-        turretSelectionActive = true;
-        turretSelectionTimer = 0f;
-        playerTurretUI.ShowTowerSelectionPanel();
-        playerTurretUI.IterateSelection();
+        turretToBuild = TurretSelectionUI.Instance.UpdateSelection();
         
 
     }
    
-    public void EndTurretSelectionUI()
-    {
-        turretSelectionActive = false;
-        playerTurretUI.HideTowerSelectionPanel();
-        turretToBuild = playerTurretUI.MakeTurretSelection();
-        
-    }
+
     public void HidePlayerDuringWave(int waveNumber)
     {
         
         if (isEngagedWithTurret)
         {
+            Debug.Log("Hiding player during wave, exiting wave");
             ExitTurret(engagedTurret);
             
         }
@@ -577,6 +421,7 @@ public void OnPress(InputAction.CallbackContext _context)
         }
         else if (InTurret())
         {
+            Debug.Log("Exiting turret from OnPress, InTurret");
             ExitTurret(engagedTurret);
         }
         else

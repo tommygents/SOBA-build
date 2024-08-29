@@ -101,28 +101,7 @@ public class PlayerTurretUI : MonoBehaviour
         turretName.gameObject.SetActive(false);
     }
 
-/*
-    public void UpdateSelection(float _direction)
-    {
-        if (_direction < -.2f)
-        {
-            selectedIndex = Mathf.Max(selectedIndex - 1, 0);
-        }
-        if (_direction > .2f)
-        {
-            selectedIndex = Mathf.Min(selectedIndex + 1, instantiatedTurrets.Count - 1);
-        }
 
-        UpdateHighlightPosition();
-    }
-
-    public void UpdateSelection()
-    {
-        float _direction = InputManager.Instance.GetMoveVector().y;
-        UpdateSelection(_direction);
-    }
-
-*/
     public void IterateSelection()
     {
         selectedIndex = (selectedIndex + 1) % turretBuildListItems.Count;
@@ -152,7 +131,7 @@ public class PlayerTurretUI : MonoBehaviour
     {
         if (selectedIndex >= 0 && selectedIndex < turretBuildListItems.Count)
         {
-            Turret _turret = turretBuildListItems[selectedIndex].GetTurretPrefab();
+            Turret _turret = (Turret)turretBuildListItems[selectedIndex].GetTurretPrefab();
             HideTowerSelectionPanel();
             Debug.Log($"Selected turret {selectedIndex}: {_turret.name}");
             return _turret;
