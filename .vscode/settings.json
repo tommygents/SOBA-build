@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "SOBA Build.sln"
+    "dotnet.defaultSolution": "SOBA build.sln"
 }

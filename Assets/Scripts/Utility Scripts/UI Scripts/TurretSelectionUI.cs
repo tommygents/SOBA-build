@@ -20,7 +20,7 @@ public class TurretSelectionUI : MonoBehaviour
     [SerializeField] private bool turretSelectionActive = false;
     [SerializeField] private float turretSelectionTimer = 0f;
     [SerializeField] private float turretSelectionTimeOut = 1.5f;
-
+    [SerializeField] private float turretSelectionIconMultiplier = 1.25f;
 
     void Awake()
     {
@@ -95,10 +95,19 @@ public class TurretSelectionUI : MonoBehaviour
     public void UpdateSelectedTurret(TurretSelectionUIIcon _turretUI)
     {
         selectedTurretImage.sprite = _turretUI.icon.sprite;
+            // Get the original size of the icon
+    Vector2 originalSize = _turretUI.icon.rectTransform.sizeDelta;
+
+    // Calculate the new size (1.25 times larger)
+    Vector2 newSize = originalSize * turretSelectionIconMultiplier;
+
+    // Set the new size while maintaining the aspect ratio
+    selectedTurretImage.rectTransform.sizeDelta = newSize;
+
+    // Ensure the image uses the new size without stretching
+    selectedTurretImage.preserveAspect = true;
         selectedTurretName.text = _turretUI.turretName;
-        //TODO: Implement this
-        //TODO: change the image in the center of the wheel to be the new selected turret
-        //TOD: change the name in the center of the wheel to be the name of the new selected turret
+        
     }
 
     public void AdvanceTurretSelection()
