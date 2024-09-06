@@ -20,8 +20,8 @@ public class WaveManagerUI : MonoBehaviour
 
     public void isWaveActiveUI(bool _waveOn)
     {
-        if (_waveOn) { labelText.text = "Time Remaining:"; }
-        else { labelText.text = "Wave begins in:"; }
+        if (_waveOn) { labelText.text = "LEFT IN WAVE"; }
+        else { labelText.text = "UNTIL WAVE"; }
     }
 
     public void waveNumberUI(int _wave)
