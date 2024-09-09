@@ -45,8 +45,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3a546e0285aecf4ba6828bb45ca24c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
   turretPrefab: {fileID: 315215000424035916, guid: b9d0941537720ff4ca88907eb3a330c3, type: 3}
-  spriteRenderer: {fileID: 0}
   turretName: Zapper
 --- !u!212 &286767652344152109
 SpriteRenderer:
@@ -89,7 +106,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 62838e0f0d815e34d8c06d9d71fe6bb7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e7467e9d3f4b5484ab22d08d6711c9d9, type: 3}
   m_Color: {r: 0.9607844, g: 0.94117653, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
