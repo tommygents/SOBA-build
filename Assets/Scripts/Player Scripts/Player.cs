@@ -273,6 +273,7 @@ Initialize();
     public void ResetPositionToLastSaved()
     {
         transform.position = positionBeforeEnteringTurret;
+        Debug.Log("Resetting position to last saved position");
     }
 
     public Vector2 GetCameraBounds()
@@ -347,6 +348,7 @@ private void Initialize()
         UpdateText(squatText, "Build Turret");
         UpdateText(pullText, "Switch Turret Selection");
         SubscribeToInputEvents();
+        UpdateLastPosition();
         
 }
 

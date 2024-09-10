@@ -27,8 +27,9 @@ public class PlayerTurretDetector : MonoBehaviour
         if (collision.GetComponent<Turret>() != null)
         {
             detectsTurret= true;
-            detectedTurret = collision.GetComponent<Turret>();
+            
             detectedTurrets.Add(collision.GetComponent<Turret>());
+            detectedTurret = GetNearestTurret();
         } 
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("PathCollider"))
@@ -69,6 +70,7 @@ private void UpdateNearestTurret()
         {
             nearestTurret = null;
             detectsTurret = false;
+            TurretEntryUIManager.Instance.HideTurretEntryUI();
         }
         else
         {
@@ -81,12 +83,22 @@ private void UpdateNearestTurret()
                 nearestTurret = turret;
             }
         }
+        TurretEntryUIManager.Instance.DisplayTurretEntryUI(nearestTurret);
     }
     }
     public Turret GetNearestTurret()
     {
         UpdateNearestTurret();
         return nearestTurret;
+    }
+
+    public void IndicateTurret()
+    {
+        //TODO: This is the code that tells the player that they will enter a turret.
+        //TODO: here's what needs to happen:
+        //TODO: somehow, the turret for this circle needs to get turned on.
+        //TODO: then, that circle neets to connect, with a line, to the instructions layer.
+        //TODO: finally, the instructions layer needs to update.
     }
 
     

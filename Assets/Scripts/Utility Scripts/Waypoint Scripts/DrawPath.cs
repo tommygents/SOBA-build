@@ -96,7 +96,7 @@ public class DrawPath : MonoBehaviour
         colliderGameObject.transform.parent = parent.transform;
 
         BoxCollider2D collider = colliderGameObject.AddComponent<BoxCollider2D>();
-        collider.isTrigger = true;
+        collider.isTrigger = false;
 
         // Position the collider at the midpoint between start and end
         Vector3 midPoint = (start + end) / 2;
