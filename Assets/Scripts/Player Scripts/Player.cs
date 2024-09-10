@@ -402,6 +402,19 @@ public void OnSprintEnd(InputAction.CallbackContext _context)
 public void OnSquatStart(InputAction.CallbackContext _context)
 {
     isSquating = true;
+    if (InTurretEntryProximity())
+        {
+            EnterTurret(turretDetector.DetectedTurret());
+        }
+        else if (InTurret())
+        {
+            Debug.Log("Exiting turret from OnSquatStart, InTurret");
+            ExitTurret(engagedTurret);
+        }
+        else
+        {
+            //This is where I trigger the build process, or else check to deploy a turret
+        }
 }
 public void OnSquatEnd(InputAction.CallbackContext _context)
 {
@@ -417,16 +430,8 @@ public void OnSquatEnd(InputAction.CallbackContext _context)
 
 public void OnPress(InputAction.CallbackContext _context)
 {
-     if (InTurretEntryProximity())
-        {
-            EnterTurret(turretDetector.DetectedTurret());
-        }
-        else if (InTurret())
-        {
-            Debug.Log("Exiting turret from OnPress, InTurret");
-            ExitTurret(engagedTurret);
-        }
-        else
+     
+        if (!InTurret())
         {
             TriggerDash();
         }
