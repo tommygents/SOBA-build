@@ -32,14 +32,14 @@ public class PlayerBuildingPlacement : MonoBehaviour
     public void HideBuildCounter()
     {
         
-        placementUI.HideChargeBar();
+        
         
     }
 
     public void ResetBuildCounter()
     {turretBuildCounter = 0f;
-        placementUI.UpdateChargeBar(0f, 0);
-        placementUI.HideChargeBar();
+        placementUI.UpdateChargeBar(0f);
+       
 
     }
 
@@ -47,7 +47,7 @@ public class PlayerBuildingPlacement : MonoBehaviour
     {
         turretBuildCounter += _time; //add the new time
         
-        placementUI.UpdateChargeBar(turretBuildCounter / turretBuildCounterMax, (int)(100 * turretBuildCounter / turretBuildCounterMax)); //Then, update the UI
+        placementUI.UpdateChargeBar(turretBuildCounter / turretBuildCounterMax); //Then, update the UI
         
         if (turretBuildCounter >= turretBuildCounterMax)
         {

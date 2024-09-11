@@ -9,44 +9,38 @@ public class PlayerBuildingPlacementUI : MonoBehaviour
 {
 
     [SerializeField] private Image chargeBar;
-    [SerializeField] private TextMeshProUGUI chargeCount;
-    [SerializeField] private Canvas chargeUICanvas;
-    [SerializeField] private CanvasGroup canvasGroup;
-    [SerializeField] private GameObject radiusCircle;
+
+        [SerializeField] private GameObject radiusCircle;
+    [SerializeField] private TextMeshProUGUI deployableText;
 
 
-    // Start is called before the first frame update
     void Start()
     {
-        chargeBar = chargeUICanvas.GetComponentInChildren<Image>();
-        chargeCount = chargeUICanvas.GetComponentInChildren<TextMeshProUGUI>();
-        canvasGroup = chargeUICanvas.GetComponent<CanvasGroup>();
+        HideDeployableText();
     }
-
+    
     // Update is called once per frame
     void Update()
     {
         
     }
 
-    public void UpdateChargeBar(float _amount, int _chargeCount)
+    public void UpdateChargeBar(float _amount)
     {
-        ShowChargeBar();
-        chargeBar.fillAmount = _amount;
-        chargeCount.text = _chargeCount.ToString();
-
-    }
-
-    public void HideChargeBar()
-    {
-        canvasGroup.alpha = 0f;
         
+        chargeBar.fillAmount = _amount;
+        if(_amount >= 1f)
+        {
+            ShowDeployableText();
+        }
+        else
+        {
+            HideDeployableText();
+        }
+
     }
 
-    public void ShowChargeBar()
-    {
-        canvasGroup.alpha = 1f;
-    }
+
 
     public void ShowRadius(float _rad)
     {
@@ -57,5 +51,15 @@ public class PlayerBuildingPlacementUI : MonoBehaviour
     public void HideRadius()
     {
         radiusCircle.transform.localScale = Vector3.zero;
+    }
+
+    public void ShowDeployableText()
+    {
+        deployableText.gameObject.SetActive(true);
+    }
+
+    public void HideDeployableText()
+    {
+        deployableText.gameObject.SetActive(false);
     }
 }
