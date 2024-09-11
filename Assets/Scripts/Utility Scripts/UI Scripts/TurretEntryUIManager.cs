@@ -18,7 +18,7 @@ public class TurretEntryUIManager : MonoBehaviour
     public RectTransform horizontalLine;
     [SerializeField] private float lineWidth = 2f;
      public Image intersectionCircle; // New field for the circle at the intersection
-
+    private bool isDisplayable = false;
    
    void Awake()
    {
@@ -56,6 +56,10 @@ private Vector2 WorldToCanvasPosition(Vector3 worldPosition)
     return canvasPoint;
 }
 
+public void ToggleDisplayable()
+{
+    isDisplayable = !isDisplayable;
+}
 public void DisplayTurretEntryUI(Turret turret)
 {
     turretEntryIndicator.gameObject.SetActive(true);
@@ -85,33 +89,38 @@ private void HideInstructionLine()
 }
 
 private void DrawInstructionLine()
-{
-    diagonalLine.gameObject.SetActive(true);
-    horizontalLine.gameObject.SetActive(true);
-    intersectionCircle.gameObject.SetActive(true);
+    {
+        ShowInstructionLine();
 
 
-    // Convert both positions to canvas space
-    Vector2 startPoint = GetCanvasPosition(turretActionIndicatorText.rectTransform);
-    Vector2 indicatorPosition = GetCanvasPosition(turretEntryIndicator.GetComponent<RectTransform>());
+        // Convert both positions to canvas space
+        Vector2 startPoint = GetCanvasPosition(turretActionIndicatorText.rectTransform);
+        Vector2 indicatorPosition = GetCanvasPosition(turretEntryIndicator.GetComponent<RectTransform>());
 
-    // Calculate the center-right point of the indicator
-    RectTransform indicatorRect = turretEntryIndicator.GetComponent<RectTransform>();
-    Vector2 indicatorSize = indicatorRect.rect.size;
-    Vector2 endPoint = indicatorPosition + new Vector2(indicatorSize.x, indicatorSize.y/2);
+        // Calculate the center-right point of the indicator
+        RectTransform indicatorRect = turretEntryIndicator.GetComponent<RectTransform>();
+        Vector2 indicatorSize = indicatorRect.rect.size;
+        Vector2 endPoint = indicatorPosition + new Vector2(indicatorSize.x, indicatorSize.y / 2);
 
-    // Calculate the point where the diagonal line meets the horizontal line
-    Vector2 middlePoint = new Vector2(startPoint.x - Mathf.Abs(startPoint.y - endPoint.y), endPoint.y);
+        // Calculate the point where the diagonal line meets the horizontal line
+        Vector2 middlePoint = new Vector2(startPoint.x - Mathf.Abs(startPoint.y - endPoint.y), endPoint.y);
 
-    // Draw diagonal line
-    DrawLine(diagonalLine, startPoint, middlePoint);
+        // Draw diagonal line
+        DrawLine(diagonalLine, startPoint, middlePoint);
 
-    // Draw horizontal line
-    DrawLine(horizontalLine, middlePoint, endPoint);
-     DrawIntersectionCircle(middlePoint);
+        // Draw horizontal line
+        DrawLine(horizontalLine, middlePoint, endPoint);
+        DrawIntersectionCircle(middlePoint);
 
-    Debug.Log($"Start point: {startPoint}, Middle point: {middlePoint}, End point: {endPoint}");
-}
+        Debug.Log($"Start point: {startPoint}, Middle point: {middlePoint}, End point: {endPoint}");
+    }
+
+    private void ShowInstructionLine()
+    {
+        diagonalLine.gameObject.SetActive(true);
+        horizontalLine.gameObject.SetActive(true);
+        intersectionCircle.gameObject.SetActive(true);
+    }
 
     private void DrawLine(RectTransform lineTransform, Vector2 start, Vector2 end)
 {

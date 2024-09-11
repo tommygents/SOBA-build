@@ -29,12 +29,18 @@ public class PlayerBuildingPlacement : MonoBehaviour
 
     
 
-    public void ResetBuildCounter()
+    public void HideBuildCounter()
     {
-        turretBuildCounter = 0f;
-        placementUI.UpdateChargeBar(0f, 0);
+        
         placementUI.HideChargeBar();
         
+    }
+
+    public void ResetBuildCounter()
+    {turretBuildCounter = 0f;
+        placementUI.UpdateChargeBar(0f, 0);
+        placementUI.HideChargeBar();
+
     }
 
     public bool IterateBuildCounter(float _time)

@@ -35,12 +35,13 @@ public class Player : MonoBehaviour
     public Vector3 positionBeforeEnteringTurret;
     [SerializeField] public PlayerTurretDetector turretDetector;
     [SerializeField] private PlayerBuildingPlacement buildingPlacement;
-
+//Dash variables
     public float dashTimer = 0f;
     public float dashDuration = .25f;
     public float dashSpeed = 3f;
     public bool isDashing = false;
 
+//UI variables
     [SerializeField, HideInInspector] public Vector3 positionBeforeDeactivation;
 
     public bool isMakingUISelection = false;
@@ -51,11 +52,20 @@ public class Player : MonoBehaviour
     public GameManager gameManager;
 
     [SerializeField] private GameObject radiusCircle;
+
+//Squat variables for building
+
     public AudioClip construction;
     public bool buildingStarted = false;
-    
+    public bool buildingDeployable = false;
 
-//Building placement variables
+//Decay function variables   
+    private float initialMultiplier = 4.0f;
+    private float duration = 2.0f; // 2 seconds
+    private float n = 0.5f; // Decay rate 
+    private float squatDuration = 2f;
+
+ 
 
     // Start is called before the first frame update
     void Start()
@@ -73,6 +83,7 @@ Initialize();
     {
         Move();
         CheckRunningAndPassCharge();
+        CheckForSquatAndAdvanceCharge();
 
         if (isSquating && !isEngagedWithTurret) //activate the build timer, so that the player builds a turret
         {
@@ -94,10 +105,10 @@ Initialize();
 
 
                 float _chargeTime = Time.deltaTime;
-                ShowRadius(turretToBuild.GetTargetingRadius());
+                SetRadius(turretToBuild.GetTargetingRadius());
                 if (buildingPlacement.IterateBuildCounter(_chargeTime)) //passes the charge time to the building manager, which returns true if enough time to build a turret has passed
                 {
-                    FinishBuildingTurret();
+                    SetBuildingDeployable();
                 }
             }
 
@@ -126,6 +137,30 @@ Initialize();
         
     } //END OF UPDATE FUNCTION
     
+    //Returns the multiplier for the squat charging after _time has passed since the beginning of the squat
+    private float SquatDecayFunction(float _time)
+    {
+        if (_time >= duration)
+        {
+            return 1.0f;
+        }
+
+        // Calculate the multiplier using the decay formula
+        return 1.0f + (initialMultiplier - 1.0f) * Mathf.Pow((1.0f - _time / duration), n);
+    }
+
+    private void CheckForSquatAndAdvanceCharge()
+    {
+        if (!isSquating) return;
+
+        squatDuration += Time.deltaTime;
+        float _chargeMultiplier = SquatDecayFunction(squatDuration);
+        if (buildingPlacement.IterateBuildCounter(_chargeMultiplier * Time.deltaTime))
+        {
+            SetBuildingDeployable();
+        }
+
+    }
     private void CheckRunningAndPassCharge()
         {
             if (isRunning && isEngagedWithTurret) //Passes the time spent running to an engaged turret to charge it up
@@ -149,21 +184,31 @@ Initialize();
         }
     }
 
-    private void FinishBuildingTurret()
+    private void SetBuildingDeployable()
+    {
+        buildingDeployable = true;
+        AudioManager.Instance.StopClip(construction);
+        SetRadius(turretToBuild.GetTargetingRadius());
+        //TODO: Other stuff to make building deployable
+    }
+
+    private void DeployTurret()
     {
         Turret _turret = Instantiate(turretToBuild, transform.position, Quaternion.identity);
-        buildingPlacement.ResetBuildCounter();
+        buildingPlacement.HideBuildCounter();
         HideRadius();
         UpdateText(squatText, "Build");
         buildingStarted = false;
-        AudioManager.Instance.StopClip(construction);
+        
         EnterTurret(_turret);
+        buildingDeployable = false;
+        buildingPlacement.ResetBuildCounter();
     }
 
     public void FinishBuildingTurretDebug()
     {
         
-        FinishBuildingTurret();
+        DeployTurret();
     }
 
 
@@ -217,6 +262,7 @@ Initialize();
         this.GetComponent<SpriteRenderer>().enabled = false; // Hide player sprite
         Camera.main.transform.position = new Vector3(_turret.transform.position.x, _turret.transform.position.y, Camera.main.transform.position.z); // Center camera on turret
         UpdateText(pushText, "Exit");
+        HideRadius();
 
     }
 
@@ -231,6 +277,7 @@ Initialize();
         this.GetComponent<SpriteRenderer>().enabled = true; // Show player sprite
         this.transform.position = positionBeforeEnteringTurret;
         positionBeforeEnteringTurret = new Vector3();// Adjust position as needed
+        
     }
 
 
@@ -243,6 +290,10 @@ Initialize();
     public void UpdateTurretSelection()
     {
         turretToBuild = TurretSelectionUI.Instance.UpdateSelection();
+        if (radiusVisible)
+        {
+            SetRadius(turretToBuild.GetTargetingRadius());
+        }
         
 
     }
@@ -308,15 +359,23 @@ Initialize();
         return _position;
     }
 
-    public void ShowRadius(float _rad)
+private bool radiusVisible = false;
+    public void SetRadius(float _rad)
     {
         radiusCircle.transform.localScale = Vector3.one * _rad;
+        ShowRadius();
+    }
 
+    private void ShowRadius()
+    {
+        radiusVisible = true;
+        radiusCircle.SetActive(true);
     }
 
     public void HideRadius()
     {
-        radiusCircle.transform.localScale = Vector3.zero;
+        radiusCircle.SetActive(false);
+        radiusVisible = false;
     }
 
 #region UI text in lower right corner
@@ -401,7 +460,7 @@ public void OnSprintEnd(InputAction.CallbackContext _context)
 
 public void OnSquatStart(InputAction.CallbackContext _context)
 {
-    isSquating = true;
+    
     if (InTurretEntryProximity())
         {
             EnterTurret(turretDetector.DetectedTurret());
@@ -411,9 +470,14 @@ public void OnSquatStart(InputAction.CallbackContext _context)
             Debug.Log("Exiting turret from OnSquatStart, InTurret");
             ExitTurret(engagedTurret);
         }
+        else if (buildingDeployable)
+        {
+            DeployTurret();
+        }
         else
         {
-            //This is where I trigger the build process, or else check to deploy a turret
+           isSquating = true;
+           squatDuration = 0f;
         }
 }
 public void OnSquatEnd(InputAction.CallbackContext _context)
@@ -421,7 +485,7 @@ public void OnSquatEnd(InputAction.CallbackContext _context)
    isSquating = false;
       
 
-            buildingPlacement.ResetBuildCounter();
+            buildingPlacement.HideBuildCounter();
             HideRadius();
             UpdateText(squatText, "Build");
             buildingStarted = false;
