@@ -19,8 +19,9 @@ public class PlayerTurretUI : MonoBehaviour
     {
         //InitializeTurretList();
         selectedIndex = 0;
-        PlaceTurretImages();
-        HideTowerSelectionPanel();
+        //PlaceTurretImages();
+        InitializeTurretListFromArray();
+        //HideTowerSelectionPanel();
         
         UpdateHighlightPosition();
         
@@ -32,12 +33,13 @@ public class PlayerTurretUI : MonoBehaviour
 //TODO: make sure the spacing works out more cleanly
 
         int _width = Mathf.Min(turretPrefabs.Length, 4);
-        int _height = Mathf.CeilToInt(turretPrefabs.Length / 4f);
+        int _height = Mathf.CeilToInt(turretPrefabs.Length / 4f);   
+      
         unitSpacing.x = selectionHighlightBorder.transform.localScale.x;
         unitSpacing.y = selectionHighlightBorder.transform.localScale.y;    
         Vector2 _startingOffset = new Vector2(-towerSelectionPanel.GetComponent<RectTransform>().rect.width/2 + (unitSpacing.x / 2f), -towerSelectionPanel.GetComponent<RectTransform>().rect.height/2 + (unitSpacing.y / 2f));
         Vector2 _padding = new Vector2(paddingInUnits * unitSpacing.x, paddingInUnits * unitSpacing.y);
-        
+      
         int _turretCount = 0;
         for (int i = 0; i < _height; i++)
             for (int j = 0; j < _width; j++)
@@ -57,6 +59,13 @@ public class PlayerTurretUI : MonoBehaviour
         TurretImage _turretInstance = Instantiate(_turret, _position, Quaternion.identity, towerSelectionPanel.transform);
         return _turretInstance;
         
+    }
+    private void InitializeTurretListFromArray()
+    {
+        foreach (TurretImage turret in turretPrefabs)
+        {
+            turretBuildListItems.Add(turret);
+        }
     }
 
     public void InitializeTurretList() //No longer using this one
@@ -132,7 +141,7 @@ public class PlayerTurretUI : MonoBehaviour
         if (selectedIndex >= 0 && selectedIndex < turretBuildListItems.Count)
         {
             Turret _turret = (Turret)turretBuildListItems[selectedIndex].GetTurretPrefab();
-            HideTowerSelectionPanel();
+            //HideTowerSelectionPanel();
             Debug.Log($"Selected turret {selectedIndex}: {_turret.name}");
             return _turret;
         }

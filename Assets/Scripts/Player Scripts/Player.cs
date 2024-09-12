@@ -68,7 +68,7 @@ public class Player : MonoBehaviour
  
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
 
 Initialize();
@@ -76,6 +76,17 @@ Initialize();
 
         
 
+    }
+    void Start()
+    {
+        SubscribeToInputEvents();
+        turretToBuild = playerTurretUI.MakeTurretSelection();
+        HideRadius();
+        actualSpeed = baseSpeed;
+        UpdateText(squatText, "Build Turret");
+        UpdateText(pullText, "Switch Turret Selection");
+        
+        UpdateLastPosition();
     }
 
     // Update is called once per frame
@@ -106,6 +117,7 @@ Initialize();
 
                 float _chargeTime = Time.deltaTime;
                 SetRadius(turretToBuild.GetTargetingRadius());
+                ConditionalShowRadius();
                 if (buildingPlacement.IterateBuildCounter(_chargeTime)) //passes the charge time to the building manager, which returns true if enough time to build a turret has passed
                 {
                     SetBuildingDeployable();
@@ -189,7 +201,20 @@ Initialize();
         buildingDeployable = true;
         AudioManager.Instance.StopClip(construction);
         SetRadius(turretToBuild.GetTargetingRadius());
+        ConditionalShowRadius();
         //TODO: Other stuff to make building deployable
+    }
+
+    private void ConditionalShowRadius()
+    {
+        if (buildingDeployable)
+        {
+            ShowRadius();
+        }
+        else
+        {
+            HideRadius();
+        }
     }
 
     private void DeployTurret()
@@ -277,6 +302,7 @@ Initialize();
         this.GetComponent<SpriteRenderer>().enabled = true; // Show player sprite
         this.transform.position = positionBeforeEnteringTurret;
         positionBeforeEnteringTurret = new Vector3();// Adjust position as needed
+        ConditionalShowRadius();
         
     }
 
@@ -290,10 +316,10 @@ Initialize();
     public void UpdateTurretSelection()
     {
         turretToBuild = TurretSelectionUI.Instance.UpdateSelection();
-        if (radiusVisible)
-        {
+       
             SetRadius(turretToBuild.GetTargetingRadius());
-        }
+            ConditionalShowRadius();
+   
         
 
     }
@@ -309,6 +335,7 @@ Initialize();
             
         }
         positionBeforeEnteringTurret = transform.position;
+        HideRadius();
         //this.gameObject.SetActive(false);  // Deactivate player GameObject
     }
 
@@ -325,6 +352,7 @@ Initialize();
     {
         transform.position = positionBeforeEnteringTurret;
         Debug.Log("Resetting position to last saved position");
+        ConditionalShowRadius();
     }
 
     public Vector2 GetCameraBounds()
@@ -363,7 +391,7 @@ private bool radiusVisible = false;
     public void SetRadius(float _rad)
     {
         radiusCircle.transform.localScale = Vector3.one * _rad;
-        ShowRadius();
+        
     }
 
     private void ShowRadius()
@@ -395,19 +423,17 @@ private void Initialize()
 
   
 
-    healthManager = GetComponent<HealthManager>();
+        healthManager = GetComponent<HealthManager>();
        
-        actualSpeed = baseSpeed;
+        
 
         turretDetector = GetComponentInChildren<PlayerTurretDetector>();
         buildingPlacement = GetComponent<PlayerBuildingPlacement>();
-        //playerTurretUI = GetComponentInChildren<PlayerTurretUI>();
-        turretToBuild = playerTurretUI.MakeTurretSelection();
-        HideRadius();
-        UpdateText(squatText, "Build Turret");
-        UpdateText(pullText, "Switch Turret Selection");
-        SubscribeToInputEvents();
-        UpdateLastPosition();
+        playerTurretUI = GetComponent<PlayerTurretUI>();
+        
+        //SubscribeToInputEvents();
+        
+        
         
 }
 
@@ -486,7 +512,7 @@ public void OnSquatEnd(InputAction.CallbackContext _context)
       
 
             buildingPlacement.HideBuildCounter();
-            HideRadius();
+            //HideRadius();
             UpdateText(squatText, "Build");
             buildingStarted = false;
             AudioManager.Instance.StopClip(construction);

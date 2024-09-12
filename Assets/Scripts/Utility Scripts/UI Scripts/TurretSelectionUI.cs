@@ -34,13 +34,14 @@ public class TurretSelectionUI : MonoBehaviour
     Destroy(gameObject);
     }
     selectedTurretIndex = 0;
-    turretSelectionActive = false;
+    
     
     
     }
 
     void Start()
     {
+        //turretSelectionPanel.SetActive(true);
         UpdateSelectedTurret(turretUIPrefabs[selectedTurretIndex]);
         HideTurretSelectionWheel();
  
@@ -94,6 +95,7 @@ public class TurretSelectionUI : MonoBehaviour
 
     public void UpdateSelectedTurret(TurretSelectionUIIcon _turretUI)
     {
+        Debug.Log("TurretUI: " + _turretUI.turretName);
         selectedTurretImage.sprite = _turretUI.icon.sprite;
             // Get the original size of the icon
     Vector2 originalSize = _turretUI.icon.rectTransform.sizeDelta;
@@ -131,6 +133,7 @@ public class TurretSelectionUI : MonoBehaviour
     public void HideTurretSelectionWheel()
     {
         turretSelectionWheel.SetActive(false);
+        turretSelectionActive = false;
     }
 
     
