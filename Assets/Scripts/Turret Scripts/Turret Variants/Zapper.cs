@@ -125,6 +125,11 @@ public void Surge(float _powerUsage)
     }
 }
 
+public void CreateCounterpart(Vector2 _counterpartPosition)
+{
+    zapperCounterpart = Instantiate(counterpartPrefab, _counterpartPosition, Quaternion.identity, transform).GetComponent<ZapperCounterpart>();
+}
+
 private Vector2 GetPathDirection(BoxCollider2D pathCollider)
 {
     // Get the rotation angle of the box collider in degrees

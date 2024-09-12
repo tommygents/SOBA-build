@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class PlayerTurretDetector : MonoBehaviour
@@ -9,6 +10,8 @@ public class PlayerTurretDetector : MonoBehaviour
     public bool detectsPath = false;
     public Turret nearestTurret = null;
     public List<Turret> detectedTurrets = new List<Turret>();
+    public List<GameObject> detectedPaths = new List<GameObject>();
+    public List<Waypoint> detectedWaypoints = new List<Waypoint>();
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +38,12 @@ public class PlayerTurretDetector : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("PathCollider"))
         {
             detectsPath = true;
+            detectedPaths.Add(collision.gameObject);
+        }
+
+        if (collision.GetComponent<Waypoint>() != null)
+        {
+            detectedWaypoints.Add(collision.GetComponent<Waypoint>());
         }
 
     }
@@ -50,7 +59,14 @@ public class PlayerTurretDetector : MonoBehaviour
         } 
         if (collision.gameObject.layer == LayerMask.NameToLayer("PathCollider"))
         {
-            detectsPath = false;
+            
+            detectedPaths.Remove(collision.gameObject);
+            detectsPath = detectedPaths.Count > 0;
+        }
+
+        if (collision.GetComponent<Waypoint>() != null)
+        {
+            detectedWaypoints.Remove(collision.GetComponent<Waypoint>());
         }
     }
 
@@ -101,5 +117,56 @@ private void UpdateNearestTurret()
         //TODO: finally, the instructions layer needs to update.
     }
 
+    public GameObject GetNearestPath()
+    {
+        
+        if (detectedPaths.Count == 0)
+        {
+            return null;
+        }
+        else if (detectedPaths.Count == 1)
+        {
+            return detectedPaths[0];
+        }
+        else
+        {
+            GameObject nearestPath = detectedPaths[0];
+            foreach (GameObject path in detectedPaths)
+            {
+                if (Vector3.Distance(transform.position, path.transform.position) < Vector3.Distance(transform.position, nearestPath.transform.position))
+                {
+                    nearestPath = path;
+                }
+            }
+            return nearestPath;
+        }
+        
     
+    
+    }
+
+    public Waypoint GetNearestWaypoint()
+    {
+        if (detectedWaypoints.Count == 0)
+        {
+            return null;
+        }
+        else if (detectedWaypoints.Count == 1)
+        {
+            return detectedWaypoints[0];    
+        }
+        else
+        {
+            Waypoint nearestWaypoint = detectedWaypoints[0];
+            foreach (Waypoint waypoint in detectedWaypoints)
+            {
+                if (Vector3.Distance(transform.position, waypoint.transform.position) < Vector3.Distance(transform.position, nearestWaypoint.transform.position))
+                {
+                    nearestWaypoint = waypoint;
+                }
+            }
+            return nearestWaypoint;
+        }
+    }
+
 }

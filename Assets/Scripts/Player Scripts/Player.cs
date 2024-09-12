@@ -35,6 +35,7 @@ public class Player : MonoBehaviour
     public Vector3 positionBeforeEnteringTurret;
     [SerializeField] public PlayerTurretDetector turretDetector;
     [SerializeField] private PlayerBuildingPlacement buildingPlacement;
+    [SerializeField] private PlayerZapperBuilder zapperBuilder;
 //Dash variables
     public float dashTimer = 0f;
     public float dashDuration = .25f;
@@ -74,9 +75,8 @@ public class Player : MonoBehaviour
 Initialize();
 
 
-        
-
     }
+
     void Start()
     {
         SubscribeToInputEvents();
@@ -220,16 +220,33 @@ Initialize();
     private void DeployTurret()
     {
         Turret _turret = Instantiate(turretToBuild, transform.position, Quaternion.identity);
+        AfterDeploymentCleanup();
+        EnterTurret(_turret);
+    }
+
+    private void AfterDeploymentCleanup()
+    {
         buildingPlacement.HideBuildCounter();
         HideRadius();
         UpdateText(squatText, "Build");
         buildingStarted = false;
-        
-        EnterTurret(_turret);
+
+
         buildingDeployable = false;
         buildingPlacement.ResetBuildCounter();
     }
 
+    #region Zapper construction
+
+    private void DeployZapper()
+    {
+        Zapper _zapper = zapperBuilder.DeployZapper();
+        AfterDeploymentCleanup();
+        EnterTurret(_zapper);
+    }
+
+
+#endregion
     public void FinishBuildingTurretDebug()
     {
         
@@ -421,16 +438,11 @@ private bool radiusVisible = false;
 private void Initialize()
 {
 
-  
-
         healthManager = GetComponent<HealthManager>();
-       
-        
-
         turretDetector = GetComponentInChildren<PlayerTurretDetector>();
         buildingPlacement = GetComponent<PlayerBuildingPlacement>();
         playerTurretUI = GetComponent<PlayerTurretUI>();
-        
+        zapperBuilder = GetComponent<PlayerZapperBuilder>();
         //SubscribeToInputEvents();
         
         
