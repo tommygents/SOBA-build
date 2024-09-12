@@ -17,9 +17,9 @@ public class PlayerTurretUI : MonoBehaviour
 
     private void Awake()
     {
-        //InitializeTurretList();
+        
         selectedIndex = 0;
-        //PlaceTurretImages();
+        
         InitializeTurretListFromArray();
         //HideTowerSelectionPanel();
         

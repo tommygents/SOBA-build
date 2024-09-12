@@ -80,7 +80,7 @@ Initialize();
     void Start()
     {
         SubscribeToInputEvents();
-        turretToBuild = playerTurretUI.MakeTurretSelection();
+        turretToBuild = TurretSelectionUI.Instance.GetTurretToBuild();
         HideRadius();
         actualSpeed = baseSpeed;
         UpdateText(squatText, "Build Turret");
@@ -189,8 +189,16 @@ Initialize();
     private void DeployTurret()
     {
         Turret _turret = Instantiate(turretToBuild, transform.position, Quaternion.identity);
-        AfterDeploymentCleanup();
         EnterTurret(_turret);
+        AfterDeploymentCleanup();
+    }
+    
+    private void DeployZapper()
+    {
+        Zapper _zapper = zapperBuilder.DeployZapper();
+        
+        EnterTurret(_zapper);
+        AfterDeploymentCleanup();
     }
 
     private void AfterDeploymentCleanup()
@@ -207,12 +215,6 @@ Initialize();
 
     #region Zapper construction
 
-    private void DeployZapper()
-    {
-        Zapper _zapper = zapperBuilder.DeployZapper();
-        AfterDeploymentCleanup();
-        EnterTurret(_zapper);
-    }
 
 
 #endregion

@@ -24,19 +24,16 @@ public class TurretSelectionUI : MonoBehaviour
 
     void Awake()
     {
-    if (Instance == null)
-    {
-    Instance = this;
-    DontDestroyOnLoad(gameObject);
-    }
-    else
-    {
-    Destroy(gameObject);
-    }
-    selectedTurretIndex = 0;
-    
-    
-    
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+        selectedTurretIndex = 0;    
     }
 
     void Start()
@@ -47,7 +44,7 @@ public class TurretSelectionUI : MonoBehaviour
  
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         IterateTurretSelectionUITimer();
