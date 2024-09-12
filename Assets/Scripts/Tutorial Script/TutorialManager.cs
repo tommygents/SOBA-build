@@ -155,8 +155,8 @@ public class TutorialManager : MonoBehaviour
         yield return new WaitUntil(() => squatStarted);
         HideSquatAnimation();
         NextStep();
-        yield return new WaitUntil(() => player.turretDetector.detectsTurret);
-        Turret _turret = player.turretDetector.detectedTurret;
+        yield return new WaitUntil(() => player.detectionRadius.detectsTurret);
+        Turret _turret = player.detectionRadius.detectedTurret;
         ShowCurrentStep(); //turret2
         
         yield return new WaitUntil(() => player.isEngagedWithTurret);
@@ -177,9 +177,9 @@ public class TutorialManager : MonoBehaviour
         NextStep();
         pullHappened = false;
         ShowCurrentStep(); //secondturret1.5
-        yield return new WaitUntil(() => player.turretDetector.detectedTurret);
+        yield return new WaitUntil(() => player.detectionRadius.detectedTurret);
         yield return new WaitUntil(()=> squatStarted);
-        yield return new WaitUntil(() => player.turretDetector.detectsTurret);
+        yield return new WaitUntil(() => player.detectionRadius.detectsTurret);
         NextStep();
         ShowCurrentStep(); //secondturret2
         yield return new WaitUntil(() => player.isEngagedWithTurret);

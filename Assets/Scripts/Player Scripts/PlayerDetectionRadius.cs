@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 
-public class PlayerTurretDetector : MonoBehaviour
+public class PlayerDetectionRadius : MonoBehaviour
 {
     public bool detectsTurret = false;
     public Turret detectedTurret= null;

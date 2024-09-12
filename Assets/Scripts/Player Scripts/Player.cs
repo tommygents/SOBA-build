@@ -33,7 +33,7 @@ public class Player : MonoBehaviour
     public Turret nearbyTurret = null;
     public Turret engagedTurret = null;
     public Vector3 positionBeforeEnteringTurret;
-    [SerializeField] public PlayerTurretDetector turretDetector;
+    [SerializeField] public PlayerDetectionRadius detectionRadius;
     [SerializeField] private PlayerBuildingPlacement buildingPlacement;
     [SerializeField] private PlayerZapperBuilder zapperBuilder;
 //Dash variables
@@ -95,37 +95,6 @@ Initialize();
         Move();
         CheckRunningAndPassCharge();
         CheckForSquatAndAdvanceCharge();
-
-        if (isSquating && !isEngagedWithTurret) //activate the build timer, so that the player builds a turret
-        {
-            if (!turretDetector.CanBuild())
-            {
-                UpdateText(squatText, "Too close!");
-
-            }
-            if (turretDetector.CanBuild())
-            {
-                
-                if (!buildingStarted)
-                {
-                    buildingStarted = true;
-                    AudioManager.Instance.PlayerClip(construction);
-                }
-
-                UpdateText(squatText, "Building...");
-
-
-                float _chargeTime = Time.deltaTime;
-                SetRadius(turretToBuild.GetTargetingRadius());
-                ConditionalShowRadius();
-                if (buildingPlacement.IterateBuildCounter(_chargeTime)) //passes the charge time to the building manager, which returns true if enough time to build a turret has passed
-                {
-                    SetBuildingDeployable();
-                }
-            }
-
-        }
-
         AdvanceDashTimerandCheckForDash();
 
         
@@ -137,7 +106,7 @@ Initialize();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
-        if (turretDetector.detectsTurret && engagedTurret == null)
+        if (detectionRadius.detectsTurret && engagedTurret == null)
         {
             UpdateText(pushText, "Enter");
         }
@@ -267,7 +236,7 @@ Initialize();
 
     private bool InTurretEntryProximity()
     {
-        return turretDetector.detectsTurret && engagedTurret == null;
+        return detectionRadius.detectsTurret && engagedTurret == null;
     }
     private bool InTurret()
     {
@@ -439,7 +408,7 @@ private void Initialize()
 {
 
         healthManager = GetComponent<HealthManager>();
-        turretDetector = GetComponentInChildren<PlayerTurretDetector>();
+        detectionRadius = GetComponentInChildren<PlayerDetectionRadius>();
         buildingPlacement = GetComponent<PlayerBuildingPlacement>();
         playerTurretUI = GetComponent<PlayerTurretUI>();
         zapperBuilder = GetComponent<PlayerZapperBuilder>();
@@ -501,7 +470,7 @@ public void OnSquatStart(InputAction.CallbackContext _context)
     
     if (InTurretEntryProximity())
         {
-            EnterTurret(turretDetector.DetectedTurret());
+            EnterTurret(detectionRadius.DetectedTurret());
         }
         else if (InTurret())
         {
@@ -510,7 +479,8 @@ public void OnSquatStart(InputAction.CallbackContext _context)
         }
         else if (buildingDeployable)
         {
-            DeployTurret();
+            if (turretToBuild is Zapper) DeployZapper();
+            else DeployTurret();
         }
         else
         {

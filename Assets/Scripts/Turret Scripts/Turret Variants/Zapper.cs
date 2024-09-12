@@ -34,7 +34,7 @@ public class Zapper : Turret
         maxCharge = chargeBarMax * chargeCountMax;
         zapperDetectionRadius = GetComponentInChildren<ZapperDetectionRadius>();
         zapperDetectionRadius.Initialize();
-        CreateCounterpart();
+        //CreateCounterpart();
         //InstantiateZapperAmmoWorldSpace();
         DrawAmmo();
         EnemyCounter.OnEnemyCountZero += HandleLastEnemy;
@@ -127,7 +127,7 @@ public void Surge(float _powerUsage)
 
 public void CreateCounterpart(Vector2 _counterpartPosition)
 {
-    zapperCounterpart = Instantiate(counterpartPrefab, _counterpartPosition, Quaternion.identity, transform).GetComponent<ZapperCounterpart>();
+    zapperCounterpart = Instantiate(counterpartPrefab, _counterpartPosition, Quaternion.identity).GetComponent<ZapperCounterpart>();
 }
 
 private Vector2 GetPathDirection(BoxCollider2D pathCollider)
