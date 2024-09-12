@@ -41,6 +41,7 @@ public class PlayerDetectionRadius : MonoBehaviour
             detectsPath = true;
             detectedPaths.Add(collision.gameObject);
             TurretSelectionUI.Instance.SwitchtoZapper();
+            player.UpdateTurretSelection();
         }
 
         if (collision.GetComponent<Waypoint>() != null)
@@ -67,6 +68,7 @@ public class PlayerDetectionRadius : MonoBehaviour
             if (!detectsPath)
             {
                 TurretSelectionUI.Instance.SwitchtoTurret();
+                player.UpdateTurretSelection();
             }
         }
 
@@ -114,14 +116,6 @@ private void UpdateNearestTurret()
         return nearestTurret;
     }
 
-    public void IndicateTurret()
-    {
-        //TODO: This is the code that tells the player that they will enter a turret.
-        //TODO: here's what needs to happen:
-        //TODO: somehow, the turret for this circle needs to get turned on.
-        //TODO: then, that circle neets to connect, with a line, to the instructions layer.
-        //TODO: finally, the instructions layer needs to update.
-    }
 
     public GameObject GetNearestPath()
     {

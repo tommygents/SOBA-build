@@ -144,12 +144,11 @@ Initialize();
     }
     private void CheckRunningAndPassCharge()
         {
-            if (isRunning && isEngagedWithTurret) //Passes the time spent running to an engaged turret to charge it up
-            {
-
-                engagedTurret.ChargeUp(isSprinting);
-            }
+        if (isRunning && isEngagedWithTurret) //Passes the time spent running to an engaged turret to charge it up
+        {
+            engagedTurret.ChargeUp(isSprinting);
         }
+    }
 
     private void AdvanceDashTimerandCheckForDash()
     {
@@ -201,6 +200,11 @@ Initialize();
         AfterDeploymentCleanup();
     }
 
+    public void SwitchtoZapper()
+    {
+        
+    }
+
     private void AfterDeploymentCleanup()
     {
         buildingPlacement.HideBuildCounter();
@@ -213,11 +217,7 @@ Initialize();
         buildingPlacement.ResetBuildCounter();
     }
 
-    #region Zapper construction
 
-
-
-#endregion
     public void FinishBuildingTurretDebug()
     {
         

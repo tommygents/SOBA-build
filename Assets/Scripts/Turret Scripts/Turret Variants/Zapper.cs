@@ -82,7 +82,8 @@ public void Surge(float _powerUsage)
 
     public override float GetTargetingRadius()
     {
-        return zapperDetectionRadius.GetTargetingRadius();
+        //return zapperDetectionRadius.GetTargetingRadius();
+        return 0f;
     }
 
 
