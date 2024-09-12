@@ -40,6 +40,7 @@ public class PlayerDetectionRadius : MonoBehaviour
         {
             detectsPath = true;
             detectedPaths.Add(collision.gameObject);
+            TurretSelectionUI.Instance.SwitchtoZapper();
         }
 
         if (collision.GetComponent<Waypoint>() != null)
@@ -63,6 +64,10 @@ public class PlayerDetectionRadius : MonoBehaviour
             
             detectedPaths.Remove(collision.gameObject);
             detectsPath = detectedPaths.Count > 0;
+            if (!detectsPath)
+            {
+                TurretSelectionUI.Instance.SwitchtoTurret();
+            }
         }
 
         if (collision.GetComponent<Waypoint>() != null)

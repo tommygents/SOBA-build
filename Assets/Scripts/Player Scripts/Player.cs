@@ -47,7 +47,7 @@ public class Player : MonoBehaviour
 
     public bool isMakingUISelection = false;
     
-    [SerializeField] public PlayerTurretUI playerTurretUI;
+    //[SerializeField] public PlayerTurretUI playerTurretUI;
     public Turret turretToBuild;
 
     public GameManager gameManager;
@@ -192,7 +192,7 @@ Initialize();
         EnterTurret(_turret);
         AfterDeploymentCleanup();
     }
-    
+
     private void DeployZapper()
     {
         Zapper _zapper = zapperBuilder.DeployZapper();
@@ -412,7 +412,7 @@ private void Initialize()
         healthManager = GetComponent<HealthManager>();
         detectionRadius = GetComponentInChildren<PlayerDetectionRadius>();
         buildingPlacement = GetComponent<PlayerBuildingPlacement>();
-        playerTurretUI = GetComponent<PlayerTurretUI>();
+        //playerTurretUI = GetComponent<PlayerTurretUI>();
         zapperBuilder = GetComponent<PlayerZapperBuilder>();
         //SubscribeToInputEvents();
         
@@ -472,6 +472,7 @@ public void OnSquatStart(InputAction.CallbackContext _context)
     
     if (InTurretEntryProximity())
         {
+            Debug.Log("Entering turret from OnSquatStart, InTurretEntryProximity");
             EnterTurret(detectionRadius.DetectedTurret());
         }
         else if (InTurret())

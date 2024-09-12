@@ -12,6 +12,8 @@ public class TurretSelectionUI : MonoBehaviour
     [SerializeField] private GameObject turretSelectionIndicator;
     [SerializeField] private GameObject turretSelectionPanel;
     [SerializeField] private TurretSelectionUIIcon[] turretUIPrefabs;
+    [SerializeField] private TurretSelectionUIIcon zapperTurretUI;
+    [SerializeField] private bool zapperMode = false;
     [SerializeField] private GameObject turretSelectionWheel;
     [SerializeField] private int selectedTurretIndex;
 
@@ -33,15 +35,13 @@ public class TurretSelectionUI : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        selectedTurretIndex = 0;    
+        selectedTurretIndex = 0;
+        UpdateSelectedTurret(turretUIPrefabs[selectedTurretIndex]);    
     }
 
     void Start()
     {
-        //turretSelectionPanel.SetActive(true);
-        UpdateSelectedTurret(turretUIPrefabs[selectedTurretIndex]);
-        HideTurretSelectionWheel();
- 
+        HideTurretSelectionWheel(); 
     }
 
 
@@ -65,34 +65,36 @@ public class TurretSelectionUI : MonoBehaviour
 
     public Turret UpdateSelection() //THIS is the function that returns the turret to build
     {
-        turretSelectionTimer = 0f;
-       
-       if (!turretSelectionActive)
-       {
-        turretSelectionActive = true;
+        if (!zapperMode)
+        {
+            turretSelectionTimer = 0f;
         
-        ShowTurretSelectionWheel();
-        return GetTurretToBuild();
-       }
-       //if the selection is already active, advance the selection
-       else
-       {
-        AdvanceTurretSelection();
-        
+            if (!turretSelectionActive)
+            {
+                turretSelectionActive = true;
+                ShowTurretSelectionWheel();
+                return GetTurretToBuild();
+            }
+            
+            else //if the selection is already active, advance the selection
+            {
+                AdvanceTurretSelection();
+            }
+        }
 
-       }
         return GetTurretToBuild();
     }
 
     
     public Turret GetTurretToBuild()
     {
-        return turretUIPrefabs[selectedTurretIndex].GetTurretPrefab();
+        if (zapperMode) return zapperTurretUI.GetTurretPrefab();
+        else return turretUIPrefabs[selectedTurretIndex].GetTurretPrefab();
     }
 
     public void UpdateSelectedTurret(TurretSelectionUIIcon _turretUI)
     {
-        Debug.Log("TurretUI: " + _turretUI.turretName);
+        
         selectedTurretImage.sprite = _turretUI.icon.sprite;
             // Get the original size of the icon
     Vector2 originalSize = _turretUI.icon.rectTransform.sizeDelta;
@@ -106,19 +108,21 @@ public class TurretSelectionUI : MonoBehaviour
     // Ensure the image uses the new size without stretching
     selectedTurretImage.preserveAspect = true;
         selectedTurretName.text = _turretUI.turretName;
-        
     }
 
     public void AdvanceTurretSelection()
     {
-        selectedTurretIndex++;
-        if (selectedTurretIndex >= turretUIPrefabs.Length)
+        if (!zapperMode)
         {
-            selectedTurretIndex = 0;
+            selectedTurretIndex++;
+            if (selectedTurretIndex >= turretUIPrefabs.Length)
+            {
+                selectedTurretIndex = 0;
+            }
+            //Move the selection indicator
+            turretSelectionIndicator.GetComponent<RectTransform>().position = turretUIPrefabs[selectedTurretIndex].rectTransform.position;
+            UpdateSelectedTurret(turretUIPrefabs[selectedTurretIndex]);
         }
-        //Move the selection indicator
-        turretSelectionIndicator.GetComponent<RectTransform>().position = turretUIPrefabs[selectedTurretIndex].rectTransform.position;
-        UpdateSelectedTurret(turretUIPrefabs[selectedTurretIndex]);
 
     }
 
@@ -133,7 +137,21 @@ public class TurretSelectionUI : MonoBehaviour
         turretSelectionActive = false;
     }
 
-    
+    #region Zapper setup
+
+    public void SwitchtoZapper()
+    {
+        zapperMode = true;
+        UpdateSelectedTurret(zapperTurretUI);
+        HideTurretSelectionWheel();
+    }
+
+    public void SwitchtoTurret()
+    {
+        zapperMode = false;
+        UpdateSelectedTurret(turretUIPrefabs[selectedTurretIndex]);
+    }
+    #endregion
 
 
 }
