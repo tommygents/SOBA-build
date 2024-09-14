@@ -12,12 +12,12 @@ public class PlayerDetectionRadius : MonoBehaviour
     public List<Turret> detectedTurrets = new List<Turret>();
     public List<GameObject> detectedPaths = new List<GameObject>();
     public List<Waypoint> detectedWaypoints = new List<Waypoint>();
-    private Player player;
+    [SerializeField] private Player player;
 
     // Start is called before the first frame update
     void Start()
     {
-        player = GetComponent<Player>();
+       
     }
 
     // Update is called once per frame

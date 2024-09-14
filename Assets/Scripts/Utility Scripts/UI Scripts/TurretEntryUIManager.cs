@@ -56,6 +56,22 @@ private Vector2 WorldToCanvasPosition(Vector3 worldPosition)
     return canvasPoint;
 }
 
+// New method
+private Vector2 WorldToSpecificCanvasPosition(Vector3 worldPosition, RectTransform targetRectTransform)
+{
+    // Convert world position to screen position
+    Vector2 screenPoint = mainCamera.WorldToScreenPoint(worldPosition);
+
+    // Convert screen position to local position within the target RectTransform
+    RectTransformUtility.ScreenPointToLocalPointInRectangle(
+        targetRectTransform,
+        screenPoint,
+        null,
+        out Vector2 localPoint);
+
+    return localPoint;
+}
+
 public void ToggleDisplayable()
 {
     isDisplayable = !isDisplayable;
@@ -88,13 +104,26 @@ private void HideInstructionLine()
     intersectionCircle.gameObject.SetActive(false);
 }
 
+
+private void DrawIndicatorLine()
+{
+    ShowInstructionLine();
+    RectTransform textRect = turretActionIndicatorText.rectTransform;
+    Vector2 textSize = textRect.rect.size;
+    Vector2 textRectLocalPosition = this.GetComponent<RectTransform>().InverseTransformPoint(textRect.TransformPoint(Vector3.zero));
+    Vector2 startPoint = textRectLocalPosition + new Vector2(-textSize.x/2, textSize.y/2);
+    Vector2 indicatorPosition = 
+}
 private void DrawInstructionLine()
     {
         ShowInstructionLine();
 
 
         // Convert both positions to canvas space
-        Vector2 startPoint = GetCanvasPosition(turretActionIndicatorText.rectTransform);
+       // Get the left-edge of the indicator text 
+        RectTransform textRect = turretActionIndicatorText.rectTransform;
+        Vector2 textSize = textRect.rect.size;
+        Vector2 startPoint = textRect + new Vector2(-textSize.x/2, textSize.y/2);
         Vector2 indicatorPosition = GetCanvasPosition(turretEntryIndicator.GetComponent<RectTransform>());
 
         // Calculate the center-right point of the indicator
@@ -127,14 +156,14 @@ private void DrawInstructionLine()
     Vector2 direction = end - start;
     float distance = direction.magnitude;
 
-    Debug.Log($"Drawing line from {start} to {end}. Distance: {distance}");
+
 
     lineTransform.anchorMin = lineTransform.anchorMax = Vector2.zero;
     lineTransform.sizeDelta = new Vector2(distance, lineWidth);
     lineTransform.anchoredPosition = start + direction * 0.5f;
     lineTransform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
 
-    Debug.Log($"Line size: {lineTransform.sizeDelta}, position: {lineTransform.anchoredPosition}, rotation: {lineTransform.localEulerAngles}");
+
 }
 
 private Vector2 GetCanvasPosition(RectTransform rectTransform)
@@ -157,4 +186,9 @@ private Vector2 GetCanvasPosition(RectTransform rectTransform)
         intersectionCircle.rectTransform.anchoredPosition = position;
     }
 
+    private void GetLocalizedPoint(Vector2 _point)
+    {
+        
+    
+    }
 }
