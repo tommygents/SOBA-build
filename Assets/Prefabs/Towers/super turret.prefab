@@ -15,22 +15,26 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 468816589, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}
+      propertyPath: <Offset>k__BackingField._value.x
+      value: -0.06
+      objectReference: {fileID: 0}
     - target: {fileID: 702155796, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.22725394
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 702155796, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.22725394
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 702155796, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.22725394
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 702155797, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: f3b03b3995dd6b84c9dd96a451c8c489, type: 3}
+      objectReference: {fileID: 21300000, guid: c1cefa0d6f7700446a0360b8571a721a, type: 3}
     - target: {fileID: 2060385095, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}
       propertyPath: m_IsTrigger
       value: 0
@@ -82,6 +86,10 @@ PrefabInstance:
     - target: {fileID: 5324510896839981306, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6894503224499299300, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}
+      propertyPath: <Offset>k__BackingField._value.x
+      value: -0.06
       objectReference: {fileID: 0}
     - target: {fileID: 6894503224499299300, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}
       propertyPath: <RemoveSegments>k__BackingField._value

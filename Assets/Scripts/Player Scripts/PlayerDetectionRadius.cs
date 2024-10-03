@@ -31,7 +31,11 @@ public class PlayerDetectionRadius : MonoBehaviour
         if (collision.GetComponent<Turret>() != null)
         {
             detectsTurret= true;
-            
+            if (!player.isEngagedWithTurret)
+            {
+                InstructionsUIManager.Instance.squatText.SetText("Enter", "turret");
+            }
+      
             detectedTurrets.Add(collision.GetComponent<Turret>());
             detectedTurret = GetNearestTurret();
         } 
@@ -95,6 +99,7 @@ private void UpdateNearestTurret()
             nearestTurret = null;
             detectsTurret = false;
             TurretEntryUIManager.Instance.HideTurretEntryUI();
+            player.ResetSquatText();
         }
         else
         {
@@ -108,7 +113,7 @@ private void UpdateNearestTurret()
             }
         }
         TurretEntryUIManager.Instance.DisplayTurretEntryUI(nearestTurret);
-    }
+        }
     }
     public Turret GetNearestTurret()
     {

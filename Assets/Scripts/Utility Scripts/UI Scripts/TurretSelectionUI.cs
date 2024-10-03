@@ -36,11 +36,12 @@ public class TurretSelectionUI : MonoBehaviour
             Destroy(gameObject);
         }
         selectedTurretIndex = 0;
-        UpdateSelectedTurret(turretUIPrefabs[selectedTurretIndex]);    
+        
     }
 
     void Start()
     {
+        UpdateSelectedTurret(turretUIPrefabs[selectedTurretIndex]);
         HideTurretSelectionWheel(); 
     }
 

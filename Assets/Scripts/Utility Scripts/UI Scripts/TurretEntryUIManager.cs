@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,9 +15,11 @@ public class TurretEntryUIManager : MonoBehaviour
     private Vector2 turretTextAnchorPosition;
     public RectTransform diagonalLine;
     public RectTransform horizontalLine;
+    public RectTransform instructionHighlightBox;
     [SerializeField] private float lineWidth = 2f;
      public Image intersectionCircle; // New field for the circle at the intersection
     private bool isDisplayable = false;
+    [SerializeField] private RectTransform turretEntryUIPanel;
    
    void Awake()
    {
@@ -78,6 +79,7 @@ public void ToggleDisplayable()
 }
 public void DisplayTurretEntryUI(Turret turret)
 {
+    
     turretEntryIndicator.gameObject.SetActive(true);
     
     // Convert world position to Canvas position
@@ -88,7 +90,7 @@ public void DisplayTurretEntryUI(Turret turret)
 
     Debug.Log("Displaying Turret Entry UI at " + turret.transform.position + 
               " with canvas position " + canvasPosition);
-    DrawInstructionLine();
+    DrawIndicatorLine();
 }
 public void HideTurretEntryUI()
 {
@@ -102,17 +104,33 @@ private void HideInstructionLine()
     diagonalLine.gameObject.SetActive(false);
     horizontalLine.gameObject.SetActive(false);
     intersectionCircle.gameObject.SetActive(false);
+    instructionHighlightBox.gameObject.SetActive(false);
 }
 
 
 private void DrawIndicatorLine()
 {
     ShowInstructionLine();
-    RectTransform textRect = turretActionIndicatorText.rectTransform;
-    Vector2 textSize = textRect.rect.size;
-    Vector2 textRectLocalPosition = this.GetComponent<RectTransform>().InverseTransformPoint(textRect.TransformPoint(Vector3.zero));
-    Vector2 startPoint = textRectLocalPosition + new Vector2(-textSize.x/2, textSize.y/2);
-    Vector2 indicatorPosition = 
+    //Figure out where to start the diagonal line from
+    //RectTransform textRect = turretActionIndicatorText.rectTransform;
+    Vector2 anchorPos = instructionHighlightBox.anchoredPosition;
+    Vector2 textSize = instructionHighlightBox.rect.size;
+    Vector2 textRectLocalPosition = turretEntryUIPanel.InverseTransformPoint(instructionHighlightBox.TransformPoint(Vector3.zero));
+    Vector2 startPoint = anchorPos + new Vector2(-textSize.x/2, textSize.y/2);
+    //Get the indicator position, which is also the endpoint
+    RectTransform indicatorRect = turretEntryIndicator.GetComponent<RectTransform>();
+    Vector2 indicatorPosition = turretEntryUIPanel.InverseTransformPoint(indicatorRect.TransformPoint(Vector3.zero));
+    Vector2 indicatorSize = indicatorRect.rect.size;
+    //Get the endpoint by moving from the indicator position
+    Vector2 endPoint = indicatorPosition + new Vector2(indicatorSize.x, indicatorSize.y / 2);
+    //Get the midpoint, where the diagonal line ends
+    Vector2 middlePoint = new Vector2(startPoint.x - Mathf.Abs(startPoint.y - endPoint.y), endPoint.y);
+    // Draw diagonal line
+        DrawLine(diagonalLine, startPoint, middlePoint);
+
+        // Draw horizontal line
+        DrawLine(horizontalLine, middlePoint, endPoint);
+        DrawIntersectionCircle(middlePoint);
 }
 private void DrawInstructionLine()
     {
@@ -123,7 +141,7 @@ private void DrawInstructionLine()
        // Get the left-edge of the indicator text 
         RectTransform textRect = turretActionIndicatorText.rectTransform;
         Vector2 textSize = textRect.rect.size;
-        Vector2 startPoint = textRect + new Vector2(-textSize.x/2, textSize.y/2);
+        Vector2 startPoint = textRect.TransformPoint(Vector2.zero) + new Vector3(-textSize.x/2, textSize.y/2, 0);
         Vector2 indicatorPosition = GetCanvasPosition(turretEntryIndicator.GetComponent<RectTransform>());
 
         // Calculate the center-right point of the indicator
@@ -149,6 +167,7 @@ private void DrawInstructionLine()
         diagonalLine.gameObject.SetActive(true);
         horizontalLine.gameObject.SetActive(true);
         intersectionCircle.gameObject.SetActive(true);
+        instructionHighlightBox.gameObject.SetActive(true);
     }
 
     private void DrawLine(RectTransform lineTransform, Vector2 start, Vector2 end)

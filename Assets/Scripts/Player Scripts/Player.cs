@@ -71,10 +71,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-
-Initialize();
-
-
+        Initialize();
     }
 
     void Start()
@@ -83,9 +80,10 @@ Initialize();
         turretToBuild = TurretSelectionUI.Instance.GetTurretToBuild();
         HideRadius();
         actualSpeed = baseSpeed;
-        UpdateText(squatText, "Build Turret");
-        UpdateText(pullText, "Switch Turret Selection");
-        
+        InstructionsUIManager.Instance.squatText.SetText("Assemble", "turret");
+        InstructionsUIManager.Instance.pullText.SetText("Switch", "turret selection");
+        InstructionsUIManager.Instance.pushText.SetText("Dash");
+        InstructionsUIManager.Instance.pullText.HideSecondaryText();
         UpdateLastPosition();
     }
 
@@ -106,14 +104,7 @@ Initialize();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
-        if (detectionRadius.detectsTurret && engagedTurret == null)
-        {
-            UpdateText(pushText, "Enter");
-        }
-        else if (!isEngagedWithTurret)
-        {
-            UpdateText(pushText, "Dash");
-        }
+
 
         
     } //END OF UPDATE FUNCTION
@@ -170,6 +161,7 @@ Initialize();
         AudioManager.Instance.StopClip(construction);
         SetRadius(turretToBuild.GetTargetingRadius());
         ConditionalShowRadius();
+        ResetSquatText();
         //TODO: Other stuff to make building deployable
     }
 
@@ -209,7 +201,8 @@ Initialize();
     {
         buildingPlacement.HideBuildCounter();
         HideRadius();
-        UpdateText(squatText, "Build");
+        
+        
         buildingStarted = false;
 
 
@@ -217,6 +210,11 @@ Initialize();
         buildingPlacement.ResetBuildCounter();
     }
 
+    public void ResetSquatText()
+    {
+       if (buildingDeployable) InstructionsUIManager.Instance.squatText.SetText("Deploy", "selected turret");
+       else InstructionsUIManager.Instance.squatText.SetText("Assemble", "turret");
+    }
 
     public void FinishBuildingTurretDebug()
     {
@@ -273,9 +271,11 @@ Initialize();
         nearbyTurret = null;
         engagedTurret = _turret;
         this.GetComponent<SpriteRenderer>().enabled = false; // Hide player sprite
-        Camera.main.transform.position = new Vector3(_turret.transform.position.x, _turret.transform.position.y, Camera.main.transform.position.z); // Center camera on turret
-        UpdateText(pushText, "Exit");
+        //Camera.main.transform.position = new Vector3(_turret.transform.position.x, _turret.transform.position.y, Camera.main.transform.position.z); // Center camera on turret
+        InstructionsUIManager.Instance.squatText.SetText("Exit", "turret");
+        
         HideRadius();
+     
 
     }
 
@@ -291,7 +291,8 @@ Initialize();
         this.transform.position = positionBeforeEnteringTurret;
         positionBeforeEnteringTurret = new Vector3();// Adjust position as needed
         ConditionalShowRadius();
-        
+        InstructionsUIManager.Instance.squatText.SetText("Enter", "turret");
+
     }
 
 
@@ -396,13 +397,6 @@ private bool radiusVisible = false;
 
 #region UI text in lower right corner
 
-    public TextMeshProUGUI squatText;
-    public TextMeshProUGUI pullText;
-    public TextMeshProUGUI pushText;
-    public void UpdateText(TextMeshProUGUI _field, string _text)
-    {
-        _field.text = _text;
-    }
 
 #endregion
     #region Refactoring
@@ -412,7 +406,6 @@ private void Initialize()
         healthManager = GetComponent<HealthManager>();
         detectionRadius = GetComponentInChildren<PlayerDetectionRadius>();
         buildingPlacement = GetComponent<PlayerBuildingPlacement>();
-        //playerTurretUI = GetComponent<PlayerTurretUI>();
         zapperBuilder = GetComponent<PlayerZapperBuilder>();
         //SubscribeToInputEvents();
         
@@ -438,8 +431,7 @@ private void Move()
 private bool IsMobile() {
     return (
     !isEngagedWithTurret && 
-    !isSquating && 
-    !isMakingUISelection
+    !isSquating
     );
 }
     #endregion
@@ -496,9 +488,7 @@ public void OnSquatEnd(InputAction.CallbackContext _context)
    isSquating = false;
       
 
-            buildingPlacement.HideBuildCounter();
-            //HideRadius();
-            UpdateText(squatText, "Build");
+            
             buildingStarted = false;
             AudioManager.Instance.StopClip(construction);
 }

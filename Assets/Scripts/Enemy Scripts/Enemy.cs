@@ -45,6 +45,7 @@ public class Enemy : MonoBehaviour
     public Vector2 velocity;
 
     public SpriteRenderer spriteRenderer;
+    [SerializeField] private Sprite defaultSprite;
     //public bool targetInRange = false;
     public EnemyWaypointMovement movementScript;
     [SerializeField] private Player player;
@@ -52,14 +53,12 @@ public class Enemy : MonoBehaviour
     public AudioClip deathSound;
 
 
-    // Start is called before the first frame update
-    protected virtual void Start()
+       protected virtual void Awake()
     {
         hp = MaxHP;
         spriteRenderer = GetComponent<SpriteRenderer>();
-      
-        
-            movementScript = GetComponentInChildren<EnemyWaypointMovement>();
+        defaultSprite = spriteRenderer.sprite;
+        movementScript = GetComponentInChildren<EnemyWaypointMovement>();
        
         
     }
@@ -151,13 +150,16 @@ public class Enemy : MonoBehaviour
         float _floatDamage = _damage - _intDamage;
         if (armored)
         {
-            armorHP -= _intDamage;
+            TakeArmorDamage((int)_damage);
+                _damage -= (int)_damage;
+            
             if (armorHP <= 0)
             {
+                _intDamage = -armorHP;
                 armorHP = 0;
                 DestroyArmor();
             }
-            _intDamage = 0;
+            else _intDamage = 0;
         }
         hp -= _intDamage;
         incrementalDamage += _floatDamage;
@@ -186,6 +188,9 @@ public class Enemy : MonoBehaviour
     public Material armorMaterial;
     public int armorHP;
     public int defaultArmorHP;
+    [SerializeField] private Sprite[] armorSprites;
+    [SerializeField] private int currentArmorSpriteIndex;
+    [SerializeField] private int armorIncrement;
 
     public void TakeIncrementalDamage(float _damage, DamageTypes _dt)
     {
@@ -200,8 +205,7 @@ public class Enemy : MonoBehaviour
             else //Case 2: the damage will not wipe out the armor.
             {
                 _damage *= GetArmorFactor(_dt);
-                armorHP -= (int)_damage;
-                _damage -= (int)_damage;
+                 
             }
         TakeIncrementalDamage(_damage);
 
@@ -219,23 +223,46 @@ public class Enemy : MonoBehaviour
     public void DestroyArmor()
     {
         armored = false;
-        spriteRenderer.material = null;
-        spriteRenderer.color = Color.white;
+        
+        spriteRenderer.sprite = defaultSprite;
+      
+    }
+
+    private void TakeArmorDamage(int _damage)
+    {
+        armorHP -= (int)_damage;
+        if (armorHP <= 0)
+        {
+            DestroyArmor();
+            return;
+        }
+        int _gap = (armorIncrement * currentArmorSpriteIndex) - armorHP;
+        if (_gap > 0)
+        {
+            currentArmorSpriteIndex -= (int)(_gap/armorIncrement);
+            spriteRenderer.sprite = armorSprites[currentArmorSpriteIndex];
+        }
+
+        /*while (armorHP < armorIncrement * currentArmorSpriteIndex)
+        {
+            currentArmorSpriteIndex--;
+        }*/
+        spriteRenderer.sprite = armorSprites[currentArmorSpriteIndex];
     }
 
     public void MakeArmored(int armorStrength)
     {
+        currentArmorSpriteIndex = armorSprites.Length - 1;
         if (spriteRenderer == null)
 
             spriteRenderer = GetComponent<SpriteRenderer>();
         armored = true;
         armorHP = armorStrength;
-        if (armorMaterial != null && spriteRenderer != null)
-        {
-            spriteRenderer.material = armorMaterial;
-            
-        }
-        spriteRenderer.color = Color.gray;
+        defaultArmorHP = armorStrength;
+        armorIncrement = defaultArmorHP / armorSprites.Length;
+        defaultSprite = spriteRenderer.sprite;
+        spriteRenderer.sprite = armorSprites[currentArmorSpriteIndex];
+        
         
     }
 
@@ -243,6 +270,8 @@ public class Enemy : MonoBehaviour
     {
         MakeArmored(defaultArmorHP);
     }
+
+
     #endregion
 
 }

@@ -78,7 +78,7 @@ PrefabInstance:
     - target: {fileID: 1082777223845990597, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: e2cfc79838a2ee24caa5e9c2605d6e35, type: 3}
+      objectReference: {fileID: 21300000, guid: 0b0e51bc6914cc0408c0df71fa572b63, type: 3}
     - target: {fileID: 1082777223845990599, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
       propertyPath: m_SpriteTilingProperty.newSize.x
       value: 1.28
@@ -86,6 +86,14 @@ PrefabInstance:
     - target: {fileID: 1082777223845990599, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
       propertyPath: m_SpriteTilingProperty.newSize.y
       value: 1.28
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082777223845990599, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082777223845990599, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1082777223845990602, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
       propertyPath: maxHP
@@ -107,6 +115,14 @@ PrefabInstance:
       propertyPath: defaultArmorHP
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 1082777223845990602, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
+      propertyPath: armorSprites.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082777223845990602, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
+      propertyPath: armorSprites.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 4f69caf4c29907841a6a4daa986b00aa, type: 3}
     - target: {fileID: 1082777223845990603, guid: 14a8a504169a11e4c8f28ae79f4429e9, type: 3}
       propertyPath: m_Name
       value: SmallEnemyTD
