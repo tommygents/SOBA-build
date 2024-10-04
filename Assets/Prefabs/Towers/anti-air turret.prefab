@@ -591,10 +591,10 @@ MonoBehaviour:
   ammunition: {fileID: 6047662502705813423, guid: 5b4ddf9fe2bcaa14386f0f0a58e6c793, type: 3}
   targetingSystem: {fileID: 4120685630083168460}
   turretUI: {fileID: 0}
-  turretBulletVelocity: 20
-  rotationSpeed: 120
+  turretBulletVelocity: 10
+  rotationSpeed: 100
   rangeAsMultipleOfTargetingRadius: 1.333
-  cooldownLength: 0.1
+  cooldownLength: 0.25
   ammoCost: 0.05
   target: {fileID: 0}
   chargeBar: 0
