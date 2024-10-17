@@ -85,5 +85,12 @@ public class Ammo : PlayerAttack
         Destroy(gameObject);
     }
 
-
+    public virtual void OnDestroy()
+    {
+        
     }
+   
+
+
+
+}

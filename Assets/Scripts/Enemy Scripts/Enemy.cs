@@ -207,9 +207,10 @@ public class Enemy : MonoBehaviour
                 _damage *= GetArmorFactor(_dt);
                  
             }
-        TakeIncrementalDamage(_damage);
+        
 
         }
+        TakeIncrementalDamage(_damage);
     }
 
     protected float GetArmorFactor(DamageTypes _dt)

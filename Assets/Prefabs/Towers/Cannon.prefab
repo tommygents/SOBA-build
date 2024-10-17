@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 178165069, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}
       propertyPath: m_Radius
-      value: 4.4196243
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 468816589, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}
       propertyPath: usingSpriteRenderer
@@ -30,6 +30,14 @@ PrefabInstance:
     - target: {fileID: 702155796, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}
       propertyPath: m_LocalScale.z
       value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 702155797, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}
+      propertyPath: m_FlipX
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 702155797, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}
+      propertyPath: m_FlipY
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 702155797, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}
       propertyPath: m_Sprite
@@ -251,7 +259,7 @@ MonoBehaviour:
   turretBulletVelocity: 10
   rotationSpeed: 200
   rangeAsMultipleOfTargetingRadius: 1.333
-  cooldownLength: 5
+  cooldownLength: 3
   ammoCost: 0.5
   target: {fileID: 0}
   chargeBar: 0

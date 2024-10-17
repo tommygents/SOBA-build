@@ -5,9 +5,10 @@ using UnityEngine;
 public class CannonBall : Ammo
 {
 
-    protected CircleCollider2D damageCollider;
+    [SerializeField] protected CircleCollider2D damageCollider;
     protected Enemy[] enemiesInRange;
     protected DamageTypes damageType = DamageTypes.explosive;
+    [SerializeField] private ParticleSystem explosionParticles;
 
     // Start is called before the first frame update
     protected override void Start()
@@ -41,7 +42,9 @@ public class CannonBall : Ammo
         {
             damageCollider.enabled = true;
             GetandHitTargets();
-            DestroyImmediate(gameObject);
+            ParticleSystem _ep = Instantiate(explosionParticles, this.transform.position, Quaternion.identity);
+            _ep.Play();
+            Destroy(gameObject);
         }
 
     }
@@ -49,6 +52,7 @@ public class CannonBall : Ammo
     public virtual void GetandHitTargets()
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, damageCollider.radius);
+        Debug.Log(hits.Length);
         foreach (Collider2D hit in hits)
         {
             float _distance = Vector2.Distance(hit.transform.position, transform.position);
@@ -66,5 +70,10 @@ public class CannonBall : Ammo
         _enemy.TakeIncrementalDamage(Damage, damageType);
     }
 
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+
+    }
 
 }

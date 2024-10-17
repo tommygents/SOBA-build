@@ -328,7 +328,7 @@ MonoBehaviour:
   counterpartPrefab: {fileID: 4742496800121745920, guid: 1ac9d309f9452844ab98c746bcbe63c8, type: 3}
   zapperCounterpart: {fileID: 2026473443, guid: 1ac9d309f9452844ab98c746bcbe63c8, type: 3}
   targetUninteractedRunTime: 120
-  movementPenalty: 0.7
+  movementPenalty: 0.8
   offsetDistance: 1.2
   ammoWidth: 0.1
   ammoMaterial: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}

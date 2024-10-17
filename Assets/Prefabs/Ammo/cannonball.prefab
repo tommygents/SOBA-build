@@ -128,3 +128,4 @@ MonoBehaviour:
   range: 0
   speed: 0
   startingPosition: {x: 0, y: 0}
+  explosionParticles: {fileID: 659176646413853399, guid: 61bde27a9341c824a9150909e469556e, type: 3}
