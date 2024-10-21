@@ -5,56 +5,33 @@ using UnityEngine.UI;
 
 public class HealthManager : MonoBehaviour
 {
+    [SerializeField] private float maxHealth = 100f;
+    private float currentHealth;
 
-    [SerializeField]
-    private int maxHP = 20;
-    public virtual int MaxHP
+    private void Start()
     {
-        get { return maxHP; }
-        set { maxHP = value; }
-    }
-    public int HP;
-    private GameObject parent;
-    [SerializeField] private Image healthBar;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        MaxHP = maxHP;
-        HP = MaxHP;
+        currentHealth = maxHealth;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void TakeDamage(float amount)
     {
-        if (HP <= 0)
-        {
-            Die();
-        }
+        currentHealth -= amount;
+        currentHealth = Mathf.Max(currentHealth, 0);
 
-        if (healthBar != null)
+        if (IsDead())
         {
-            healthBar.fillAmount = (float)HP/MaxHP;
-            //Debug.Log("HP: " + HP + " Max HP: " + MaxHP + " Ratio: "+ (HP / MaxHP));
+            // Handle player death
         }
     }
 
-    private void Die()
+    public void Heal(float amount)
     {
-        Player _player = GetComponentInParent<Player>();
-        if (_player != null)
-        {
-            
-        }
-
-        else
-        {
-
-        }
+        currentHealth += amount;
+        currentHealth = Mathf.Min(currentHealth, maxHealth);
     }
 
-    public void UpdateHealthBar()
+    public bool IsDead()
     {
-
+        return currentHealth <= 0;
     }
 }
