@@ -76,7 +76,19 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        SubscribeToInputEvents();
+
+        
+    healthManager = GetComponent<HealthManager>();
+
+    detectionRadius = GetComponentInChildren<PlayerDetectionRadius>();
+  
+
+    buildingPlacement = GetComponent<PlayerBuildingPlacement>();
+
+    zapperBuilder = GetComponent<PlayerZapperBuilder>();
+
+
+        //SubscribeToInputEvents();
         turretToBuild = TurretSelectionUI.Instance.GetTurretToBuild();
         HideRadius();
         actualSpeed = baseSpeed;
@@ -275,6 +287,7 @@ public class Player : MonoBehaviour
         InstructionsUIManager.Instance.squatText.SetText("Exit", "turret");
         
         HideRadius();
+        InGameLogger.Instance.Log("Entered turret: " + _turret.name);
      
 
     }
@@ -292,7 +305,7 @@ public class Player : MonoBehaviour
         positionBeforeEnteringTurret = new Vector3();// Adjust position as needed
         ConditionalShowRadius();
         InstructionsUIManager.Instance.squatText.SetText("Enter", "turret");
-
+        InGameLogger.Instance.Log("Exited turret: " + _turret.name);
     }
 
 
@@ -461,7 +474,7 @@ public void OnSprintEnd(InputAction.CallbackContext _context)
 
 public void OnSquatStart(InputAction.CallbackContext _context)
 {
-    
+    InGameLogger.Instance.Log("Squat started");
     if (InTurretEntryProximity())
         {
             Debug.Log("Entering turret from OnSquatStart, InTurretEntryProximity");
@@ -485,6 +498,7 @@ public void OnSquatStart(InputAction.CallbackContext _context)
 }
 public void OnSquatEnd(InputAction.CallbackContext _context)
 {
+    InGameLogger.Instance.Log("Squat ended");
    isSquating = false;
       
 
@@ -527,13 +541,21 @@ public void OnPullEnd(InputAction.CallbackContext _context)
     #region Event Management
  void OnEnable()
 {
-    
-SubscribeToInputEvents();
+    InGameLogger.Instance.Log("Enabling player");
+    SubscribeToInputEvents();
 }
 
 
 private void SubscribeToInputEvents()
 {
+    if (InputManager.Instance == null)
+    {
+        InGameLogger.Instance.LogError("InputManager is not initialized. Retrying...");
+        StartCoroutine(WaitForInputManager());
+        return;
+    }
+
+    InGameLogger.Instance.Log("Subscribing to input events");
     InputManager.Instance.OnSprintStart += OnSprintStart;
     InputManager.Instance.OnSprintEnd += OnSprintEnd;
     InputManager.Instance.OnSquatStart += OnSquatStart;
@@ -541,11 +563,18 @@ private void SubscribeToInputEvents()
     InputManager.Instance.OnRunStart += OnRunStart;
     InputManager.Instance.OnRunEnd += OnRunEnd;
     InputManager.Instance.OnPress += OnPress;
-    
     InputManager.Instance.OnPullStart += OnPullStart;
     InputManager.Instance.OnPull += OnPull;
     InputManager.Instance.OnPullEnd += OnPullEnd;
+}
 
+private IEnumerator WaitForInputManager()
+{
+    while (InputManager.Instance == null)
+    {
+        yield return null; // Wait for the next frame
+    }
+    SubscribeToInputEvents(); // Subscribe once InputManager is available
 }
  void OnDisable()
 {
@@ -565,6 +594,7 @@ private void SubscribeToInputEvents()
     #endregion
 
 }
+
 
 
 

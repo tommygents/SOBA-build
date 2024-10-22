@@ -33,9 +33,9 @@ public class MenuManager : MonoBehaviour
 
     void Start()
     {
-        InputManager.Instance.OnPull += HandlePull;
-        InputManager.Instance.OnSquatStart += HandleSquatStart;
-        InputManager.Instance.OnSquatEnd += HandleSquatEnd;
+        InGameLogger.Instance.Log("Starting MenuManager");
+
+        SubscribeToInputEvents();
         firstTimePanel.SetActive(false);
 
         Debug.Log(PlayerPrefs.GetInt("Tutorial", -1));
@@ -45,9 +45,31 @@ public class MenuManager : MonoBehaviour
             StartCoroutine(FirstTime());
         }
 
-        else { 
-        UseTutorialButtons(false);
+        else
+        {
+            UseTutorialButtons(false);
+        }
     }
+
+private IEnumerator WaitForInputManager()
+{
+    while (InputManager.Instance == null)
+    {
+        yield return null; // Wait for the next frame
+    }
+    SubscribeToInputEvents(); // Subscribe once InputManager is available
+}
+    private void SubscribeToInputEvents()
+    {
+        if (InputManager.Instance == null)
+    {
+        InGameLogger.Instance.LogError("InputManager is not initialized. Retrying...");
+        StartCoroutine(WaitForInputManager());
+        return;
+    }
+        InputManager.Instance.OnPull += HandlePull;
+        InputManager.Instance.OnSquatStart += HandleSquatStart;
+        InputManager.Instance.OnSquatEnd += HandleSquatEnd;
     }
 
     // Update is called once per frame

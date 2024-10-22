@@ -2,36 +2,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
 using System.Reflection;
-public class WaitForButtonPress : CustomYieldInstruction
-{
-
-    private InputAction _action;
-    private bool _buttonPressed = false;
-
-    public WaitForButtonPress(InputAction action)
-    {
-        _action = action;
-        _action.performed += HandlePerformed;
-    }
-
-    private void HandlePerformed(InputAction.CallbackContext context)
-    {
-        _buttonPressed = true;
-    }
-
-    public override bool keepWaiting
-    {
-        get
-        {
-            if (_buttonPressed)
-            {
-                _action.performed -= HandlePerformed; // Clean up
-                return false;
-            }
-            return true;
-        }
-    }
-}
 
 public class InputManager : MonoBehaviour
 {   
@@ -60,7 +30,9 @@ private ControlScheme controls;
 
 void Awake()    
 
-    { //first, initialize the instance as a singleton
+    {
+        InGameLogger.Instance.Log("Initializing InputManager");
+         //first, initialize the instance as a singleton
                 if (Instance == null)
                 {
                     Instance = this;
