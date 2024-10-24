@@ -9,6 +9,7 @@ public class PlayerBuildingPlacement : MonoBehaviour
     public float turretBuildCounter = 0f;
     public float turretBuildCounterMax = 5.0f;
     public Turret currentTurret;
+    public ChargeBar buildingChargeBar;
 
 
     [SerializeField] private PlayerBuildingPlacementUI placementUI;
@@ -19,7 +20,17 @@ public class PlayerBuildingPlacement : MonoBehaviour
     void Start()
     {
         placementUI = GetComponent<PlayerBuildingPlacementUI>();
+        buildingChargeBar.MakeActive();
+        StartCoroutine(WaitForChargeBarUIManager());
     }
+    private IEnumerator WaitForChargeBarUIManager()
+{
+    while (ChargeBarUIManager.Instance == null)
+    {
+        yield return null; // Wait for the next frame
+    }
+    buildingChargeBar.MakeActive(); // Subscribe once InputManager is available
+}
 
     // Update is called once per frame
     void Update()
@@ -38,7 +49,7 @@ public class PlayerBuildingPlacement : MonoBehaviour
 
     public void ResetBuildCounter()
     {turretBuildCounter = 0f;
-        placementUI.UpdateChargeBar(0f);
+        buildingChargeBar.ResetChargeAmount();
        
 
     }
@@ -46,8 +57,7 @@ public class PlayerBuildingPlacement : MonoBehaviour
     public bool IterateBuildCounter(float _time)
     {
         turretBuildCounter += _time; //add the new time
-        
-        placementUI.UpdateChargeBar(turretBuildCounter / turretBuildCounterMax); //Then, update the UI
+        buildingChargeBar.SetChargeAmount(turretBuildCounter / turretBuildCounterMax);       
         
         if (turretBuildCounter >= turretBuildCounterMax)
         {

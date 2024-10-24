@@ -8,15 +8,19 @@ using UnityEngine.UI;
 public class PlayerBuildingPlacementUI : MonoBehaviour
 {
 
-    [SerializeField] private Image chargeBar;
+    [SerializeField] private Image chargeBarImage;
 
         [SerializeField] private GameObject radiusCircle;
     [SerializeField] private TextMeshProUGUI deployableText;
+    public ChargeBar buildingChargeBar;
+
+
+
 
 
     void Start()
     {
-        HideDeployableText();
+
     }
     
     // Update is called once per frame
@@ -25,20 +29,6 @@ public class PlayerBuildingPlacementUI : MonoBehaviour
         
     }
 
-    public void UpdateChargeBar(float _amount)
-    {
-        
-        chargeBar.fillAmount = _amount;
-        if(_amount >= 1f)
-        {
-            ShowDeployableText();
-        }
-        else
-        {
-            HideDeployableText();
-        }
-
-    }
 
 
 
@@ -53,13 +43,5 @@ public class PlayerBuildingPlacementUI : MonoBehaviour
         radiusCircle.transform.localScale = Vector3.zero;
     }
 
-    public void ShowDeployableText()
-    {
-        deployableText.gameObject.SetActive(true);
-    }
-
-    public void HideDeployableText()
-    {
-        deployableText.gameObject.SetActive(false);
-    }
+    
 }
