@@ -324,6 +324,10 @@ MonoBehaviour:
   player: {fileID: 0}
   cameraShakeInterval: 5
   cameraShakeCounter: 0
+  primaryUpgradeProgressBar: {fileID: 0}
+  secondaryUpgradeProgressBar: {fileID: 0}
+  primaryUpgradeData: {fileID: 11400000, guid: 8c51ac2ba5a461448a9bc70b55bbe36d, type: 2}
+  secondaryUpgradeData: {fileID: 11400000, guid: 92f4fe4c04dc73b41a521783c75a8263, type: 2}
   zapperDetectionRadius: {fileID: 2316671208861911640}
   counterpartPrefab: {fileID: 4742496800121745920, guid: 1ac9d309f9452844ab98c746bcbe63c8, type: 3}
   zapperCounterpart: {fileID: 2026473443, guid: 1ac9d309f9452844ab98c746bcbe63c8, type: 3}

@@ -65,6 +65,8 @@ public class Player : MonoBehaviour
     private float duration = 2.0f; // 2 seconds
     private float n = 0.5f; // Decay rate 
     private float squatDuration = 2f;
+    private float pullDuration = 0f;
+    private float pressDuration = 0f;
 
  
 
@@ -105,6 +107,8 @@ public class Player : MonoBehaviour
         Move();
         CheckRunningAndPassCharge();
         CheckForSquatAndAdvanceCharge();
+        CheckForPullAndAdvanceCharge();
+        CheckForPressAndAdvanceCharge();
         AdvanceDashTimerandCheckForDash();
 
         
@@ -122,7 +126,7 @@ public class Player : MonoBehaviour
     } //END OF UPDATE FUNCTION
     
     //Returns the multiplier for the squat charging after _time has passed since the beginning of the squat
-    private float SquatDecayFunction(float _time)
+    private float GetMultiplierDecay(float _time)
     {
         if (_time >= duration)
         {
@@ -133,18 +137,50 @@ public class Player : MonoBehaviour
         return 1.0f + (initialMultiplier - 1.0f) * Mathf.Pow((1.0f - _time / duration), n);
     }
 
+    private void ApplyDecayFunction(float _accumulatedTime)
+    {
+        
+
+    }
+
     private void CheckForSquatAndAdvanceCharge()
     {
         if (!isSquating) return;
 
         squatDuration += Time.deltaTime;
-        float _chargeMultiplier = SquatDecayFunction(squatDuration);
+        float _chargeMultiplier = GetMultiplierDecay(squatDuration);
         if (buildingPlacement.IterateBuildCounter(_chargeMultiplier * Time.deltaTime))
         {
             SetBuildingDeployable();
         }
 
     }
+
+    private void CheckForPullAndAdvanceCharge()
+    {
+        if (!holdingPull) return;
+        pullDuration += Time.deltaTime;
+        float _chargeMultiplier = GetMultiplierDecay(pullDuration);
+        float _chargeAmount = _chargeMultiplier * Time.deltaTime;
+        if (isEngagedWithTurret)
+        {
+            if(engagedTurret.IteratePrimaryUpgradeProgressBar(_chargeAmount))
+            {
+                engagedTurret.PrimaryUpgrade();
+            }
+        }
+
+        //here, we implement the action for pull
+    }
+
+    private void CheckForPressAndAdvanceCharge()
+    {
+        if (!holdingPress) return;
+        pressDuration += Time.deltaTime;
+        ApplyDecayFunction(pressDuration);
+    }
+
+    
     private void CheckRunningAndPassCharge()
         {
         if (isRunning && isEngagedWithTurret) //Passes the time spent running to an engaged turret to charge it up
@@ -283,7 +319,7 @@ public class Player : MonoBehaviour
         nearbyTurret = null;
         engagedTurret = _turret;
         this.GetComponent<SpriteRenderer>().enabled = false; // Hide player sprite
-        //Camera.main.transform.position = new Vector3(_turret.transform.position.x, _turret.transform.position.y, Camera.main.transform.position.z); // Center camera on turret
+        _turret.OnEntered();
         InstructionsUIManager.Instance.squatText.SetText("Exit", "turret");
         
         HideRadius();
@@ -305,7 +341,8 @@ public class Player : MonoBehaviour
         positionBeforeEnteringTurret = new Vector3();// Adjust position as needed
         ConditionalShowRadius();
         InstructionsUIManager.Instance.squatText.SetText("Enter", "turret");
-        InGameLogger.Instance.Log("Exited turret: " + _turret.name);
+        buildingPlacement.buildingChargeBar.MakeActive();
+        //InGameLogger.Instance.Log("Exited turret: " + _turret.name);
     }
 
 
@@ -388,7 +425,7 @@ public class Player : MonoBehaviour
         _position.y = Mathf.Clamp(_position.y, minY, maxY);
         return _position;
     }
-
+#region Radius Circle
 private bool radiusVisible = false;
     public void SetRadius(float _rad)
     {
@@ -407,11 +444,8 @@ private bool radiusVisible = false;
         radiusCircle.SetActive(false);
         radiusVisible = false;
     }
-
-#region UI text in lower right corner
-
-
 #endregion
+
     #region Refactoring
 private void Initialize()
 {
@@ -474,7 +508,7 @@ public void OnSprintEnd(InputAction.CallbackContext _context)
 
 public void OnSquatStart(InputAction.CallbackContext _context)
 {
-    InGameLogger.Instance.Log("Squat started");
+    //InGameLogger.Instance.Log("Squat started");
     if (InTurretEntryProximity())
         {
             Debug.Log("Entering turret from OnSquatStart, InTurretEntryProximity");
@@ -498,7 +532,7 @@ public void OnSquatStart(InputAction.CallbackContext _context)
 }
 public void OnSquatEnd(InputAction.CallbackContext _context)
 {
-    InGameLogger.Instance.Log("Squat ended");
+    
    isSquating = false;
       
 
@@ -525,16 +559,27 @@ if (!gameManager.isPaused)
 
 public void OnPullStart(InputAction.CallbackContext _context)
 {
-    //isMakingUISelection = true;
-    //playerTurretUI.ShowTowerSelectionPanel();
+
+    holdingPull = true;
+    pullDuration = 0f;
 }
 
 public void OnPullEnd(InputAction.CallbackContext _context)
 {
-    //isMakingUISelection = false;
-    //playerTurretUI.HideTowerSelectionPanel();
+  
+    holdingPull = false;
 }
 
+public void OnPressStart(InputAction.CallbackContext _context)
+{
+    holdingPress = true;
+    pressDuration = 0f;
+}
+
+public void OnPressEnd(InputAction.CallbackContext _context)
+{
+    holdingPress = false;
+}
 #endregion
 
 
@@ -566,6 +611,8 @@ private void SubscribeToInputEvents()
     InputManager.Instance.OnPullStart += OnPullStart;
     InputManager.Instance.OnPull += OnPull;
     InputManager.Instance.OnPullEnd += OnPullEnd;
+    InputManager.Instance.OnPressStart += OnPressStart;
+    InputManager.Instance.OnPressEnd += OnPressEnd;
 }
 
 private IEnumerator WaitForInputManager()

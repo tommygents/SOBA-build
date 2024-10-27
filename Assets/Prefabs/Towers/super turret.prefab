@@ -148,6 +148,10 @@ MonoBehaviour:
   player: {fileID: 0}
   cameraShakeInterval: 5
   cameraShakeCounter: 0
+  primaryUpgradeProgressBar: {fileID: 0}
+  secondaryUpgradeProgressBar: {fileID: 0}
+  primaryUpgradeData: {fileID: 11400000, guid: 5d016f80fa877bf4286ff61ffd331ba1, type: 2}
+  secondaryUpgradeData: {fileID: 11400000, guid: 2b9d9ff82787df84ebda4b1ffa2320a2, type: 2}
 --- !u!114 &7907072985899395179 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4120685630083168460, guid: 5e61ff4cb44a063429815e7ad2058a91, type: 3}

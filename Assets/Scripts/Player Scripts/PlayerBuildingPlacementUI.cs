@@ -8,11 +8,11 @@ using UnityEngine.UI;
 public class PlayerBuildingPlacementUI : MonoBehaviour
 {
 
-    [SerializeField] private Image chargeBarImage;
+
 
         [SerializeField] private GameObject radiusCircle;
     [SerializeField] private TextMeshProUGUI deployableText;
-    public ChargeBar buildingChargeBar;
+  
 
 
 

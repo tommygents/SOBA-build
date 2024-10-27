@@ -44,13 +44,11 @@ public class Turret : MonoBehaviour
     public int cameraShakeInterval = 5;
     public int cameraShakeCounter = 0;
 
-
-
-    /*
-     * In the next draft, I want to fix the charge rate so that it charges at a consistent rate but burns down faster
-     * 
-     */
-
+//upgrade related variables
+    public ChargeBar primaryUpgradeProgressBar;
+    public ChargeBar secondaryUpgradeProgressBar;
+    [SerializeField] protected TurretUpgradeChargeData primaryUpgradeData;   
+    [SerializeField] protected TurretUpgradeChargeData secondaryUpgradeData; 
 
 
     // Start is called before the first frame update
@@ -64,6 +62,11 @@ public class Turret : MonoBehaviour
         turretUI.UpdateChargeBar(ChargeBarFullPercentage(), chargeCount, false); //initialize the charge bar
         maxCharge = chargeBarMax * chargeCountMax;
         turretRange = targetingSystem.GetTargetingRadius() * rangeAsMultipleOfTargetingRadius;
+        
+        // Get both upgrade progress bars
+        var chargeBars = GetComponentsInChildren<ChargeBar>();
+        primaryUpgradeProgressBar = chargeBars[0];
+        secondaryUpgradeProgressBar = chargeBars[1];
     }
 
     
@@ -287,10 +290,73 @@ public virtual void ShowTargetingArea(Transform _origin)
     }
 
 
+    public virtual void OnEntered()
+    {
+        // Show primary upgrade bar by default
+        primaryUpgradeProgressBar.MakeActive();
+    }
+
+    public virtual bool IteratePrimaryUpgradeProgressBar(float _time)
+    {
+        if (!primaryUpgradeData.CanUpgrade()) return false;
+        
+        primaryUpgradeProgressBar.IncrementChargeAmount(_time);
+        return primaryUpgradeProgressBar.IsFull();
+    }
+
+    public virtual bool IterateSecondaryUpgradeProgressBar(float _time)
+    {
+        if (!secondaryUpgradeData.CanUpgrade()) return false;
+        
+        secondaryUpgradeProgressBar.IncrementChargeAmount(_time);
+        return secondaryUpgradeProgressBar.IsFull();
+    }
+
+    public virtual void PrimaryUpgrade()
+    {
+        if (primaryUpgradeData.CanUpgrade())
+        {
+            primaryUpgradeData.Upgrade();
+            primaryUpgradeProgressBar.ResetChargeAmount();
+            
+            // Apply the upgrade effect (implement in derived classes)
+            ApplyPrimaryUpgrade();
+        }
+    }
+
+    public virtual void SecondaryUpgrade()
+    {
+        if (secondaryUpgradeData.CanUpgrade())
+        {
+            secondaryUpgradeData.Upgrade();
+            secondaryUpgradeProgressBar.ResetChargeAmount();
+            
+            // Apply the upgrade effect (implement in derived classes)
+            ApplySecondaryUpgrade();
+        }
+    }
+
+    // These methods should be overridden in derived classes to apply specific upgrades
+    protected virtual void ApplyPrimaryUpgrade()
+    {
+        // Example: damage multiplier
+        // damageMultiplier = primaryUpgradeData.GetCurrentMultiplier();
+    }
+
+    protected virtual void ApplySecondaryUpgrade()
+    {
+        // Example: fire rate multiplier
+        // cooldownLength /= secondaryUpgradeData.GetCurrentMultiplier();
+    }
+
+    #region debugging
 
     public void FillMeterDebugging()
     {
         chargeBar = chargeBarMax;
         chargeCount = chargeCountMax;
     }
+
+#endregion
 }
+

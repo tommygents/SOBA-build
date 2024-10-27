@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d26e3f9ef07cb2f4e88996c914c7d184, type: 3}
+  m_Name: SuperTurretSecondaryCharge
+  m_EditorClassIdentifier: 
+  currentCharge: 0
+  maxCharge: 1
+  chargeColor: {r: 0, g: 0, b: 0, a: 0}
+  sectionName: 
+  statusText: 
+  primaryUpgrade:
+    currentLevel: 1
+    upgradeMultiplier: 1.2
+    maxLevel: 5
+    statName: 
+    upgradeDescription: 
+  secondaryUpgrade:
+    currentLevel: 1
+    upgradeMultiplier: 1.2
+    maxLevel: 5
+    statName: 
+    upgradeDescription: 
+  turretType: 

@@ -609,6 +609,10 @@ MonoBehaviour:
   player: {fileID: 0}
   cameraShakeInterval: 10
   cameraShakeCounter: 0
+  primaryUpgradeProgressBar: {fileID: 0}
+  secondaryUpgradeProgressBar: {fileID: 0}
+  primaryUpgradeData: {fileID: 11400000, guid: b3d29867ea3e9c441aecd3bcb980443c, type: 2}
+  secondaryUpgradeData: {fileID: 11400000, guid: cfff64b5efc9c7e40b35ca2956b48cf8, type: 2}
 --- !u!50 &2060385094
 Rigidbody2D:
   serializedVersion: 4

@@ -10,11 +10,8 @@ public class PlayerBuildingPlacement : MonoBehaviour
     public float turretBuildCounterMax = 5.0f;
     public Turret currentTurret;
     public ChargeBar buildingChargeBar;
-
-
     [SerializeField] private PlayerBuildingPlacementUI placementUI;
-
-
+    [SerializeField] private ChargeData buildingChargeData;
 
     // Start is called before the first frame update
     void Start()
@@ -47,27 +44,17 @@ public class PlayerBuildingPlacement : MonoBehaviour
         
     }
 
-    public void ResetBuildCounter()
-    {turretBuildCounter = 0f;
-        buildingChargeBar.ResetChargeAmount();
-       
-
-    }
-
     public bool IterateBuildCounter(float _time)
     {
-        turretBuildCounter += _time; //add the new time
-        buildingChargeBar.SetChargeAmount(turretBuildCounter / turretBuildCounterMax);       
+        buildingChargeData.currentCharge += _time;
+        buildingChargeBar.SetChargeAmount(buildingChargeData.currentCharge / buildingChargeData.maxCharge);
         
-        if (turretBuildCounter >= turretBuildCounterMax)
-        {
-
-           
-            return true;
-
-        }
-        else return false;
+        return buildingChargeData.IsFull();
     }
 
-
+    public void ResetBuildCounter()
+    {
+        buildingChargeData.Reset();
+        buildingChargeBar.ResetChargeAmount();
+    }
 }
