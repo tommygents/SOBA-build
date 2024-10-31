@@ -5,7 +5,7 @@ public class TurretUpgradeChargeData : ChargeData
 {
     [Header("Upgrade Settings")]
     public float currentLevel = 1f;
-    public float upgradeMultiplier = 1.2f;  // How much the stat changes per upgrade
+    public float upgradeFactor = 1.2f;  // How much the stat changes per upgrade
     public int maxLevel = 5;
     public string statName;  // e.g., "Damage", "Fire Rate", "Range"
     public string upgradeDescription;  // e.g., "Increases damage by 20%"
@@ -15,6 +15,7 @@ public class TurretUpgradeChargeData : ChargeData
 
     public bool AtMaxLevel() 
     {
+        
         if (maxLevel <= 0)
         {
             return false;
@@ -29,9 +30,9 @@ public class TurretUpgradeChargeData : ChargeData
         return IsFull();
     }
     
-    public float GetCurrentMultiplier() => Mathf.Pow(upgradeMultiplier, currentLevel - 1);
+    public float GetCurrentMultiplier() => Mathf.Pow(upgradeFactor, currentLevel - 1);
     
-    public float GetFactor() => upgradeMultiplier;
+    public float GetFactor() => upgradeFactor;
     
     public void Upgrade()
     {

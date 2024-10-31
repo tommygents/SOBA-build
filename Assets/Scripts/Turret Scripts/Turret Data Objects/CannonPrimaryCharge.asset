@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: CannonPrimaryCharge
   m_EditorClassIdentifier: 
   currentCharge: 0
-  maxCharge: 1
-  chargeColor: {r: 0, g: 0, b: 0, a: 0}
+  maxCharge: 10
+  chargeColor: {r: 1, g: 0.54534864, b: 0, a: 1}
   sectionName: Explosive Radius
   statusText: Radius Increased!
   currentLevel: 1
-  upgradeMultiplier: 1.2
+  upgradeFactor: 1.5
   maxLevel: 5
   statName: 
   upgradeDescription: 

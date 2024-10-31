@@ -45,4 +45,13 @@ public class ChargeBar : MonoBehaviour
         
         return chargeData.GetChargePercentage();
     }
+
+    public bool AtMaxLevel()
+    {
+        if (chargeData.GetType() == typeof(TurretUpgradeChargeData))
+        {
+            return ((TurretUpgradeChargeData)chargeData).AtMaxLevel();
+        }
+        return false;
+    }   
 }

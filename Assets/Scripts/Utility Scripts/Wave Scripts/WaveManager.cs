@@ -77,7 +77,7 @@ void Awake()
             
             if (elapsedTime >= waveDuration)
             {
-                Debug.Log($"Ending Wave {currentWaveNumber} at elapsed time: {elapsedTime}");
+                //Debug.Log($"Ending Wave {currentWaveNumber} at elapsed time: {elapsedTime}");
                 EndWave();
             }
         }
@@ -271,7 +271,7 @@ public float GetWaveDuration(int waveNumber)
         foreach (var spawnEvent in wave.spawnEvents)
         {
             float endTime = Mathf.Min(spawnEvent.GetEndTime(), MAX_WAVE_DURATION);
-            Debug.Log($"Wave {waveNumber} - Event: {spawnEvent.enemyPrefab.name}, Start: {spawnEvent.startTime}, Duration: {spawnEvent.duration}, End: {endTime}");
+            //Debug.Log($"Wave {waveNumber} - Event: {spawnEvent.enemyPrefab.name}, Start: {spawnEvent.startTime}, Duration: {spawnEvent.duration}, End: {endTime}");
             latestEndTime = Mathf.Max(latestEndTime, endTime);
         }
         float waveDuration = Mathf.Min(latestEndTime, MAX_WAVE_DURATION);

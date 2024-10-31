@@ -69,7 +69,6 @@ public class Turret : MonoBehaviour
         var chargeBars = GetComponentsInChildren<ChargeBar>();
         primaryUpgradeProgressBar = chargeBars[0];
         secondaryUpgradeProgressBar = chargeBars[1];
-        ApplyCurrentUpgrades();
     }
 
     
@@ -299,23 +298,21 @@ public virtual void ShowTargetingArea(Transform _origin)
         //primaryUpgradeProgressBar.MakeActive();
     }
 
-    public virtual bool IteratePrimaryUpgradeProgressBar(float _chargeAmount)
+    public virtual bool IteratePrimaryUpgradeProgressBar(float _time)
     {
-       primaryUpgradeProgressBar.MakeActive();
-        if (primaryUpgradeData.AtMaxLevel()) {
-            Debug.Log("Can't upgrade primary");
-            return false;
-        }
-        primaryUpgradeProgressBar.IncrementChargeAmount(_chargeAmount);
+        primaryUpgradeProgressBar.MakeActive();
+        if (primaryUpgradeData.CanUpgrade()) return false;
+        
+        primaryUpgradeProgressBar.IncrementChargeAmount(_time);
         return primaryUpgradeProgressBar.IsFull();
     }
 
-    public virtual bool IterateSecondaryUpgradeProgressBar(float _chargeAmount)
+    public virtual bool IterateSecondaryUpgradeProgressBar(float _time)
     {
         secondaryUpgradeProgressBar.MakeActive();
-        if (secondaryUpgradeData.AtMaxLevel()) return false;
+        if (secondaryUpgradeData.CanUpgrade()) return false;
         
-        secondaryUpgradeProgressBar.IncrementChargeAmount(_chargeAmount);
+        secondaryUpgradeProgressBar.IncrementChargeAmount(_time);
         return secondaryUpgradeProgressBar.IsFull();
     }
 
@@ -370,24 +367,20 @@ public virtual void ShowTargetingArea(Transform _origin)
         }
     }
 
-    protected virtual void ApplyCurrentUpgrades()
+    protected virtual void AlternateSecondaryUpgrade()
     {
+        // Only apply to basic turrets
         if (GetType() == typeof(Turret))
         {
-            // Basic turret: Divide cooldown (faster firing)
-            float currentLevel = primaryUpgradeData.currentLevel;
-            float upgradeFactor = primaryUpgradeData.upgradeMultiplier;
-            cooldownLength /= Mathf.Pow(upgradeFactor, currentLevel - 1);
-
-            // Multiply detection radius
-            currentLevel = secondaryUpgradeData.currentLevel;
-            upgradeFactor = secondaryUpgradeData.upgradeMultiplier;
-            float newRadius = targetingSystem.GetTargetingRadius() * Mathf.Pow(upgradeFactor, currentLevel - 1);
-            targetingSystem.SetTargetingRadius(newRadius);
+            float _sprintBonusFactor = secondaryUpgradeData.GetFactor();
+            foreach (Turret turret in activeBasicTurrets)
+            {
+                turret.sprintBonus += _sprintBonusFactor;
+            }
         }
     }
-
-    #region debugging
+ 
+     #region debugging
 
     public void FillMeterDebugging()
     {
