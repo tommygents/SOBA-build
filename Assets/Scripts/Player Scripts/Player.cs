@@ -137,11 +137,7 @@ public class Player : MonoBehaviour
         return 1.0f + (initialMultiplier - 1.0f) * Mathf.Pow((1.0f - _time / duration), n);
     }
 
-    private void ApplyDecayFunction(float _accumulatedTime)
-    {
-        
-
-    }
+  
 
     private void CheckForSquatAndAdvanceCharge()
     {
@@ -159,16 +155,13 @@ public class Player : MonoBehaviour
     private void CheckForPullAndAdvanceCharge()
     {
         if (!holdingPull) return;
+        
         pullDuration += Time.deltaTime;
         float _chargeMultiplier = GetMultiplierDecay(pullDuration);
         float _chargeAmount = _chargeMultiplier * Time.deltaTime;
-        if (isEngagedWithTurret)
-        {
-            if(engagedTurret.IteratePrimaryUpgradeProgressBar(_chargeAmount))
-            {
-                engagedTurret.PrimaryUpgrade();
-            }
-        }
+        engagedTurret.IteratePrimaryUpgradeProgressBar(_chargeAmount);
+           
+        
 
         //here, we implement the action for pull
     }
@@ -177,8 +170,11 @@ public class Player : MonoBehaviour
     {
         if (!holdingPress) return;
         pressDuration += Time.deltaTime;
-        ApplyDecayFunction(pressDuration);
-    }
+        float _chargeMultiplier = GetMultiplierDecay(pressDuration);
+        float _chargeAmount = _chargeMultiplier * Time.deltaTime;
+        engagedTurret.IterateSecondaryUpgradeProgressBar(_chargeAmount);
+           
+     }
 
     
     private void CheckRunningAndPassCharge()
@@ -532,7 +528,7 @@ public void OnSquatStart(InputAction.CallbackContext _context)
 }
 public void OnSquatEnd(InputAction.CallbackContext _context)
 {
-    
+    Debug.Log("Squat ended, duration: " + squatDuration);
    isSquating = false;
       
 
@@ -553,15 +549,19 @@ public void OnPress(InputAction.CallbackContext _context)
 public void OnPull(InputAction.CallbackContext _context)
 {
 if (!gameManager.isPaused)
+    if (!InTurret())
                 UpdateTurretSelection();
 }
 
 
 public void OnPullStart(InputAction.CallbackContext _context)
 {
-
-    holdingPull = true;
-    pullDuration = 0f;
+    if (InTurret())
+    {
+        engagedTurret.PrimaryUpgrade();
+        holdingPull = true;
+        pullDuration = 0f;
+    }
 }
 
 public void OnPullEnd(InputAction.CallbackContext _context)
@@ -572,8 +572,12 @@ public void OnPullEnd(InputAction.CallbackContext _context)
 
 public void OnPressStart(InputAction.CallbackContext _context)
 {
-    holdingPress = true;
-    pressDuration = 0f;
+    if (InTurret())
+    {
+        engagedTurret.SecondaryUpgrade();
+        holdingPress = true;
+        pressDuration = 0f;
+    }
 }
 
 public void OnPressEnd(InputAction.CallbackContext _context)

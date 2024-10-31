@@ -19,8 +19,9 @@ public class ChargeBar : MonoBehaviour
 
     public bool IncrementChargeAmount(float _amount)
     {
-        chargeData.currentCharge = Mathf.Min(chargeData.currentCharge + (_amount * chargeData.maxCharge), chargeData.maxCharge);
+        chargeData.currentCharge = Mathf.Min(chargeData.currentCharge + (_amount), chargeData.maxCharge);
         return chargeData.IsFull();
+        //REmoved  '* chargeData.maxCharge' from the brackets 2 lines up; not sure what it was doing there.
     }
 
     public void MakeActive()
@@ -28,15 +29,20 @@ public class ChargeBar : MonoBehaviour
         ChargeBarUIManager.Instance.SwitchTo(this);
     }
 
-    public bool IsFull() => chargeData.IsFull();
+    public bool IsFull() 
+    {
+       
+        return chargeData.IsFull();
+    }
 
     public void ResetChargeAmount()
     {
-        chargeData.Reset();
+        chargeData.ResetChargeAmount();
     }
 
     public float GetChargeAmount()
     {
+        
         return chargeData.GetChargePercentage();
     }
 }

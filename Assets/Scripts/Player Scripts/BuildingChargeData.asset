@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BuildingChargeData
   m_EditorClassIdentifier: 
   currentCharge: 0
-  maxCharge: 5
+  maxCharge: 10
   chargeColor: {r: 1, g: 0, b: 0, a: 1}
   sectionName: Assembly progress
   statusText: Deployable

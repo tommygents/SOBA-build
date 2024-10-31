@@ -551,6 +551,8 @@ GameObject:
   - component: {fileID: 7817073912392242676}
   - component: {fileID: 468816589}
   - component: {fileID: 468816588}
+  - component: {fileID: 7507675815899479366}
+  - component: {fileID: 4230620804671260093}
   m_Layer: 7
   m_Name: anti-air turret
   m_TagString: Untagged
@@ -609,8 +611,8 @@ MonoBehaviour:
   player: {fileID: 0}
   cameraShakeInterval: 10
   cameraShakeCounter: 0
-  primaryUpgradeProgressBar: {fileID: 0}
-  secondaryUpgradeProgressBar: {fileID: 0}
+  primaryUpgradeProgressBar: {fileID: 7507675815899479366}
+  secondaryUpgradeProgressBar: {fileID: 4230620804671260093}
   primaryUpgradeData: {fileID: 11400000, guid: b3d29867ea3e9c441aecd3bcb980443c, type: 2}
   secondaryUpgradeData: {fileID: 11400000, guid: cfff64b5efc9c7e40b35ca2956b48cf8, type: 2}
 --- !u!50 &2060385094
@@ -1025,3 +1027,29 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7507675815899479366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7984402139635472848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aee326fb9eee8db40b1c1a4df093b2d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chargeData: {fileID: 11400000, guid: b3d29867ea3e9c441aecd3bcb980443c, type: 2}
+--- !u!114 &4230620804671260093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7984402139635472848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aee326fb9eee8db40b1c1a4df093b2d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chargeData: {fileID: 11400000, guid: cfff64b5efc9c7e40b35ca2956b48cf8, type: 2}

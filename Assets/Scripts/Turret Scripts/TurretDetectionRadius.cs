@@ -78,5 +78,16 @@ public class TurretDetectionRadius : MonoBehaviour
         else return 0f;
     }
 
+    public void SetTargetingRadius(float radius)
+    {
+        if (circleCollider != null)
+            circleCollider.radius = radius;
+    }
+
+    public void IterateTargetingRadius(float amount)
+    {
+        if (circleCollider != null)
+            circleCollider.radius *= amount;
+    }
 
 }

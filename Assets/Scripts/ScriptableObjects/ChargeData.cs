@@ -14,6 +14,11 @@ public class ChargeData : ScriptableObject
         currentCharge = 0f;
     }
 
+    public virtual void ResetChargeAmount()
+    {
+        currentCharge = 0f;
+    }
+
     public bool IsFull()
     {
         return currentCharge >= maxCharge;

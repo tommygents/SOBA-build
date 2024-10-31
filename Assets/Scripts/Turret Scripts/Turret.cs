@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Turret : MonoBehaviour
 {
+    // Add static list for basic turrets
+    private static List<Turret> activeBasicTurrets = new List<Turret>();
 
     [SerializeField] protected Ammo ammunition; //assign in the editor, this is what the turret will shoot
     [SerializeField] protected TurretDetectionRadius targetingSystem; //gets assigned in Start()
@@ -67,6 +69,7 @@ public class Turret : MonoBehaviour
         var chargeBars = GetComponentsInChildren<ChargeBar>();
         primaryUpgradeProgressBar = chargeBars[0];
         secondaryUpgradeProgressBar = chargeBars[1];
+        ApplyCurrentUpgrades();
     }
 
     
@@ -293,22 +296,26 @@ public virtual void ShowTargetingArea(Transform _origin)
     public virtual void OnEntered()
     {
         // Show primary upgrade bar by default
-        primaryUpgradeProgressBar.MakeActive();
+        //primaryUpgradeProgressBar.MakeActive();
     }
 
-    public virtual bool IteratePrimaryUpgradeProgressBar(float _time)
+    public virtual bool IteratePrimaryUpgradeProgressBar(float _chargeAmount)
     {
-        if (!primaryUpgradeData.CanUpgrade()) return false;
-        
-        primaryUpgradeProgressBar.IncrementChargeAmount(_time);
+       primaryUpgradeProgressBar.MakeActive();
+        if (primaryUpgradeData.AtMaxLevel()) {
+            Debug.Log("Can't upgrade primary");
+            return false;
+        }
+        primaryUpgradeProgressBar.IncrementChargeAmount(_chargeAmount);
         return primaryUpgradeProgressBar.IsFull();
     }
 
-    public virtual bool IterateSecondaryUpgradeProgressBar(float _time)
+    public virtual bool IterateSecondaryUpgradeProgressBar(float _chargeAmount)
     {
-        if (!secondaryUpgradeData.CanUpgrade()) return false;
+        secondaryUpgradeProgressBar.MakeActive();
+        if (secondaryUpgradeData.AtMaxLevel()) return false;
         
-        secondaryUpgradeProgressBar.IncrementChargeAmount(_time);
+        secondaryUpgradeProgressBar.IncrementChargeAmount(_chargeAmount);
         return secondaryUpgradeProgressBar.IsFull();
     }
 
@@ -339,14 +346,45 @@ public virtual void ShowTargetingArea(Transform _origin)
     // These methods should be overridden in derived classes to apply specific upgrades
     protected virtual void ApplyPrimaryUpgrade()
     {
-        // Example: damage multiplier
-        // damageMultiplier = primaryUpgradeData.GetCurrentMultiplier();
+        // Only apply to basic turrets
+        if (GetType() == typeof(Turret))
+        {
+            float cooldownMultiplier = primaryUpgradeData.GetFactor();
+            foreach (Turret turret in activeBasicTurrets)
+            {
+                turret.cooldownLength = turret.cooldownLength / cooldownMultiplier;
+            }
+        }
     }
 
     protected virtual void ApplySecondaryUpgrade()
     {
-        // Example: fire rate multiplier
-        // cooldownLength /= secondaryUpgradeData.GetCurrentMultiplier();
+        // Only apply to basic turrets
+        if (GetType() == typeof(Turret))
+        {
+            float detectionRadiusMultiplier = secondaryUpgradeData.GetFactor();
+            foreach (Turret turret in activeBasicTurrets)
+            {
+                turret.targetingSystem.SetTargetingRadius(turret.targetingSystem.GetTargetingRadius() * detectionRadiusMultiplier);
+            }
+        }
+    }
+
+    protected virtual void ApplyCurrentUpgrades()
+    {
+        if (GetType() == typeof(Turret))
+        {
+            // Basic turret: Divide cooldown (faster firing)
+            float currentLevel = primaryUpgradeData.currentLevel;
+            float upgradeFactor = primaryUpgradeData.upgradeMultiplier;
+            cooldownLength /= Mathf.Pow(upgradeFactor, currentLevel - 1);
+
+            // Multiply detection radius
+            currentLevel = secondaryUpgradeData.currentLevel;
+            upgradeFactor = secondaryUpgradeData.upgradeMultiplier;
+            float newRadius = targetingSystem.GetTargetingRadius() * Mathf.Pow(upgradeFactor, currentLevel - 1);
+            targetingSystem.SetTargetingRadius(newRadius);
+        }
     }
 
     #region debugging
@@ -358,5 +396,33 @@ public virtual void ShowTargetingArea(Transform _origin)
     }
 
 #endregion
+
+    // Add OnEnable/OnDisable for cleanup
+    protected virtual void OnEnable()
+    {
+        RegisterTurret();
+    }
+
+    protected virtual void OnDisable()
+    {
+        UnregisterTurret();
+    }
+
+    protected virtual void RegisterTurret()
+    {
+        // Only register as basic turret if this is actually a basic turret (not a derived type)
+        if (GetType() == typeof(Turret))
+        {
+            activeBasicTurrets.Add(this);
+        }
+    }
+
+    protected virtual void UnregisterTurret()
+    {
+        if (GetType() == typeof(Turret))
+        {
+            activeBasicTurrets.Remove(this);
+        }
+    }
 }
 

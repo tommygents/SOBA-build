@@ -60,7 +60,12 @@ public class Ammo : PlayerAttack
         GetComponent<Rigidbody2D>().velocity = direction * speed;
     }
 
-    
+    public virtual void MakeAmmo(float _range, float _speed, float _angle, float _damageMultiplier)
+    {
+   
+        Damage = (int)(Damage * _damageMultiplier);
+        MakeAmmo(_range, _speed, _angle);
+    }
 
 
     public void SetDirection(float angle)

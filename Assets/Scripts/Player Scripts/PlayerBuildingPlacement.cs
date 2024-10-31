@@ -19,6 +19,7 @@ public class PlayerBuildingPlacement : MonoBehaviour
         placementUI = GetComponent<PlayerBuildingPlacementUI>();
         buildingChargeBar.MakeActive();
         StartCoroutine(WaitForChargeBarUIManager());
+        ResetBuildCounter();
     }
     private IEnumerator WaitForChargeBarUIManager()
 {
@@ -54,7 +55,7 @@ public class PlayerBuildingPlacement : MonoBehaviour
 
     public void ResetBuildCounter()
     {
-        buildingChargeData.Reset();
+        buildingChargeData.ResetChargeAmount();
         buildingChargeBar.ResetChargeAmount();
     }
 }

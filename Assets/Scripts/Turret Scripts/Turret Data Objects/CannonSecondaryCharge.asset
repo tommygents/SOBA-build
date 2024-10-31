@@ -15,18 +15,11 @@ MonoBehaviour:
   currentCharge: 0
   maxCharge: 1
   chargeColor: {r: 0, g: 0, b: 0, a: 0}
-  sectionName: 
-  statusText: 
-  primaryUpgrade:
-    currentLevel: 1
-    upgradeMultiplier: 1.2
-    maxLevel: 5
-    statName: 
-    upgradeDescription: 
-  secondaryUpgrade:
-    currentLevel: 1
-    upgradeMultiplier: 1.2
-    maxLevel: 5
-    statName: 
-    upgradeDescription: 
-  turretType: 
+  sectionName: Firing Rate
+  statusText: Firing Rate increased!
+  currentLevel: 1
+  upgradeMultiplier: 1.2
+  maxLevel: 5
+  statName: 
+  upgradeDescription: 
+  initialLevel: 1

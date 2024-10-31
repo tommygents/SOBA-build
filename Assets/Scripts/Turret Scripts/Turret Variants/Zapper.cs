@@ -20,6 +20,7 @@ public class Zapper : Turret
     [SerializeField] private float ammoWidth = 0.1f;
     [SerializeField] private Material ammoMaterial;
     [SerializeField] private Color ammoColor = Color.yellow;
+    private static List<Zapper> activeZappers = new List<Zapper>();
 
     // Start is called before the first frame update
     protected override void Start()
@@ -83,7 +84,7 @@ public void Surge(float _powerUsage)
     public override float GetTargetingRadius()
     {
         //return zapperDetectionRadius.GetTargetingRadius();
-        return 0f;
+        return 1f;
     }
 
 
@@ -263,6 +264,36 @@ private void AddAmmoCollider(GameObject _ammo, Vector3 start, Vector3 end)
 
         // Rotate the collider to align with the path
         _ammo.transform.rotation = Quaternion.Euler(0, 0, angle);
+}
+
+protected override void RegisterTurret()
+{
+    activeZappers.Add(this);
+}
+
+protected override void UnregisterTurret()
+{
+    activeZappers.Remove(this);
+}
+
+protected override void ApplyPrimaryUpgrade()
+{
+    float slowdownFactor = primaryUpgradeData.GetCurrentMultiplier();
+    foreach (Zapper zapper in activeZappers)
+    {
+        // Adjust for zapper-specific upgrade (e.g., damage or surge power)
+        zapper.movementPenalty = zapper.movementPenalty - slowdownFactor;
+    }
+}
+
+protected override void ApplySecondaryUpgrade()
+{
+    float powerEfficiency = secondaryUpgradeData.GetFactor();
+    foreach (var zapper in activeZappers)
+    {
+        // Adjust for zapper-specific upgrade (e.g., power consumption)
+        zapper.targetUninteractedRunTime += powerEfficiency;
+    }
 }
 
 }
