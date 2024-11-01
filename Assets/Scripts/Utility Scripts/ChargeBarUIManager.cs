@@ -58,7 +58,15 @@ public class ChargeBarUIManager : MonoBehaviour
         currentChargeBar = _chargeBar;
         chargeBarImage.color = _chargeBar.chargeColor;
         sectionLabel.text = _chargeBar.sectionName;
-        statusLabel.text = _chargeBar.statusName;
+        
+        if (_chargeBar.AtMaxLevel())
+        {
+            statusLabel.text = "Max Level!";
+        }
+        else
+        {
+            statusLabel.text = _chargeBar.statusName;
+        }
         FillChargeBarImage(currentChargeBar.GetChargeAmount());    
     }
 

@@ -40,7 +40,6 @@ public class TurretUpgradeChargeData : ChargeData
         {
             currentLevel++;
          
-            
         }
     }
 

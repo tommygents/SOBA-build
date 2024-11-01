@@ -321,7 +321,7 @@ public virtual void ShowTargetingArea(Transform _origin)
         if (primaryUpgradeData.CanUpgrade())
         {
             primaryUpgradeData.Upgrade();
-            primaryUpgradeProgressBar.ResetChargeAmount();
+            if (!primaryUpgradeData.AtMaxLevel()) primaryUpgradeProgressBar.ResetChargeAmount();
             
             // Apply the upgrade effect (implement in derived classes)
             ApplyPrimaryUpgrade();
@@ -334,7 +334,7 @@ public virtual void ShowTargetingArea(Transform _origin)
         if (secondaryUpgradeData.CanUpgrade())
         {
             secondaryUpgradeData.Upgrade();
-            secondaryUpgradeProgressBar.ResetChargeAmount();
+            if (!secondaryUpgradeData.AtMaxLevel()) secondaryUpgradeProgressBar.ResetChargeAmount();
             
             // Apply the upgrade effect (implement in derived classes)
             ApplySecondaryUpgrade();
