@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -47,12 +48,12 @@ public class Player : MonoBehaviour
 
     public bool isMakingUISelection = false;
     
-    //[SerializeField] public PlayerTurretUI playerTurretUI;
     public Turret turretToBuild;
 
     public GameManager gameManager;
 
     [SerializeField] private GameObject radiusCircle;
+    [SerializeField] private float newBasicTurretTargetingRadius = 0f;
 
 //Squat variables for building
 
@@ -306,6 +307,7 @@ public class Player : MonoBehaviour
         }
     }
 
+  
 
     public void EnterTurret(Turret _turret)
     {
@@ -316,27 +318,32 @@ public class Player : MonoBehaviour
         engagedTurret = _turret;
         this.GetComponent<SpriteRenderer>().enabled = false; // Hide player sprite
         _turret.OnEntered();
+        _turret.player = this;
         InstructionsUIManager.Instance.squatText.SetText("Exit", "turret");
+        _turret.UpdateInstructionsTextWithUpgrades();
         
         HideRadius();
-        InGameLogger.Instance.Log("Entered turret: " + _turret.name);
-     
+  
 
     }
 
 
     public void ExitTurret(Turret _turret)
     {
-        Debug.Log("Exiting turret from ExitTurret function");
+        
         isNearTurret = true;
         isEngagedWithTurret = false;
         nearbyTurret = _turret;
         engagedTurret = null; 
+        _turret.player = null;
         this.GetComponent<SpriteRenderer>().enabled = true; // Show player sprite
         this.transform.position = positionBeforeEnteringTurret;
         positionBeforeEnteringTurret = new Vector3();// Adjust position as needed
         ConditionalShowRadius();
         InstructionsUIManager.Instance.squatText.SetText("Enter", "turret");
+        InstructionsUIManager.Instance.pullText.SetText("Switch", "turret selection");
+        InstructionsUIManager.Instance.pushText.SetText("Dash", "");
+        InstructionsUIManager.Instance.pushText.HideSecondaryText();
         buildingPlacement.buildingChargeBar.MakeActive();
         //InGameLogger.Instance.Log("Exited turret: " + _turret.name);
     }
@@ -351,8 +358,9 @@ public class Player : MonoBehaviour
     public void UpdateTurretSelection()
     {
         turretToBuild = TurretSelectionUI.Instance.UpdateSelection();
-       
+        if (turretToBuild.GetType() != typeof(Turret) || newBasicTurretTargetingRadius == 0f)
             SetRadius(turretToBuild.GetTargetingRadius());
+        else SetRadius(newBasicTurretTargetingRadius);
             ConditionalShowRadius();
    
         
@@ -439,6 +447,13 @@ private bool radiusVisible = false;
     {
         radiusCircle.SetActive(false);
         radiusVisible = false;
+    }
+
+    public void SetNewBasicTurretTargetingRadius(float _radius)
+    {
+        newBasicTurretTargetingRadius = _radius;
+        if (turretToBuild.GetType() == typeof(Turret))
+             SetRadius(newBasicTurretTargetingRadius);
     }
 #endregion
 

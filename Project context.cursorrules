@@ -42,12 +42,6 @@ In addition, I'm working in C# and Unity 2021.3.18f1.
   - Leverage Unity's asset bundle system for efficient resource management and loading.
   - Use Unity's tag and layer system for object categorization and collision filtering.
 
-  Performance Optimization
-  - Use object pooling for frequently instantiated and destroyed objects.
-  - Optimize draw calls by batching materials and using atlases for sprites and UI elements.
-  - Implement level of detail (LOD) systems for complex 3D models to improve rendering performance.
-  - Use Unity's Job System and Burst Compiler for CPU-intensive operations.
-  - Optimize physics performance by using simplified collision meshes and adjusting fixed timestep.
 
   Key Conventions
   1. Follow Unity's component-based architecture for modular and reusable game elements.

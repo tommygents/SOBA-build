@@ -325,6 +325,7 @@ public virtual void ShowTargetingArea(Transform _origin)
             
             // Apply the upgrade effect (implement in derived classes)
             ApplyPrimaryUpgrade();
+            UpdateInstructionsTextWithUpgrades();
         }
     }
 
@@ -337,6 +338,7 @@ public virtual void ShowTargetingArea(Transform _origin)
             
             // Apply the upgrade effect (implement in derived classes)
             ApplySecondaryUpgrade();
+            UpdateInstructionsTextWithUpgrades();
         }
     }
 
@@ -364,6 +366,8 @@ public virtual void ShowTargetingArea(Transform _origin)
             {
                 turret.targetingSystem.SetTargetingRadius(turret.targetingSystem.GetTargetingRadius() * detectionRadiusMultiplier);
             }
+            player.SetNewBasicTurretTargetingRadius(targetingSystem.GetTargetingRadius() * detectionRadiusMultiplier);
+            Debug.Log("New basic turret targeting radius: " + (targetingSystem.GetTargetingRadius() * detectionRadiusMultiplier));
         }
     }
 
@@ -399,6 +403,30 @@ public virtual void ShowTargetingArea(Transform _origin)
     protected virtual void OnDisable()
     {
         UnregisterTurret();
+    }
+
+    public virtual void UpdateInstructionsTextWithUpgrades()
+    {
+        string _primaryUpgradeText = primaryUpgradeData.sectionName;
+        string _secondaryUpgradeText = secondaryUpgradeData.sectionName;
+        if (primaryUpgradeData.AtMaxLevel())
+        {
+            InstructionsUIManager.Instance.pullText.SetText(_primaryUpgradeText, "Maxed Out!");
+        }
+        else
+        {
+            InstructionsUIManager.Instance.pullText.SetText(_primaryUpgradeText, "Upgrade");
+        }
+        if (secondaryUpgradeData.AtMaxLevel())
+        {
+            InstructionsUIManager.Instance.pushText.SetText(_secondaryUpgradeText, "Maxed Out!");
+        }
+        else
+        {
+            InstructionsUIManager.Instance.pushText.SetText(_secondaryUpgradeText, "Upgrade");
+        }
+        InstructionsUIManager.Instance.pullText.ShowSecondaryText();
+        InstructionsUIManager.Instance.pushText.ShowSecondaryText();
     }
 
     protected virtual void RegisterTurret()

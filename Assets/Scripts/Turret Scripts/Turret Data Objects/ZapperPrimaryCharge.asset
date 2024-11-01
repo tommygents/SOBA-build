@@ -15,8 +15,8 @@ MonoBehaviour:
   currentCharge: 0
   maxCharge: 10
   chargeColor: {r: 1, g: 0.9079155, b: 0, a: 1}
-  sectionName: Slowdown Factor
-  statusText: Slowdown Increased!
+  sectionName: slowdown factor
+  statusText: Upgrade ready!
   currentLevel: 1
   upgradeFactor: 0.2
   maxLevel: 5

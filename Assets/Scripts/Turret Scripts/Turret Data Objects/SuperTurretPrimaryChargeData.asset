@@ -15,8 +15,8 @@ MonoBehaviour:
   currentCharge: 0
   maxCharge: 10
   chargeColor: {r: 0, g: 1, b: 0.9641843, a: 1}
-  sectionName: Ammo Efficiency
-  statusText: Ammo cost dropped!
+  sectionName: ammo efficiency
+  statusText: Upgrade ready!
   currentLevel: 1
   upgradeFactor: 1.1
   maxLevel: 0

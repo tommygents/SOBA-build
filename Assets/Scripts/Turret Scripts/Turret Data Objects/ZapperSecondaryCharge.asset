@@ -15,8 +15,8 @@ MonoBehaviour:
   currentCharge: 0
   maxCharge: 10
   chargeColor: {r: 0.77499574, g: 0.8867924, b: 0, a: 1}
-  sectionName: 
-  statusText: 
+  sectionName: power draw
+  statusText: Upgrade ready!
   currentLevel: 1
   upgradeFactor: 30
   maxLevel: 5

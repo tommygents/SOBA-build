@@ -15,8 +15,8 @@ MonoBehaviour:
   currentCharge: 0
   maxCharge: 10
   chargeColor: {r: 0, g: 1, b: 0.91311145, a: 1}
-  sectionName: Targeting Radius
-  statusText: Radius Increased!
+  sectionName: targeting radius
+  statusText: Upgrade ready!
   currentLevel: 1
   upgradeFactor: 1.2
   maxLevel: 5

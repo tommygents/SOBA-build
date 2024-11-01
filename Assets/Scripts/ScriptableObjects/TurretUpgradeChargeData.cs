@@ -39,7 +39,7 @@ public class TurretUpgradeChargeData : ChargeData
         if (!AtMaxLevel())
         {
             currentLevel++;
-            Debug.Log("Upgrading to " + sectionName + " level: " + currentLevel);
+         
             
         }
     }
@@ -48,7 +48,7 @@ public class TurretUpgradeChargeData : ChargeData
     {
         base.Reset();
         currentLevel = 1;
-        Debug.Log("Resetting " + sectionName + " to default level: " + initialLevel);
+  
     }
 
     public void ResetToDefault()

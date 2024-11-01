@@ -15,8 +15,8 @@ MonoBehaviour:
   currentCharge: 0
   maxCharge: 10
   chargeColor: {r: 0, g: 0.61150885, b: 0.7169812, a: 1}
-  sectionName: Damage
-  statusText: Damage Increased!
+  sectionName: damage
+  statusText: Upgrade ready!
   currentLevel: 1
   upgradeFactor: 1.1
   maxLevel: 0
