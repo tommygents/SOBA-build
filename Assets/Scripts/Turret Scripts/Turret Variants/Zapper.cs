@@ -13,6 +13,7 @@ public class Zapper : Turret
     [SerializeField] private GameObject counterpartPrefab;
     [SerializeField] private ZapperCounterpart zapperCounterpart;
     private ZapperAmmo zapperAmmo;
+    [SerializeField] private Sprite zapperAmmoSprite;
     [SerializeField] private float targetUninteractedRunTime; //This is how long I want the turret to be able to run without interacting at all with anything else
     bool zapperActive = true;
     [SerializeField] private float movementPenalty = 0.5f;
@@ -228,6 +229,8 @@ private void DrawAmmo()
     GameObject ammo = new GameObject("ZapperAmmo");
     ammo.transform.SetParent(transform);
     LineRenderer lineRenderer = ammo.AddComponent<LineRenderer>();
+    SpriteLineMaterial spriteLineMaterial = ammo.AddComponent<SpriteLineMaterial>();
+    spriteLineMaterial.spriteTexture = zapperAmmoSprite;
     lineRenderer.SetPosition(0, transform.position);
     lineRenderer.SetPosition(1, zapperCounterpart.GetWorldPosition());
     ConfigureAmmoRenderer(lineRenderer);

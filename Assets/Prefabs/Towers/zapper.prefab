@@ -350,10 +350,11 @@ MonoBehaviour:
   zapperDetectionRadius: {fileID: 2316671208861911640}
   counterpartPrefab: {fileID: 4742496800121745920, guid: 1ac9d309f9452844ab98c746bcbe63c8, type: 3}
   zapperCounterpart: {fileID: 2026473443, guid: 1ac9d309f9452844ab98c746bcbe63c8, type: 3}
+  zapperAmmoSprite: {fileID: 21300000, guid: 8742b58dca7e8964085160074653cf17, type: 3}
   targetUninteractedRunTime: 120
   movementPenalty: 0.1
   offsetDistance: 1.2
-  ammoWidth: 0.1
+  ammoWidth: 0.4
   ammoMaterial: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   ammoColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!114 &5042376467145758593 stripped
