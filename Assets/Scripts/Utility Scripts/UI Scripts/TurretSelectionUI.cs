@@ -74,13 +74,12 @@ public class TurretSelectionUI : MonoBehaviour
             {
                 turretSelectionActive = true;
                 ShowTurretSelectionWheel();
-                return GetTurretToBuild();
+                
             }
             
-            else //if the selection is already active, advance the selection
-            {
+            
                 AdvanceTurretSelection();
-            }
+            
         }
 
         return GetTurretToBuild();

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Cannon : Turret
 {
     private static List<Cannon> activeCannonTurrets = new List<Cannon>();
-    private float damageMultiplier;
+    [SerializeField] private float damageMultiplier;
 
     protected override void RegisterTurret()
     {
@@ -39,7 +39,9 @@ public class Cannon : Turret
     // Start is called before the first frame update
     protected override void Start()
     {
+        
         base.Start();
+        ApplyPrimaryUpgrade();
     }
 
     // Update is called once per frame
@@ -59,6 +61,10 @@ public class Cannon : Turret
         
             float fireAngle = transform.eulerAngles.z;
             Ammo _ammo = Instantiate(ammunition, transform.position, Quaternion.Euler(0, 0, fireAngle));
+            if (_ammo.GetType() == typeof(CannonBall))
+            {
+                ((CannonBall)_ammo).AssignDamageCollider();
+            }
             _ammo.MakeAmmo(turretRange, turretBulletVelocity, fireAngle, damageMultiplier);
             cameraShake.TriggerShake();
             cooldownCounter = cooldownLength;
