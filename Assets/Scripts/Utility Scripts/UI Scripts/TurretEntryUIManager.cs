@@ -19,6 +19,8 @@ public class TurretEntryUIManager : MonoBehaviour
     [SerializeField] private float lineWidth = 2f;
      public Image intersectionCircle; // New field for the circle at the intersection
     private bool isDisplayable = false;
+    private Color dimColor = new Color(1, 1, 1, 0.5f);
+    private Color normalColor = new Color(1, 1, 1, 1);
     [SerializeField] private RectTransform turretEntryUIPanel;
    
    void Awake()
@@ -38,6 +40,8 @@ public class TurretEntryUIManager : MonoBehaviour
     {
         HideTurretEntryUI();
         turretTextAnchorPosition = turretActionIndicatorText.rectTransform.anchoredPosition;
+        normalColor = instructionHighlightBox.GetComponent<Image>().color;
+        dimColor = new Color(normalColor.r, normalColor.g, normalColor.b, 0.5f);
     }
 
     // Update is called once per frame
@@ -88,8 +92,7 @@ public void DisplayTurretEntryUI(Turret turret)
     // Set the anchored position of the RectTransform
     turretEntryIndicator.GetComponent<RectTransform>().anchoredPosition = canvasPosition;
 
-    Debug.Log("Displaying Turret Entry UI at " + turret.transform.position + 
-              " with canvas position " + canvasPosition);
+  
     DrawIndicatorLine();
 }
 public void HideTurretEntryUI()
@@ -209,5 +212,23 @@ private Vector2 GetCanvasPosition(RectTransform rectTransform)
     {
         
     
+    }
+
+    public void DimInstructionLine()
+    {
+        diagonalLine.GetComponent<Image>().color = dimColor;
+        horizontalLine.GetComponent<Image>().color = dimColor;
+        intersectionCircle.GetComponent<Image>().color = dimColor;
+        instructionHighlightBox.GetComponent<Image>().color = dimColor;
+        turretEntryIndicator.GetComponent<Image>().color = dimColor;
+    }
+
+    public void NormalizeInstructionLine()
+    {
+        diagonalLine.GetComponent<Image>().color = normalColor;
+        horizontalLine.GetComponent<Image>().color = normalColor;
+        intersectionCircle.GetComponent<Image>().color = normalColor;
+        instructionHighlightBox.GetComponent<Image>().color = normalColor;
+        turretEntryIndicator.GetComponent<Image>().color = normalColor;
     }
 }

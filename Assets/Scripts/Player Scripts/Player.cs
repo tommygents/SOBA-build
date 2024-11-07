@@ -321,7 +321,7 @@ public class Player : MonoBehaviour
         _turret.player = this;
         InstructionsUIManager.Instance.squatText.SetText("Exit", "turret");
         _turret.UpdateInstructionsTextWithUpgrades();
-        
+        TurretEntryUIManager.Instance.NormalizeInstructionLine();
         HideRadius();
   
 
@@ -345,6 +345,7 @@ public class Player : MonoBehaviour
         InstructionsUIManager.Instance.pushText.SetText("Dash", "");
         InstructionsUIManager.Instance.pushText.HideSecondaryText();
         buildingPlacement.buildingChargeBar.MakeActive();
+        TurretEntryUIManager.Instance.DimInstructionLine();
         //InGameLogger.Instance.Log("Exited turret: " + _turret.name);
     }
 
