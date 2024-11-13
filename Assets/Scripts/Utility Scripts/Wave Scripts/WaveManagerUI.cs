@@ -9,6 +9,7 @@ public class WaveManagerUI : MonoBehaviour
     public TextMeshProUGUI labelText;
     public TextMeshProUGUI waveText;
     public GameObject WaveLayer;
+    public AudioClip tickingSound;
 
     public void UpdateTimer(float _sec)
     {
@@ -16,6 +17,25 @@ public class WaveManagerUI : MonoBehaviour
         int seconds = Mathf.FloorToInt(_sec - minutes * 60);
         string _timer = string.Format("{0:0}:{1:00}", minutes, seconds);
         timerText.text = _timer;
+        if (_sec <= 5)
+        {
+            PlayTickingSound(_sec);
+        
+        timerText.color = Color.red;
+        }
+        else
+        {
+            timerText.color = Color.white;
+        }
+        
+    }
+
+
+    public void PlayTickingSound(float _sec)
+    {
+     
+           AudioManager.Instance.PlayerClip(tickingSound);
+        
     }
 
     public void isWaveActiveUI(bool _waveOn)
@@ -24,7 +44,7 @@ public class WaveManagerUI : MonoBehaviour
         else { labelText.text = "UNTIL WAVE"; }
     }
 
-    public void waveNumberUI(int _wave)
+    public void SetWaveNumberInUI(int _wave)
     {
         waveText.text = _wave.ToString();
     }

@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+
 using System.Linq;
 
 public class WaveManager : MonoBehaviour
@@ -35,11 +37,18 @@ public static WaveManager Instance;
     public WaveManagerUI waveManagerUI;
     private float waveStartTime;
     private float breakStartTime;
+    private Coroutine waveTimerCoroutine;
+    [SerializeField] private int timeScale = 1;
 
     void Start()
     {
         // Ensure Time.timeScale is set to 1
-        Time.timeScale = 1f;
+        Time.timeScale = timeScale;
+        isWaveActive = false;
+        waveManagerUI.isWaveActiveUI(false);
+        waveManagerUI.SetWaveNumberInUI(1);
+        waveTimerCoroutine = StartCoroutine(WaveTimer(120));
+        currentWaveNumber = 1;
     }
 
 void Awake()
@@ -57,10 +66,13 @@ void Awake()
         }
     }
 
+   
+
     private void InitializeEnemyPrefabsDictionary()
     {
         enemyPrefabs = enemyPrefabList.ToDictionary(entry => entry.enemyType, entry => entry.enemyPrefab);
     }
+    /*
 
     void FixedUpdate()
     {
@@ -68,6 +80,7 @@ void Awake()
 
         if (isWaveActive)
         {
+            
             float elapsedTime = Time.time - waveStartTime;
             float waveDuration = GetWaveDuration(currentWaveNumber);
             float remainingTime = Mathf.Max(0, waveDuration - elapsedTime);
@@ -77,7 +90,6 @@ void Awake()
             
             if (elapsedTime >= waveDuration)
             {
-                //Debug.Log($"Ending Wave {currentWaveNumber} at elapsed time: {elapsedTime}");
                 EndWave();
             }
         }
@@ -94,6 +106,7 @@ void Awake()
             }
         }
     }
+    */
 /*
 void Update()
     {
@@ -210,7 +223,9 @@ private void LoadWaveData()
     }
 
     Debug.Log($"Finished loading wave data. Total waves: {waves.Count}");
-}    public Wave GetWave(int waveNumber)
+}    
+
+public Wave GetWave(int waveNumber)
     {
         if (waves.TryGetValue(waveNumber, out Wave wave))
         {
@@ -300,16 +315,51 @@ public float GetWaveDuration(int waveNumber)
 
 public void JumpTimerForDebugging()
 {
+StopCoroutine(waveTimerCoroutine);
+ToggleWave();
+}
+
+public IEnumerator WaveTimer(int _timerLength)
+{
+    while (_timerLength > 0)
+    {
+        _timerLength--;
+        waveManagerUI.UpdateTimer(_timerLength);   
+        
+        yield return new WaitForSeconds(1);
+    }
+    ToggleWave();
+}
+
+public void ToggleWave()
+{
+    isWaveActive = !isWaveActive; //isWaveActive now indicates what's coming up next, not what just ended.
+    waveManagerUI.isWaveActiveUI(isWaveActive);
     if (isWaveActive)
     {
-        // If we're in a wave, jump to the end of the wave
-        waveStartTime = Time.time - GetWaveDuration(currentWaveNumber) + 0.1f;
+        
+        
+        OnWaveStart?.Invoke(currentWaveNumber);
     }
-    else
+    else //headed into a break
     {
-        // If we're in a break, jump to the end of the break
-        breakStartTime = Time.time - breakDuration + 0.1f;
+        
+        OnWaveEnd?.Invoke();
+        currentWaveNumber++;
+        waveManagerUI.SetWaveNumberInUI(currentWaveNumber);
+        if (HasNextWave())
+        {
+            //displayWaveNumber++; 
+        }
+        else
+        {
+            EndGame();
+        }
     }
+    //TODO: Now, the wave has been toggled, it's time to hand things back over to the timer to do another wave and/or break. 
+    int timerLength = isWaveActive ? 60:120;
+    waveTimerCoroutine = StartCoroutine(WaveTimer(timerLength));
+
 }
 
 }

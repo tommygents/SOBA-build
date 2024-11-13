@@ -7,6 +7,7 @@ public class WaypointSpawner : Waypoint
     private Wave currentWave;
     private List<Wave.SpawnEvent> pendingSpawnEvents = new List<Wave.SpawnEvent>();
     private float waveStartTime;
+    private Coroutine spawnRoutine;
 
     protected override void Start()
     {
@@ -28,13 +29,13 @@ public class WaypointSpawner : Waypoint
         {
             pendingSpawnEvents = new List<Wave.SpawnEvent>(currentWave.spawnEvents);
             waveStartTime = Time.time;
-            StartCoroutine(SpawnRoutine());
+            spawnRoutine = StartCoroutine(SpawnRoutine());
         }
     }
 
     private void HandleWaveEnd()
     {
-        StopAllCoroutines();
+        StopCoroutine(spawnRoutine);
         pendingSpawnEvents.Clear();
     }
 
