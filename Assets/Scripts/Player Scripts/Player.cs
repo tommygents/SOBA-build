@@ -37,6 +37,7 @@ public class Player : MonoBehaviour
     [SerializeField] public PlayerDetectionRadius detectionRadius;
     [SerializeField] private PlayerBuildingPlacement buildingPlacement;
     [SerializeField] private PlayerZapperBuilder zapperBuilder;
+ [SerializeField] private GameObject turretChargeBarSection;
 //Dash variables
     public float dashTimer = 0f;
     public float dashDuration = .25f;
@@ -100,6 +101,7 @@ public class Player : MonoBehaviour
         InstructionsUIManager.Instance.pushText.SetText("Dash");
         InstructionsUIManager.Instance.pullText.HideSecondaryText();
         UpdateLastPosition();
+        turretChargeBarSection.SetActive(false);
     }
 
     // Update is called once per frame
@@ -317,13 +319,16 @@ public class Player : MonoBehaviour
         nearbyTurret = null;
         engagedTurret = _turret;
         this.GetComponent<SpriteRenderer>().enabled = false; // Hide player sprite
-        _turret.OnEntered();
+        
         _turret.player = this;
+        TurretSelectionUI.Instance.gameObject.SetActive(false);
         InstructionsUIManager.Instance.squatText.SetText("Exit", "turret");
         _turret.UpdateInstructionsTextWithUpgrades();
         TurretEntryUIManager.Instance.NormalizeInstructionLine();
         HideRadius();
-  
+        ChargeBarUIManager.Instance.gameObject.SetActive(false);
+        turretChargeBarSection.SetActive(true);
+        _turret.OnEntered();
 
     }
 
@@ -346,7 +351,10 @@ public class Player : MonoBehaviour
         InstructionsUIManager.Instance.pushText.HideSecondaryText();
         buildingPlacement.buildingChargeBar.MakeActive();
         TurretEntryUIManager.Instance.DimInstructionLine();
+        TurretSelectionUI.Instance.gameObject.SetActive(true);
+        ChargeBarUIManager.Instance.gameObject.SetActive(true);
         //InGameLogger.Instance.Log("Exited turret: " + _turret.name);
+        turretChargeBarSection.SetActive(false);
     }
 
 

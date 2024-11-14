@@ -296,11 +296,12 @@ public virtual void ShowTargetingArea(Transform _origin)
     {
         // Show primary upgrade bar by default
         //primaryUpgradeProgressBar.MakeActive();
+        ActivateTurretProgressBars();
     }
 
     public virtual bool IteratePrimaryUpgradeProgressBar(float _time)
     {
-        primaryUpgradeProgressBar.MakeActive();
+        //primaryUpgradeProgressBar.MakeActive(ChargeBarPrimaryUI.Instance);
         if (primaryUpgradeData.CanUpgrade()) return false;
         
         primaryUpgradeProgressBar.IncrementChargeAmount(_time);
@@ -309,11 +310,18 @@ public virtual void ShowTargetingArea(Transform _origin)
 
     public virtual bool IterateSecondaryUpgradeProgressBar(float _time)
     {
-        secondaryUpgradeProgressBar.MakeActive();
+        //secondaryUpgradeProgressBar.MakeActive(ChargeBarSecondaryUI.Instance);
         if (secondaryUpgradeData.CanUpgrade()) return false;
         
         secondaryUpgradeProgressBar.IncrementChargeAmount(_time);
         return secondaryUpgradeProgressBar.IsFull();
+    }
+
+    public virtual void ActivateTurretProgressBars()
+    {
+        primaryUpgradeProgressBar.MakeActive(ChargeBarPrimaryUI.Instance);
+        secondaryUpgradeProgressBar.MakeActive(ChargeBarSecondaryUI.Instance);
+    
     }
 
     public virtual void PrimaryUpgrade()

@@ -29,6 +29,11 @@ public class ChargeBar : MonoBehaviour
         ChargeBarUIManager.Instance.SwitchTo(this);
     }
 
+    public void MakeActive(ChargeBarMainUI _uiManager)
+    {
+        _uiManager.SwitchTo(this);
+    }
+
     public bool IsFull() 
     {
        

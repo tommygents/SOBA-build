@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d26e3f9ef07cb2f4e88996c914c7d184, type: 3}
   m_Name: TurretSecondaryCharge
   m_EditorClassIdentifier: 
-  currentCharge: 0
-  maxCharge: 10
+  currentCharge: 19.328705
+  maxCharge: 20
   chargeColor: {r: 0, g: 1, b: 0.91311145, a: 1}
   sectionName: targeting radius
   statusText: Upgrade ready!

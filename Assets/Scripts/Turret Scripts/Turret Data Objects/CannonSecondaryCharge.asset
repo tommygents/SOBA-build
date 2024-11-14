@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CannonSecondaryCharge
   m_EditorClassIdentifier: 
   currentCharge: 0
-  maxCharge: 10
+  maxCharge: 20
   chargeColor: {r: 1, g: 0.77285296, b: 0, a: 1}
   sectionName: firing rate
   statusText: Upgrade ready!

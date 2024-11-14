@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ZapperPrimaryCharge
   m_EditorClassIdentifier: 
   currentCharge: 0
-  maxCharge: 10
+  maxCharge: 20
   chargeColor: {r: 1, g: 0.9079155, b: 0, a: 1}
   sectionName: slowdown factor
   statusText: Upgrade ready!
