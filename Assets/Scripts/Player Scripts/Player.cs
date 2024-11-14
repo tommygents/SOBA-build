@@ -323,6 +323,7 @@ public class Player : MonoBehaviour
         _turret.player = this;
         TurretSelectionUI.Instance.gameObject.SetActive(false);
         InstructionsUIManager.Instance.squatText.SetText("Exit", "turret");
+        InstructionsUIManager.Instance.StartRunning();
         _turret.UpdateInstructionsTextWithUpgrades();
         TurretEntryUIManager.Instance.NormalizeInstructionLine();
         HideRadius();
@@ -349,6 +350,7 @@ public class Player : MonoBehaviour
         InstructionsUIManager.Instance.pullText.SetText("Switch", "turret selection");
         InstructionsUIManager.Instance.pushText.SetText("Dash", "");
         InstructionsUIManager.Instance.pushText.HideSecondaryText();
+        InstructionsUIManager.Instance.StopRunning();
         buildingPlacement.buildingChargeBar.MakeActive();
         TurretEntryUIManager.Instance.DimInstructionLine();
         TurretSelectionUI.Instance.gameObject.SetActive(true);

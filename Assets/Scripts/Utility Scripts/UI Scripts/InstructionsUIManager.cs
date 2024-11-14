@@ -11,6 +11,9 @@ public class InstructionsUIManager : MonoBehaviour
     [SerializeField] public InstructionsTextField pushText;
     [SerializeField] public InstructionsTextField squatText;
     [SerializeField] public InstructionsTextField runText;
+    private Animator animator;
+    [SerializeField] private GameObject runningSprite;
+
 
 
     void Awake()
@@ -28,7 +31,8 @@ public class InstructionsUIManager : MonoBehaviour
     
     void Start()
     {
-        
+        animator = runningSprite.GetComponent<Animator>();
+        runningSprite.SetActive(false);
     }
 
     // Update is called once per frame
@@ -37,6 +41,22 @@ public class InstructionsUIManager : MonoBehaviour
         
     }
 
-    
+        public void StartRunning()
+    {
+        runningSprite.SetActive(true);
+        animator.Play("RunningAnimation"); // Use your animation clip's name here
+        runText.SetText("Charge Turret", "Sprint for bonus");
+        // OR
+        //animator.SetBool("IsRunning", true); // If using a parameter
+    }
+
+    // Method to stop the animation
+    public void StopRunning()
+    {
+        runningSprite.SetActive(false);
+        // OR
+        //animator.SetBool("IsRunning", false); // If using a parameter
+        runText.SetText("", "");
+    }
     
 }
