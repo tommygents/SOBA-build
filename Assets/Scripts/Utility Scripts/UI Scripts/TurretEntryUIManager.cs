@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class TurretEntryUIManager : MonoBehaviour
 {
 
@@ -29,20 +30,26 @@ public class TurretEntryUIManager : MonoBehaviour
     {
     Instance = this;
     DontDestroyOnLoad(gameObject);
+    SceneManager.sceneLoaded += OnSceneLoaded;  // Subscribe to scene loaded event
     }
     else
     {
     Destroy(gameObject);
     }
    }
-   
-    void Start()
-    {
-        HideTurretEntryUI();
-        turretTextAnchorPosition = turretActionIndicatorText.rectTransform.anchoredPosition;
-        normalColor = instructionHighlightBox.GetComponent<Image>().color;
-        dimColor = new Color(normalColor.r, normalColor.g, normalColor.b, 0.5f);
-    }
+
+   private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+   {
+    HideTurretEntryUI();
+    turretTextAnchorPosition = turretActionIndicatorText.rectTransform.anchoredPosition;
+    normalColor = instructionHighlightBox.GetComponent<Image>().color;
+    dimColor = new Color(normalColor.r, normalColor.g, normalColor.b, 0.5f);
+   }
+
+   private void OnDestroy()
+   {
+    SceneManager.sceneLoaded -= OnSceneLoaded;  // Clean up subscription
+   }
 
     // Update is called once per frame
     void Update()

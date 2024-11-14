@@ -37,7 +37,7 @@ public class InGameLogger : MonoBehaviour
             debugText = GetComponent<TextMeshProUGUI>();
             if (debugText == null)
             {
-                Debug.LogError("InGameLogger: No TextMeshProUGUI component found. Please assign it in the Inspector.");
+                //Debug.LogError("InGameLogger: No TextMeshProUGUI component found. Please assign it in the Inspector.");
             }
         }
 
@@ -56,7 +56,7 @@ public class InGameLogger : MonoBehaviour
     {
         if (debugText == null)
         {
-            Debug.LogError("InGameLogger: debugText is not assigned.");
+            //Debug.LogError("InGameLogger: debugText is not assigned.");
             return;
         }
         
