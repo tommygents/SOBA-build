@@ -243,7 +243,7 @@ public Wave GetWave(int waveNumber)
 
      public bool HasNextWave()
     {
-        return waves.ContainsKey(currentWaveNumber + 1);
+        return waves.ContainsKey(currentWaveNumber);
     }
 
  public void StartNextWave()
@@ -335,10 +335,9 @@ public void ToggleWave()
 {
     isWaveActive = !isWaveActive; //isWaveActive now indicates what's coming up next, not what just ended.
     waveManagerUI.isWaveActiveUI(isWaveActive);
-    if (isWaveActive)
+    if (isWaveActive) //headed into a wave
     {
-        
-        
+
         OnWaveStart?.Invoke(currentWaveNumber);
     }
     else //headed into a break
@@ -354,9 +353,10 @@ public void ToggleWave()
         else
         {
             EndGame();
+            return;
         }
     }
-    //TODO: Now, the wave has been toggled, it's time to hand things back over to the timer to do another wave and/or break. 
+  
     int timerLength = isWaveActive ? 60:120;
     waveTimerCoroutine = StartCoroutine(WaveTimer(timerLength));
 
